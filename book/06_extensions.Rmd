@@ -1,0 +1,7 @@
+# Extensions
+```{r, echo = FALSE}
+# 6. Extensions (Optional)
+# 	- Time-Dependent Covariates
+# 	- Time Varying Effects
+# 	- Improved Baseline Hazard Estimation (Gaussian / Dirchlet Process)
+```

@@ -1,4 +1,14 @@
 # Methods
+```{r, eval = FALSE}
+# 4. Methods
+# 	- Reliability Basics
+# 	- Censoring
+# 	- Accelerated Failure Time Model
+# 	- Frailty & Hierarchical Model
+# 	- Estimation (HMC and Gibbs)
+# 	- Model Selection
+```
+
 
 - Basic Mathematical Construction
 

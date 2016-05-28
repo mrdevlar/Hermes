@@ -1,0 +1,12 @@
+# Analysis
+```{r, eval = FALSE}
+# 5. Analysis
+# 	- The scenarios
+# 		- Simple homogenous system (same model, same plant)
+# 		- Stratification by Model and Site
+# 			- Hierarchical Modeling and Frailty
+```
+
+### Notes
+
+[Comparison of Hazard Estimation in R](https://arxiv.org/pdf/1509.03253.pdf)

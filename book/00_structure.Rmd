@@ -1,0 +1,36 @@
+# Structure
+```{r, eval = FALSE}
+# Do not include in main text, for planning purposes only.
+```
+
+## General Structure
+1. Introduction
+	- General Summary of entire thesis
+2. Predictive Maintenance
+	- What is? Details.
+3. Domain Knowledge - Photovoltaic Inverter
+	- Low information, limited economic resources
+	- High reliability problem
+4. Methods
+	- Reliability Basics
+	- Censoring
+	- Accelerated Failure Time Model
+	- Frailty & Hierarchical Model
+	- Estimation (HMC and Gibbs)
+	- Model Selection
+5. Analysis
+	- The scenarios
+		- Simple homogenous system (same model, same plant)
+		- Stratification by Model and Site
+			- Hierarchical Modeling and Frailty
+6. Extensions (Optional)
+	- Time-Dependent Covariates
+	- Time Varying Effects
+	- Improved Baseline Hazard Estimation (Gaussian / Dirchlet Process)
+7. Conclusion
+
+
+### Notes
+For additional structure ideas
+[PREDICTION OF REMAINING LIFE OF POWER TRANSFORMERS BASED ON LEFT RUNCATED AND RIGHT CENSORED LIFETIME DATA](http://arxiv.org/pdf/0908.2901.pdf)
+

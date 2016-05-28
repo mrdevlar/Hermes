@@ -1,0 +1,9 @@
+# STAN Estimation
+```{r, eval = FALSE}
+
+```
+
+ - Define Hamiltonian Monte Carlo
+ - Address what types of problem it solves (compared to JAGS)
+ 	- Hierarchical Modeling, non-log-convex posteriors
+ - Reference STAN documentation, Gelman et al. and Rethinking

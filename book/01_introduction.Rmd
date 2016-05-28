@@ -1,10 +1,19 @@
 # Introduction
+```{r eval = FALSE}
+#1. Introduction
+#	- General Summary of entire thesis
+```
+
+
+## Introduction Notes 
+ - You hate writing introductions, but you still have to, and it still has to catch the attention of your audience and communicate clearly the priorities of the thesis. It doesn't have to be as thick as you think it does though. 
+ - Make sure to clearly provide a structure for the remaining document. 
+ - There is no need to justify any of the choices, do that within the text.
 
 
 
-# Introduction Notes
+## Introduction Scraps
 
-We are not interested in the construction of maintenance events. Or are we?
 
 The predominant preoccupation in the preventative maintenance field is in dealing with high dimensional data that is increasingly being captured by an ever greater number of sensors built into industrial equipment. 
 
@@ -25,7 +34,6 @@ As data is a limited resource in these examples, what data is captured and how i
 
 Reliability analysis, in some form or other, has been a foundational part of the practice of statstics for almost as long as the field has existed. 
 
-While games of chance 
 
-It is demographics and insurance that were most likely responsible for keeping the field at work in its formative years.
+
 

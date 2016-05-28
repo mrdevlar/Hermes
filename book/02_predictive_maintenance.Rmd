@@ -1,4 +1,8 @@
 # Predictive Maintenance
+```{r, eval = FALSE}
+# 2. Predictive Maintenance
+#	- What is? Details.
+```
 
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing
@@ -10,4 +14,3 @@
 	- Use of competing risk models when multiple failure methods occur.
 	- Fit one model per failure mode
 		- May ignore the dependency among failure modes
-	
