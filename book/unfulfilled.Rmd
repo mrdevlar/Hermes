@@ -1,0 +1,11 @@
+# Unfulfilled Ideas
+
+
+
+
+## Stuff I didn't want to do:
+
+- [R Markdown Live Preview](https://github.com/yyjhao/markmon)
+- [R Markdown Live Preview #2](https://packagecontrol.io/packages/Markmon%20real-time%20markdown%20preview)
+- [R Markdown Not-so-live Render](https://github.com/revolunet/sublimetext-markdown-preview)
+- [npm Install Windows](http://blog.teamtreehouse.com/install-node-js-npm-windows)

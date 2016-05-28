@@ -1,0 +1,18 @@
+# Methods
+
+- Basic Mathematical Construction
+
+- Distribution Choice
+  - Weibull
+  - ?Lognormal
+  - ?Loglogistic 
+
+
+- Stratification == Frailty
+  - Traditional regression methods would presume a shared fixed effect for the shape or scale of the distribution.
+
+- Heavy Truncation -> Estimation Problems
+
+- Considerations for how deal with data recording, what to record and why?
+	- Failure autopsy, sensors or maintenance testing
+	- Continuous monitoring (economically impractical)

@@ -1,0 +1,13 @@
+# Predictive Maintenance
+
+- Considerations for how deal with data recording, what to record and why?
+	- Failure autopsy, sensors or maintenance testing
+	- Continuous monitoring (economically impractical)
+	- Hazards of lab testing leading to accelerated failure
+
+- Define a Failure Mode
+	- State why it is important for Failure Modes to be separated
+	- Use of competing risk models when multiple failure methods occur.
+	- Fit one model per failure mode
+		- May ignore the dependency among failure modes
+	

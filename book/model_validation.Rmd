@@ -1,0 +1,5 @@
+# Model Validation
+
+Here we describe how models can be selected.
+- Log-likelihood and Deviance Checks
+- C-index and Predictive Performance

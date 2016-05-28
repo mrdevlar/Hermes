@@ -1,0 +1,31 @@
+# Introduction
+
+
+
+# Introduction Notes
+
+We are not interested in the construction of maintenance events. Or are we?
+
+The predominant preoccupation in the preventative maintenance field is in dealing with high dimensional data that is increasingly being captured by an ever greater number of sensors built into industrial equipment. 
+
+While the methods demonstrated in this thesis are applicable in those circumstances, we acknowledge instead a less examined but equally plentiful context in which to perform maintenance. That of information scarcity.
+
+While sensors are increasingly cheap and plentiful, they are still expensive in absolute terms. No product developer of sound mind would argue for the inclusion of a sensors in a t-shirt to prevent stitching failure. The sensors would vastly increase the production cost of the original product. Yet, this kind of scenario is found throughout industry. We want to infer the reliability and predict the failure of objects that do not have extensive sensor information associated with them.
+
+Maintenance is not sexy, but it is essential. 
+Yet ire is 
+
+Maintenance is the backbone of the modern industrialized world. It's not sexy, but it is essential. Few sing the praises of the multitude of technicians which are responsible for ensuring trains run on time, computer systems remain online or that bridges are structurally sound. 
+
+The purpose of this thesis is to making the lives of technicians a bit easier by describing and analyzing methods of performing predictive maintenance in areas with limited data. 
+
+As data is a limited resource in these examples, what data is captured and how it is stored and utilized becomes a primary element in the success of preventative maintenance in these context. 
+
+
+
+Reliability analysis, in some form or other, has been a foundational part of the practice of statstics for almost as long as the field has existed. 
+
+While games of chance 
+
+It is demographics and insurance that were most likely responsible for keeping the field at work in its formative years.
+

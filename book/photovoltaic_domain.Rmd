@@ -1,0 +1,17 @@
+# Photovoltaic Domain
+
+- Describe the state of the industry as still subsidy-fueled, and why predictive maintenance is needed. 
+- Describe a basic photovoltaic system
+- Describe why the situation is different for photovoltaic plants compared to other energy sources. e.g. Information sparcity.
+- Describe the failure mechanism a.k.a. The failure mode
+	- Note that infant mortality is not part of the failure mode
+	- Early failures are considered right censored at the time of failure
+	- Potentially resolved through either two different models, one for early failure and mode failure, or some form of mixture model.
+- Describe the explanatory variables
+	- Manufacturer
+	- Site
+	- Location
+	- Noisy Alarm
+	- Qty of Lab Tests
+- Failure Mode for Photovoltaic Inverter
+	- [Reliability the weak link in the solar industry](http://www.interpv.net/tech/tech_view.asp?idx=49&part_code=030190059&page=2)
