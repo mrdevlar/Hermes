@@ -1,16 +1,18 @@
 # Methods
-```{r, eval = FALSE}
-# 4. Methods
-# 	- Reliability Basics
-# 	- Censoring
-# 	- Accelerated Failure Time Model
-# 	- Frailty & Hierarchical Model
-# 	- Estimation (HMC and Gibbs)
-# 	- Model Selection
+```
+4. Methods
+	- Reliability Analysis
+	- Censoring
+	- Accelerated Failure Time Model
+	- Frailty & Hierarchical Model
+	- Estimation (HMC and Gibbs)
+	- Model Selection
+@TODO: Do not build here, build in separate files
 ```
 
 
-- Basic Mathematical Construction
+
+
 
 - Distribution Choice
   - Weibull
@@ -21,7 +23,7 @@
 - Stratification == Frailty
   - Traditional regression methods would presume a shared fixed effect for the shape or scale of the distribution.
 
-- Heavy Truncation -> Estimation Problems
+
 
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing

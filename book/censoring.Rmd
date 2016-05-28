@@ -6,6 +6,7 @@
 
 - While truncation does not feature explicitly in our case-study, it should be noted that it can appear due to poor data entry practices. Systems administrators should be careful to avoid truncation in their data inadvertantly. For example, if a device is dead on arrival, it is easy to simply omit it from the records rather than take the time to input a failure at t = 0. However, the omission of such records induces truncation, which biases the estimation of the underlying survival functions. 
 
+- Heavy Truncation -> Estimation Problems
 
 
 - May provide how one works correctly with right censored or truncated distributions.

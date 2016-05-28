@@ -1,7 +1,7 @@
 # Predictive Maintenance
-```{r, eval = FALSE}
-# 2. Predictive Maintenance
-#	- What is? Details.
+```
+2. Predictive Maintenance
+	- What is? Details.
 ```
 
 - Considerations for how deal with data recording, what to record and why?

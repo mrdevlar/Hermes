@@ -1,5 +1,5 @@
 # STAN Estimation
-```{r, eval = FALSE}
+```
 
 ```
 

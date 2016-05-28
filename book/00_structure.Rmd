@@ -1,6 +1,6 @@
 # Structure
-```{r, eval = FALSE}
-# Do not include in main text, for planning purposes only.
+```
+@TODO: Do not include in main text, for planning purposes only.
 ```
 
 ## General Structure
@@ -12,7 +12,7 @@
 	- Low information, limited economic resources
 	- High reliability problem
 4. Methods
-	- Reliability Basics
+	- Reliability Analysis
 	- Censoring
 	- Accelerated Failure Time Model
 	- Frailty & Hierarchical Model

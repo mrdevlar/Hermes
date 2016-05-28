@@ -1,8 +1,0 @@
-# Analysis
-```{r, echo = FALSE}
-
-```
-
-### Notes
-
-[Comparison of Hazard Estimation in R](https://arxiv.org/pdf/1509.03253.pdf)

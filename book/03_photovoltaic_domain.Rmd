@@ -1,8 +1,8 @@
 # Photovoltaic Domain
-```{r, eval = FALSE}
-#3. Domain Knowledge - Photovoltaic Inverter
-#	- Low information, limited economic resources
-#	- High reliability problem
+```
+3. Domain Knowledge - Photovoltaic Inverter
+	- Low information, limited economic resources
+	- High reliability problem
 ```
 
 - Describe the state of the industry as still subsidy-fueled, and why predictive maintenance is needed. 
