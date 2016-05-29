@@ -4,4 +4,6 @@
 - Relationships among the basic building blocks
 ```
 
-# 
+# Basic Functions
+
+Let us define $T$, a non-negative random variable with an unknown distribution representing the time until a well-defined event. In our case, the event is the failure of an in

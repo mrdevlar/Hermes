@@ -11,3 +11,8 @@ This is a collection of the open windows I've been holding for the past few mont
 [Using Time Dependent Covariates and Time Dependent Coeffcients in the Cox Models](https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf)
 
 [PREDICTION OF REMAINING LIFE OF POWER TRANSFORMERS BASED ON LEFT TRUNCATED AND RIGHT CENSORED LIFETIME DATA](http://arxiv.org/pdf/0908.2901.pdf)
+
+[Corey Sparks RPubs - Mainly contains examples of survival analysis](https://rpubs.com/corey_sparks)
+	- https://rpubs.com/corey_sparks/68765
+	- https://rpubs.com/corey_sparks/65939
+	-

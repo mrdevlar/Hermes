@@ -156,6 +156,7 @@ return
 ```
 
 # [Distraction Free Writing Settings](https://www.sublimetext.com/docs/3/distraction_free.html)
+Tags = [sublime]
 
 Preferences -> Settings - More -> Distraction Free Settings
 
@@ -171,3 +172,30 @@ Preferences -> Settings - More -> Distraction Free Settings
 	"font_size": 15,
 }
 ```
+
+# [Books every programmer should read](http://stackoverflow.com/questions/1711/what-is-the-single-most-influential-book-every-programmer-should-read/)
+Tags = [books, programming]
+
+ - [In the beginning there was command line](http://cristal.inria.fr/~weis/info/commandline.html)
+ - [The Tao of Programming](http://www.mit.edu/~xela/tao.html)
+
+ 
+# AHK Open current terminal or start a new one
+Tags = [ahk]
+
+Change the terminal button to open the current terminal if the terminal is already open, otherwise open it.
+
+```{ahk}
+#r::
+IfWinExist, ahk_class mintty 
+{
+	WinActivate, ahk_class mintty
+	return
+} else {
+	run C:\cygwin\bin\mintty /bin/sh -lc 'cd "$(cygpath "/cygdrive/r/0000_Code/Hermes/")"; exec bash'
+	WinActivate, ahk_class mintty
+	return
+}
+return
+```
+
