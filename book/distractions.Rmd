@@ -64,8 +64,7 @@ Tags = [sublime, path]
 
 Go to Preferences -> Key Bindings User, and insert the following:
 ```
-	{ "keys": ("ctrl+alt+e"), "command": "open_dir", 
-    "args": {"dir": "$file_path", "file": "$file_name"} }
+	{ "keys": ["ctrl+alt+e"], "command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"} }
 ```
 
 # [Sublime Text Keyboard Shortcuts](http://docs.sublimetext.info/en/latest/reference/keyboard_shortcuts_win.html)
