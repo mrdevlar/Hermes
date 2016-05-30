@@ -149,7 +149,7 @@ Tags = [sublime, ahk, syntax]
 # [AHK for Opening Cygwin Terminal in a Specific Folder](http://superuser.com/questions/592086/how-to-open-a-cygwin-shell-at-a-specific-directory-from-netbeans)
 Tags = [ahk, cygwin, folder]
 ```
-Send#r::
+#r::
 run C:\cygwin\bin\mintty /bin/sh -lc 'cd "$(cygpath "/cygdrive/r/0000_Code/Hermes/")"; exec bash'
 return
 ```
@@ -197,4 +197,5 @@ IfWinExist, ahk_class mintty
 }
 return
 ```
+
 

@@ -1,0 +1,5 @@
+# Data Generation
+
+
+[Demography 213 Fall 2015](http://courses.demog.berkeley.edu/mason213F15/)
+ - Contains data generation for PH model from life tables.
