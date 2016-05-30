@@ -3,3 +3,5 @@
 
 [Demography 213 Fall 2015](http://courses.demog.berkeley.edu/mason213F15/)
  - Contains data generation for PH model from life tables.
+ - Contains data generation for violations of the PH model, again using the life tables
+ 	- See Week 10 and 11
