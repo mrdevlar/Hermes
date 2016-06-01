@@ -3,14 +3,15 @@
 - Basic building blocks
 - Relationships among the basic building blocks
 - Survival function == Reliability function
+- Hazard function == risk, intensity, mortality rate or conditional failure rate
+- Better Segways between functions
+- Maybe add examples?
 ```
 
 
+# Time-to-Event Functions
 
-
-# Basic Functions
-
-Let us define $T$, a continuous non-negative random variable ($T \ge 0, T \in \mathbb{R}$) with an unknown distribution representing the time until a well-defined event. We can then define $t$ to be the realization of this random variable at a particular time.
+Let us define $T$, a continuous non-negative random variable ($T \ge 0, T \in \mathbb{R}$) with an unknown distribution representing the time until a well-defined event. We can then define $t$ to be the realization of this random variable at a specific point in time.
 
 A familiar way of describing a probability distribution is to use probability density function (pdf) and cumulative distribution function (cdf). The pdf is the relative likelihood of a random variable taking a particular realization.
 
@@ -24,9 +25,39 @@ In our application, the cdf of $T$ may not be particularly interesting as we are
 
 $$S(t) = P(T \ge t) = 1 - F(t) = \int^{\infty}_t f(x) dx$$
 
-This gives us the Survival function which is the probability that our well-defined event occurs after a specific point in time. Of course, if the event occurs after a specific point in time, the object under study must not have experienced the event up to that point. Thus, the Survival function gets its name from the fact that it provides the probability that the object has survived up to a particular point in time. 
+This gives us the survival function which is the probability that our well-defined event occurs after a specific point in time. Of course, if the event occurs after a specific point in time, the object under study must not have experienced the event up to that point. Thus, the survival function gets its name from the fact that it provides the probability that the object has survived up to a particular point in time. 
 
-As the Survival function is the complement of the cumulative distribution function, it inherits the properties from the cdf. It is monotonically decreasing, with $S(0) = 1$ and $S(\infty) = \lim_{t\rightarrow \infty}S(t) = 0$. This formalizes the self-evident notion that at the beginning of observation all devices are operational, and given a long enough time frame all devices will eventually fail. 
+As the survival function is the complement of the cumulative distribution function, it inherits the properties from the cdf. It is monotonically decreasing, with $S(0) = 1$ and $S(\infty) = \lim_{t\rightarrow \infty}S(t) = 0$. This formalizes the notion that when the event in question is death, in the beginning all devices are operational, but given a long enough time frame all devices eventually fail. 
+
+It is generally true that any pdf can be expressed as a derivative of its cdf, and the survival function also provides a route back to the pdf. The negative derivative of the survival function returns the pdf. Such that the pdf can be redefined as:
+
+$$f(t) = \lim_{\Delta t \rightarrow 0^+} \frac{\Pr(t \le T < t + \Delta t) }{\Delta t} = \frac{d F(t)}{dt} = - \frac{d S(t)}{dt}$$
+
+As we now have a function that can describe the probability of survival up to a specific point, but what if we want to know whether or not something survives into the next point in time? 
+
+**@TODO**: Better segway between survival and hazard function
+
+$$h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)}$$
+
+This is the hazard function, it defines the rate of survival as $\Delta t \rightarrow 0$, or rephrased it is the instantaneous rate of an event, given that the event has not yet occurred. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than 1. 
+
+If we integrate the hazard from our starting point until a specific point in time, we return a cumulative hazard function. 
+
+$$H(t) = \int^t_0 h(u) du$$
+
+The cumulative hazard, provides the amount of times we would expect to observe our well-defined event over a given period of time, assuming that event were repeatable. 
+
+
+## Relationships between Functions
+
+
+
+
+
+
+
+
+
 
 
 
