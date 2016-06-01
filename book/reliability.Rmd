@@ -2,6 +2,8 @@
 ```
 - Basic building blocks
 - Relationships among the basic building blocks
+
+The purpose of this section is to get a handle of the basic mathematical notation and relationships that underly reliability analysis. 
 ```
 
 # Basic Functions

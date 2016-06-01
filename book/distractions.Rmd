@@ -199,3 +199,19 @@ IfWinExist, ahk_class mintty
 return
 ```
 
+# AHK Sublime Mouse Open Swithc
+Tags = [ahk, sublime]
+
+Fixes the CTRL+Tab issue in Sublime
+
+```
+; Sublime Text 
+#IfWinActive, ahk_class PX_WINDOW_CLASS
+F24::
+SendInput ^{PgDn}
+return
+F23::
+SendInput ^{PgUp}
+return
+```
+
