@@ -64,8 +64,7 @@ Tags = [sublime, path]
 
 Go to Preferences -> Key Bindings User, and insert the following:
 ```
-	{ "keys": ("ctrl+alt+e"), "command": "open_dir", 
-    "args": {"dir": "$file_path", "file": "$file_name"} }
+	{ "keys": ["ctrl+alt+e"], "command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"} }
 ```
 
 # [Sublime Text Keyboard Shortcuts](http://docs.sublimetext.info/en/latest/reference/keyboard_shortcuts_win.html)
@@ -150,7 +149,7 @@ Tags = [sublime, ahk, syntax]
 # [AHK for Opening Cygwin Terminal in a Specific Folder](http://superuser.com/questions/592086/how-to-open-a-cygwin-shell-at-a-specific-directory-from-netbeans)
 Tags = [ahk, cygwin, folder]
 ```
-Send#r::
+#r::
 run C:\cygwin\bin\mintty /bin/sh -lc 'cd "$(cygpath "/cygdrive/r/0000_Code/Hermes/")"; exec bash'
 return
 ```
@@ -199,7 +198,7 @@ IfWinExist, ahk_class mintty
 return
 ```
 
-# AHK Sublime Mouse Open Swithc
+# AHK Sublime Mouse Open Switch
 Tags = [ahk, sublime]
 
 Fixes the CTRL+Tab issue in Sublime
