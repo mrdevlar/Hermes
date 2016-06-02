@@ -199,3 +199,10 @@ return
 ```
 
 
+# Sublime Title Case Keyboard Shortcut
+Tags = [sublime]
+
+In Preferences -> Key Bindings - User
+```
+{ "keys": ["ctrl+k", "ctrl+i"], "command": "title_case" },
+```
