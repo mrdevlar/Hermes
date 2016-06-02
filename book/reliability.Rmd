@@ -8,8 +8,16 @@
 - Maybe add examples?
 ```
 
+## Introduction
 
-# Time-to-Event Functions
+Time-to-event analysis/footnote{also known as survival analysis, reliability analysis and event history analysis} concerns itself with the modeling of the expected duration of time until an object experiences a well-defined event. This event should is a transition between a finite number of possible states, such as from functional to broken, or alive to dead.\cite{Andersen1992} 
+
+To be able to model the time until these transitions, we require precision in describing our phenomenon, and for that, we require mathematics. The following section describes the mathematical narrative that underly the construction, manipulation and estimation of time-to-event models.
+
+We begin with a description of the basic functions involved in the models, 
+
+
+## Time-to-Event Functions
 
 Let us define $T$, a continuous non-negative random variable ($T \ge 0, T \in \mathbb{R}$) with an unknown distribution representing the time until a well-defined event. We can then define $t$ to be the realization of this random variable at a specific point in time.
 
@@ -65,6 +73,19 @@ The relationships are important yadda yadda.
 
 
 
+### Left-overs
+
+
+
+
+
+Two features distinguish time-to-event analysis from most standard statistical procedures, namely non-normally distributed errors and incomplete observation.
+
+
+
+The first feature that distinguishes time-to-event analysis from traditional statistical methods is a lack of normally distributed errors.\cite{Guo2010} Time is always positive quantity, this alone should invalidate the normal error model. However, more compelling is the notion that the rate of survival distribution does not necessarily have to have a single mode. For example, when examining the survival time of individuals following a difficult surgical procedure, one would expect to see two groups of deaths. One shortly after the procedure, possibly due to complications, and a second group of deaths long after if the reason for the surgery reoccurs. This type of bimodality is unable to be properly modeled using standard OLS regression. 
+
+The second distinguishing feature is incomplete observation, or censoring, which obscures the time until an event occurs. For example, when analyzing the time until failure of an industrial device, it is often impractical to wait until all the devices in the population have failed before drawing conclusions. Therefore, the data we utilize gives us only a partial view of the duration until the event occurs in the population. Censoring comes in various classes and types, depending on the segment of time is unobserved. Right censoring is the most common class, and refers to the situation where the event is observed only if it occurs prior to some pre-specified time.\cite{Klein2003} In our case, we only observe a photovoltaic inverter failure if it has occurred in the past. Our prespecified time, is this moment, and all functioning inverters are thus right censored. 
 
 
 
