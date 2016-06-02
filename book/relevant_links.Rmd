@@ -15,4 +15,11 @@ This is a collection of the open windows I've been holding for the past few mont
 [Corey Sparks RPubs - Mainly contains examples of survival analysis](https://rpubs.com/corey_sparks)
 	- https://rpubs.com/corey_sparks/68765
 	- https://rpubs.com/corey_sparks/65939
-	-
+	- https://rpubs.com/corey_sparks/63970
+	- https://rpubs.com/corey_sparks/63112
+	- https://rpubs.com/corey_sparks/58432
+	- https://rpubs.com/corey_sparks/164805
+
+[Simulating Data with Proportional Hazard Assumption Starting with Life Tables](http://courses.demog.berkeley.edu/mason213F15/Week10/welcome.pdf)
+	- Provides a better process for the data generation process.
+	- Piecewise Constant Hazard Function, results in Exp(\lambda) within the cut points.

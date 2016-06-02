@@ -198,6 +198,65 @@ IfWinExist, ahk_class mintty
 return
 ```
 
+# AHK Sublime Mouse Open Switch
+Tags = [ahk, sublime]
+
+Fixes the CTRL+Tab issue in Sublime
+
+```
+; Sublime Text 
+#IfWinActive, ahk_class PX_WINDOW_CLASS
+F24::
+SendInput ^{PgDn}
+return
+F23::
+SendInput ^{PgUp}
+return
+```
+
+# Spell checking in Sublime Distraction Free Mode
+Tags = [sublime]
+
+Preferences -> Settings - More -> Distraction Free
+
+```
+"spell_check": true,
+"dictionary": "Packages/Language - English/en_US.dic",
+```
+
+# Markdown Preview in Sublime
+Tags = [sublime, markdown]
+
+CTRL+SHIFT+P -> Install Packages -> Markdown Preview
+
+Then in Preferences -> Key-Bindings -> User
+
+```
+ { "keys": ["alt+m"], "command": "markdown_preview", "args": {"target": "browser", "parser":"markdown"} }
+```
+
+To get it to handle mathjax support.
+
+Preferences -> Package Settings -> Markdown Preview -> User
+
+```
+"enable_mathjax": true,
+```
+
+
+# [Atom Text Editor](https://atom.io/beta)
+Tags = [software]
+
+# Wrap with Math Tags
+Tags = [autohotkey, markdown]
+
+```
+#w::
+SendInput, ^x
+ClipWait 2
+SendInput, $^v$
+return
+```
 
 # Sublime Title Case Keyboard Shortcut
 Tags = [sublime]
