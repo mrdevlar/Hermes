@@ -14,7 +14,12 @@ Time-to-event analysis/footnote{also known as survival analysis, reliability ana
 
 To be able to model the time until these transitions, we require precision in describing our phenomenon, and for that, we require mathematics. The following section describes the mathematical narrative that underly the construction, manipulation and estimation of time-to-event models.
 
-We begin with a description of the basic functions involved in the models, 
+We begin with a description of the basic functions required to understand the models, their role in defining time-to-event distributions and their relationship to one another.
+
+Moar stuff (but does it need a separate chapter or integrate here? Probably integrate here.)
+
+ - Censoring
+ - PH and AFT Models
 
 
 ## Time-to-Event Functions

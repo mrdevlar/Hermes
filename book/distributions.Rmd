@@ -1,0 +1,19 @@
+# Weibull Distribution
+
+Basics
+- f(t)
+- S(t)
+- h(t)
+- Median Residual Lifetime
+
+There are numerous different triggers that can precipitate an inverter failure. The first time any one of these triggers occur, the inverter fails. Thus, the lifetime of an inverter is controlled by the distribution of a minimum. The Weibull distribution is one of the limiting distribution of minima. [Hong et al, p.10](http://arxiv.org/pdf/0908.2901.pdf)
+
+# Lognormal Distribution
+
+Basics
+- f(t)
+- S(t)
+- h(t)
+- Median Residual Lifetime
+
+The lognormal tends to be considerably more optimistic compared to the Weibull when estimating survival distributions.
