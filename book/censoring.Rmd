@@ -1,6 +1,36 @@
 # Censoring and Truncation
 
-- Censoring is missing compared to Truncation which is omission
+Censoring and Truncation is a common facet of time-to-event analysis. It is so common that it is often mis-represented as being unique to time-to-event analysis.**REFHERE** Yet, censoring and truncation occur in any environment where measurements may be omitted or inaccurately recorded. The phenomenon occurs in something as simple as a weight scale with a maximum beyond which it records the same value. 
+
+The reason why censoring and truncation is ubiquitous in time-to-event analysis is by construction. As time is the central unit, analysis often inquires about events that have not occurred, which automatically leads to issues of truncation and censoring. We are often unable or unwilling to wait long enough to see all events occur, such as failure, and have complete information. Therefore, we must infer from the information available which requires a mechanism to accommodate those times which are not yet fully observed. 
+
+- Define Censoring
+	- Provide Example
+- Define Truncation
+	- Provide Example
+- Contrast Censoring and Truncation
+- Set independence assumptions between censoring, truncation and failure time distributions
+- Provide example within the current photovoltaic domain.
+	- Types of censoring
+		- Random
+		- Type I, due to multiple inverters coming online at the same time.
+- Provide Mathematical construction of both.
+	- Change in likelihood function
+- References and Further Reading
+
+The level of information available when measurements are handled determine the type of 
+
+In mathematical terms, censoring and truncation requires the estimation of two additional distributions to handle the missing or omitted data. We do this through the construction of a binary variable 
+
+
+
+
+
+
+
+## Additional Notes
+
+- Censoring is missing with a known direction compared to Truncation which is omission
 - One of the unique aspects of time-to-event analysis is that data does not always contain an observation of the event in question. 
 - Though really it is the lack of normally distributed errors. 
 - Data in this case should be right censored.
@@ -16,7 +46,6 @@
 
 ## Older Text
 
-As stated earlier, censoring is a defining element of survival analysis. Yet, so far we have only explored functions that exist in complete information. In real world applications, we are often unable to wait long enough to see all devices fail and have complete information. Thus, we must infer from what we have but to do this we require a mechanism to accommodate those lifetimes that are not yet fully observed.
 
 The solution is to create a binary random variable ( $\delta_i$) to account for whether a failure is observed and a random variable ($Y_i$) which combines our observation of the time with whether that failure is observed.
 
@@ -24,18 +53,4 @@ Let $T$ denote the lifetime of a device and $C$ a random censor time. Every devi
 
 $$  Y_i = \min(T_i,C_i) \qquad \text{ and } \qquad \delta_i = \left\{\begin{matrix} 1 \text{ if } T_i \le C_i\\ 0 \text{ if } C_i < T_i \end{matrix}\right.$$
 
-% Independence assumption between censoring and failure time
 % Likelihood estimation
-
-
-
-It should be noted that the preceding description applies to 
-
-random censoring which is common in observational data like that used in this analysis. However, reliability studies also make use of different schemes for 
-
-Thus 
-
-There are three main modes of censoring, Type I, Type II and random censoring. 
-
-In reliability studies Type I and Type II censoring is common. However, as we are attempting 
-	
