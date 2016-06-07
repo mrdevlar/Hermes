@@ -4,6 +4,22 @@
 	- What is? Details.
 ```
 
+Predictive maintenance has long been a goal in reliability analysis. As its name suggests, predictive maintenance refers to a set of processes designed to determine the condition of operational equipment in order to determine when maintenance should be performed. 
+
+Central motivation:
+- maintenance tasks are costly
+- repair and replacement leads to downtime and decreased output
+
+Contextualize predictive maintenance in the framework of general maintenance strategies.
+- Subset of preventative maintenance
+- Versus corrective maintenance and replacement
+
+
+The central motivation being that these tasks incur costs and thus should only 
+The idea being that maintenance as a task incurs costs, and such processes can be used to only perform the task when it is required. 
+
+
+
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing
 	- Continuous monitoring (economically impractical)

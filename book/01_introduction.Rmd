@@ -27,7 +27,7 @@ In the author's view, good academic literature is of the type takes a complex to
 
 Yet, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of of the calculus of probability at the level of Blitzstein and Huang **REFHERE** as well as a first course on Bayesian linear models at the level of McElreath **REFHERE**. 
 
-To ensure that rigor, an extensive list of references and resources are made available in each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process that are beyond the scope of this text.
+To ensure that some rigor is retained, an extensive list of references and resources are made available in each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process that are beyond the scope of this text.
 
 
 

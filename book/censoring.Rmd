@@ -38,3 +38,4 @@ Thus
 There are three main modes of censoring, Type I, Type II and random censoring. 
 
 In reliability studies Type I and Type II censoring is common. However, as we are attempting 
+	
