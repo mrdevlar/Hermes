@@ -1,5 +1,19 @@
 # Data Generation
 
+Data is generated using a life table like in classic demographic research. There are several reasons for this approach. First, it introduces time discretization which is a consideration in any real data set. This is in contrast to the model itself, which treats time as a continuous phenomena. 
+
+Second, it allows for the specification of a population that has an arbitrarily defined hazard. This makes the output substantially more realistic than generating the data from a known parametric distribution (such as a Weibull or Lognormal). 
+
+Third, it allows for the introduction of deviations
+
+Finally, as the data is 
+
+Inverse transform sampling of the cdf of the life table is used to generate values. 
+
+
+
+[Inverse Transform Sampling](https://en.wikipedia.org/wiki/Inverse_transform_sampling)
+ - This is the exact method that is being used
 
 [Demography 213 Fall 2015](http://courses.demog.berkeley.edu/mason213F15/)
  - Contains data generation for PH model from life tables.
