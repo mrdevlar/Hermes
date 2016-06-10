@@ -12,6 +12,7 @@
 
 
 
+Proportional Hazards models seek to find a shift in the hazard rate for an individual at every age of *t*. 
 
 
 - Distribution Choice
@@ -28,3 +29,9 @@
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing
 	- Continuous monitoring (economically impractical)
+
+# Notes
+
+ - "Whereas OLS produces a predicted dependent variable (fitted value) for each individual; Cox regression produces a *probability distribution for the duration of each individual's waiting time*" 
+ - "Whereas in OLS a change in the estimated parameter's value implies a linear change in every individual's fitted value; in Cox regression a change in an estimated parameter implies *a proportional shift in each individual's hazard rate* **at all ages**"
+	- [Cite](http://courses.demog.berkeley.edu/mason213F15/)
