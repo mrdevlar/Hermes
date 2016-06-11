@@ -1,25 +1,35 @@
 # Predictive Maintenance
-```
-2. Predictive Maintenance
-	- What is? Details.
-```
 
-Predictive maintenance has long been a goal in reliability analysis. As its name suggests, predictive maintenance refers to a set of processes designed to determine the condition of operational equipment in order to determine when maintenance should be performed. 
+
+<!-- 
+# Predictive Maintenance
+	- What is? Details.
 
 Central motivation:
 - maintenance tasks are costly
-- repair and replacement leads to downtime and decreased output
+- repair and replacement leads to downtime and decreased output 
 
+-->
+
+
+<!-- Introduce and define Maintenance  -->
+Predictive maintenance has long been a goal in reliability analysis. As its name suggests, predictive maintenance refers to a set of processes designed to determine the condition of operational equipment in order to determine when maintenance should be performed. <!-- CITEHERE --> In other words, it is a set of tools to predict when an industrial device may require support to keep it operational. 
+
+Underlying this definition is the practicality that maintenance is a substantial business expense for many organizations. The knowledge of how to correctly allocate maintenance resources ensures optimal operation as well as reducing costs and downtime. 
+
+
+
+
+<!-- 
 Contextualize predictive maintenance in the framework of general maintenance strategies.
 - Subset of preventative maintenance
 - Versus corrective maintenance and replacement
+ -->
+
+Predictive maintenance is a sub process in the broader field. 
 
 
-The central motivation being that these tasks incur costs and thus should only 
-The idea being that maintenance as a task incurs costs, and such processes can be used to only perform the task when it is required. 
-
-
-
+<!-- 
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing
 	- Continuous monitoring (economically impractical)
@@ -30,3 +40,17 @@ The idea being that maintenance as a task incurs costs, and such processes can b
 	- Use of competing risk models when multiple failure methods occur.
 	- Fit one model per failure mode
 		- May ignore the dependency among failure modes
+-->
+
+
+
+
+
+
+
+The central motivation being that these tasks incur costs and thus should only 
+The idea being that maintenance as a task incurs costs, and such processes can be used to only perform the task when it is required. 
+
+
+
+
