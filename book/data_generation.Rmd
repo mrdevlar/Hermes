@@ -1,8 +1,10 @@
 # Data Generation
 
-Data is generated using inverse transform sampling using an empirical CDF. The data merges together 
+Data is generated using inverse transform sampling using an empirical distribution function. That distribution is generated using input from two real-world data sets from photovoltaic companies. 
 
-Data is generated using a life table like in classic demographic research. There are several reasons for this approach. First, it introduces time discretization which is a consideration in any real data set. This is in contrast to the model itself, which treats time as a continuous phenomena. 
+Data is generated using a life table like those found in classic demographic research. 
+
+There are several reasons for this approach. First, it introduces time discretization which is a consideration in any real data set. This is in contrast to the model itself, which treats time as a continuous phenomena. 
 
 Second, it allows for the specification of a population that has an arbitrarily defined hazard. This makes the output substantially more realistic than generating the data from a known parametric distribution (such as a Weibull or Lognormal). 
 

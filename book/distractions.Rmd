@@ -265,3 +265,9 @@ In Preferences -> Key Bindings - User
 ```
 { "keys": ["ctrl+k", "ctrl+i"], "command": "title_case" },
 ```
+
+# [Sublime Text Wordcount](https://github.com/titoBouzout/WordCount)
+Tags = [sublime]
+
+CTRL+SHIFT+P -> Install -> WordCount
+

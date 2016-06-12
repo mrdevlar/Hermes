@@ -25,10 +25,11 @@ Proportional Hazards models seek to find a shift in the hazard rate for an indiv
   - Traditional regression methods would presume a shared fixed effect for the shape or scale of the distribution.
 
 
-
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing
 	- Continuous monitoring (economically impractical)
+
+- The type of estimation done on the baseline hazard has implications for future forecasting. Non-parametric models lack the ability to forecast future failure rates beyond the last failure time.
 
 # Notes
 

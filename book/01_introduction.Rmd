@@ -1,19 +1,20 @@
 # Introduction
-```
-0. Acknowledgements
+
+<!-- 
+0. Acknowledgments
 0.5 Intended Audience
 1. Introduction
 	- General Summary of entire thesis
-```
 
+ -->
 
-# Acknowledgements
+# Acknowledgments
 
 No man is an island.
 
 While a single name appears on the cover of this document, it should not be implied that anything was, or could be done alone. Everyone is the product of their environments and I've had the esteemed privilege to be assisted and inspired by many wonderful people. 
 
-So my great appreciation to Ewa Podkolinska, Jerzy Podkolinski, Alina Kroeker, Raymond Kroeker, Tom Ruette, Wannes Meert, Mathias Verbeke, Gregory Schiano, Jan Aerts, Gerda Glaskens, Luc De Raedt, Roel Braekers, Geert Verbeke, Eric Schmitt, Rui Barbosa, Stijn Van Weezel, Akshat Dwivedi, Irzam Hardiansyah, Zhu Meng, Sytze Elzinga, Justin Fischedick and lastly and most importantly Rianne Hartemink.
+So my great appreciation to Ewa Podkolinska, Jerzy Podkolinski, Alina Kroeker, Raymond Kroeker, Tom Ruette, Wannes Meert, Mathias Verbeke, Gregory Schiano, Jan Aerts, Gerda Glaskens, Luc De Raedt, Roel Braekers, Geert Verbeke, Eric Schmitt, Rui Barbosa, Stijn Van Weezel, Akshat Dwivedi, Irzam Hardiansyah, Zhu Meng, Sytze Elzinga, Justin Fischedick and most importantly Rianne Hartemink.
 
 Thank you, all of you. May you enjoy reading this as much as I enjoyed writing it.
 
@@ -23,19 +24,17 @@ Thank you, all of you. May you enjoy reading this as much as I enjoyed writing i
 
 # Intended Audience
 
-In the author's view, good academic literature is of the type takes a complex topic and makes it accessible to a broader audience. The intended audience of this thesis is not an expert in statistics, rather a general practitioner in the area of predictive maintenance or reliability analysis. Therefore, there is an emphasis on the building of intuition and understanding of the underlying models likely at the expense of rigor and formality. 
+Good academic literature is the kind that is capable of taking a complex topic and makes it accessible to a broader audience. In an effort to adhere to that standard, the intended audience of this thesis is not a pure mathematician, rather a general practitioner in the area of predictive maintenance or reliability analysis. Emphasized is the development of understanding and intuition for the underlying models and how to handle edge cases. 
 
-Yet, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of of the calculus of probability at the level of Blitzstein and Huang **REFHERE** as well as a first course on Bayesian linear models at the level of McElreath **REFHERE**. 
+However, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang <!-- **REFHERE** --> as well as a first course on Bayesian linear models at the level of McElreath <!-- **REFHERE** -->. 
 
-To ensure that some rigor is retained, an extensive list of references and resources are made available in each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process that are beyond the scope of this text.
-
-
+To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text.
 
 
 
 
 
-
+<!-- 
 
 ## Introduction Notes 
  - You hate writing introductions, but you still have to, and it still has to catch the attention of your audience and communicate clearly the priorities of the thesis. It doesn't have to be as thick as you think it does though. 
@@ -43,23 +42,54 @@ To ensure that some rigor is retained, an extensive list of references and resou
  - There is no need to justify any of the choices, do that within the text.
  - Event-history analysis vs signal processing
 
+Stick in structure of remaining text
+
+ -->
+
+## Introduction
+
+Maintenance is not sexy, but it is essential. It is the immune system of the modern industrialized world. Without it, the myriad of systems we depend on for safeguarding our collectively quality of life would rapidly deteriorate and disappear. Yet, few sing the praises of the multitude of technicians and engineers which are responsible for ensuring trains run on time, computer systems remain accessible or that bridges do not suddenly collapse. Paradoxically, this lack of visibility is a testament to the uninterrupted success of maintenance activities. 
 
 
-## Introduction Scraps
+The last several decades have brought with them rapid innovation in the area of maintenance. What has historically been a manual and labor-intensive activity is increasingly becoming a scientific process, one that leverages technology to optimize operations. Modernization has meant going beyond traditional methods of maintenance based on reactions to failure or scheduled inspection and moving towards those that utilize data and predict failure. Such a trend can have a widespread impact on operational expenses. Reactive methods generally incur greater costs due to downtime and a need for more expensive replacement parts. Scheduled inspections share similar pitfalls, requiring downtime, specialized machinery and also running the risk of inadvertent damage. Predictive maintenance minimizes many of these drawbacks. Judgments about the state of a device are made as a result of continuous monitoring of actual operating conditions.<!-- Mobley p.3 --> This reduces downtime and allows for a better allocation of maintenance resources. Most importantly, predictive maintenance enables faults to become apparent *before* failure allowing for contingencies, such as repair or replacement, to ensure constant output.
 
 
-The predominant preoccupation in the preventative maintenance field is in dealing with high dimensional data that is increasingly being captured by an ever greater number of sensors built into industrial equipment. 
+The transition toward predictive maintenance owes much to the continued development of sensor technology. More reliable, accurate, and most importantly, inexpensive sensors have enabled continuous monitoring in a wider range of domains. Many modern devices come with built-in sensors that record output or other context-specific data that can be used to assess health. Increasingly, many also include connectivity that allows telemetry to be retrieved remotely on demand. This reality is likely what has spurred widespread innovation in the field, with more than half of the publications on predictive maintenance emerging within the last decade. <!-- Limo Search = 703 / 989 | Google Scholar = 3300 / 5450 --> Unfortunately, this data gluttony has also led to a sort of tunnel vision within the field, with the majority of this work dedicated to enabling predictive maintenance exclusively in this rich context. As a result, authors are predominantly preoccupied with domains where data is high dimensional, time-dependent, with fine granularity and encoded without error. 
+
+
+While the future may make these ideal circumstances ubiquitous, there is still a wide set of domains where this is not a reality. Sensors may have become increasingly cheap and plentiful but they can still be expensive in absolute terms. The majority of the sensors included in new products are meant to extend functionality and the continuous monitoring they enable is an fortunate, but inadvertent, consequence. Yet, for many devices the inclusion of additional sensors means an increase in manufacturing costs, which can be prohibitive for production. No product developer of sound mind would argue for the inclusion of a sensors in a t-shirt to prevent stitching failure. The sensors would vastly increase the final cost of the original product. Yet, this kind of cost-benefit dilemma is found throughout numerous domains where the manufacturing cost is lower than the cost of output or environmental sensors. In these domains, data is rarely high dimensional, time-dependent, fine and without error. Yet, we may still wish to use the available data to enable predictive maintenance.
+
+
+
+This thesis attempts to fill this space by addressing the forgotten children of the big data revolution.
+
+
+In the extreme case, this is enables the 'Internet of Things' which seeks to network all devices that generate data.
+
+
+
 
 While the methods demonstrated in this thesis are applicable in those circumstances, we acknowledge instead a less examined but equally plentiful context in which to perform maintenance. That of information scarcity.
 
-While sensors are increasingly cheap and plentiful, they are still expensive in absolute terms. No product developer of sound mind would argue for the inclusion of a sensors in a t-shirt to prevent stitching failure. The sensors would vastly increase the production cost of the original product. Yet, this kind of scenario is found throughout industry. We want to infer the reliability and predict the failure of objects that do not have extensive sensor information associated with them.
 
-Maintenance is not sexy, but it is essential. 
-Yet ire is 
 
-Maintenance is the backbone of the modern industrialized world. It's not sexy, but it is essential. Few sing the praises of the multitude of technicians which are responsible for ensuring trains run on time, computer systems remain online or that bridges are structurally sound. 
+While it is likely that the price of sensors will continue to decline, 
 
+
+
+
+
+
+
+
+This thesis is an effort to improve the quality and ease of these maintenance tasks by demonstrating 
 The purpose of this thesis is to making the lives of technicians a bit easier by describing and analyzing methods of performing predictive maintenance in areas with limited data. 
+
+
+To facilitate this, an interesting domain and and industrial device are selected. Specifically, the solar industry with its heavy reliance on dwindling government subsidies and firm requirement to reduce costs 
+
+
+
 
 As data is a limited resource in these examples, what data is captured and how it is stored and utilized becomes a primary element in the success of preventative maintenance in these context. 
 

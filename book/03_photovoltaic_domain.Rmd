@@ -1,9 +1,9 @@
 # Photovoltaic Domain
-```
+
+<!-- 
 3. Domain Knowledge - Photovoltaic Inverter
 	- Low information, limited economic resources
 	- High reliability problem
-```
 
 - Describe the state of the industry as still subsidy-fueled, and why predictive maintenance is needed. 
 - Describe a basic photovoltaic system
@@ -20,3 +20,4 @@
 	- Qty of Lab Tests
 - Failure Mode for Photovoltaic Inverter
 	- [Reliability the weak link in the solar industry](http://www.interpv.net/tech/tech_view.asp?idx=49&part_code=030190059&page=2)
+ -->

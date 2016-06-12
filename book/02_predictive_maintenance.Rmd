@@ -8,7 +8,6 @@
 Central motivation:
 - maintenance tasks are costly
 - repair and replacement leads to downtime and decreased output 
-
 -->
 
 
@@ -27,6 +26,9 @@ Contextualize predictive maintenance in the framework of general maintenance str
  -->
 
 Predictive maintenance is a sub process in the broader field. 
+Run-to-failure management
+
+
 
 
 <!-- 
@@ -42,15 +44,31 @@ Predictive maintenance is a sub process in the broader field.
 		- May ignore the dependency among failure modes
 -->
 
+Reactive > Scheduled > Predictive
 
+ - Reactivity: Don't fix it until it's broke
+ - Scheduling: Check if it is about to break periodically
+ - Predictive: Continuous monitoring to estimate failure time
 
-
+Maintenance has historically been a labor intensive activity. The task can be roughly broken down in the following steps: Stop the machine, inspect the machine with any number of tools
 
 
 
 The central motivation being that these tasks incur costs and thus should only 
 The idea being that maintenance as a task incurs costs, and such processes can be used to only perform the task when it is required. 
 
+It has historically been a manual and labor intensive activity. Assuming maintenance is even done at all, it has long-since been subject to the same general pattern. 
 
 
+## Mobley 2002 - Introduction to Preventative Maintenance Quotes and Notes:
 
+"Analysis of maintenance costs has shown that repairs made in a reactive (i.e., after failure) mode are normally three times greater than the same repairs made on a scheduled basis." - Mobley, p.4
+
+
+"The common premise of predictive maintenance is that regular monitoring of the actual mechanical condition, operating efficiency, and other indicators of the operating condition of machine-trains and process systems will provide the data required to ensure the maximum interval between repairs and minimize the number and cost of unscheduled outages created by machine-train failures" p.4
+
+"It is the means of improving productivity, product quality, and overall effectiveness of manufacturing and production plants." p.5
+
+"Condition Monitoring. Statistics and probability theory are the basis for condition- monitoring maintenance. Trend detection through data analysis often rewards the analyst with insight into the causes of failure and preventive actions that will help avoid future failures. For example, stadium lights burn out within a narrow period. If 10 percent of the lights have burned out, it may be accurately assumed that the rest will fail soon and should, most effectively, be replaced as a group rather than individually." p.47
+
+"Scheduled. Scheduled, fixed-interval preventive maintenance tasks should generally be used only if failures that cannot be detected in advance can be reduced, or if dictated by production requirements. The distinction should be drawn between fixed-interval maintenance and fixed-interval inspection that may detect a threshold condition and initiate condition-monitoring tasks. Examples of fixed-interval tasks include 3,000-mile oil changes and 48,000-mile spark plug changes on a car, whether it needs the changes or not. This may be wasteful because all equipment and their operating environments are not alike. What is right for one situation may not be right for another." p.47

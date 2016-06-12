@@ -1,9 +1,14 @@
 # Structure
-```
-@TODO: Do not include in main text, for planning purposes only.
-```
+
+## Even more general structure
+
+1. Introduction
+2. Domain
+3. Methods
+4. Analysis
 
 ## General Structure
+
 1. Introduction
 	- General Summary of entire thesis
 2. Predictive Maintenance
