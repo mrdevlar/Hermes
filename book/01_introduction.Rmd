@@ -62,6 +62,12 @@ While the future may make these ideal circumstances ubiquitous, there is still a
 
 This thesis addresses the development of predict maintenance in informationally sparse systems. 
 
+This thesis seeks to illustrate and develop the processes required to establish a predictive maintenance system.
+
+Geographers of chance.
+
+This thesis presents the procedures rquired for the development of a predictive maintenance system. 
+
 It does so from the perspective of time-to-event analysis
 
 This thesis attempts to address the viability of predictive maintenance within 
