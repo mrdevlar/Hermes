@@ -48,56 +48,28 @@ Stick in structure of remaining text
 
 ## Introduction
 
-Maintenance is not sexy, but it is essential. It is the immune system of the modern industrialized world. Without it, the myriad of systems we depend on for safeguarding our collectively quality of life would rapidly deteriorate and disappear. Yet, few sing the praises of the multitude of technicians and engineers which are responsible for ensuring trains run on time, computer systems remain accessible or that bridges do not suddenly collapse. Paradoxically, this lack of visibility is a testament to the uninterrupted success of maintenance activities. 
+Maintenance is not sexy, but it is essential. It is the immune system of the modern industrialized world. Without it, the myriad of systems we depend on for safeguarding our collectively quality of life would rapidly deteriorate and disappear. Yet, few sing the praises of the multitude of technicians and engineers which are responsible for ensuring trains run on time, computer systems remain accessible or that bridges do not suddenly collapse. Paradoxically, this lack of visibility is a testament to the uninterrupted success of these activities. 
 
 
-The previous several decades have brought with them rapid innovation in the area of maintenance. What has historically been a manual and labor-intensive activity is increasingly becoming a scientific process, one that leverages technology to optimize operations. Modernization has meant going beyond traditional methods of maintenance based on reactions to failure or scheduled inspection and moving towards those that utilize data and predict failure. Such a trend can have a widespread impact on operational expenses. Reactive methods generally incur greater costs due to downtime and a need for more expensive replacement parts. Scheduled inspections share similar pitfalls, requiring downtime, specialized machinery and also running the risk of inadvertent damage. Predictive maintenance minimizes many of these drawbacks. Judgments about the state of a device are made as a result of continuous monitoring of actual operating conditions.<!-- Mobley p.3 --> This reduces downtime and allows for a better allocation of maintenance resources. Most importantly, predictive maintenance enables faults to become apparent *before* failure allowing for contingencies, such as repair or replacement, to ensure constant output.
+The preceding decades have brought with them rapid innovation in the area of maintenance. What has historically been a manual and labor-intensive activity is increasingly becoming a scientific process, one that leverages technology to optimize operations. Modernization has meant going beyond traditional methods of maintenance based on reactions to failure or scheduled inspection and moving towards those that utilize data and predict failure. Such a trend can have a widespread impact on operational expenses. Reactive methods generally incur greater costs due to downtime and a need for more expensive replacement parts. Scheduled inspections share similar pitfalls, requiring downtime, specialized machinery and also running the risk of inadvertent damage to the objects they seek to maintain. Predictive maintenance minimizes many of these drawbacks. Judgments about the state of a device are made as a result of continuous monitoring of actual operating conditions.<!-- Mobley p.3 --> This reduces downtime and allows for a better allocation of maintenance resources. Most importantly, predictive maintenance enables faults to become apparent *before* failure allowing for contingencies, such as repair or replacement, to ensure constant output.
 
 
-The transition toward predictive maintenance owes much to the continued development of sensor technology. More reliable, accurate, and most importantly, inexpensive sensors have enabled continuous monitoring in a wider range of domains. Many modern devices come with built-in sensors that record output or other context-specific data that can be used to assess health. Increasingly, many also include connectivity that allows telemetry to be retrieved remotely on demand. This reality is likely what has spurred widespread innovation in the field, with more than half of the publications on predictive maintenance emerging within the last decade. <!-- Limo Search = 703 / 989 | Google Scholar = 3300 / 5450 --> Unfortunately, this data gluttony has also led to a sort of tunnel vision, with the majority of this work dedicated to enabling predictive maintenance exclusively in this rich contexts. As a result, authors are predominantly preoccupied with domains where data is high dimensional, time-dependent, with fine granularity and encoded without error. 
+The transition toward predictive maintenance owes much to the continued development of sensor technology. More reliable, accurate, and most importantly, inexpensive sensors have enabled continuous monitoring in a wider range of domains. Many modern devices come with built-in sensors that record output or other context-specific data that can be used to assess health. Increasingly, many also include connectivity that allows telemetry to be retrieved remotely on demand. This reality is likely what has spurred widespread innovation in the field, with more than half of the publications on predictive maintenance emerging within the last decade. <!-- Limo Search = 703 / 989 | Google Scholar = 3300 / 5450 --> Unfortunately, this data gluttony has also led to a form of tunnel vision, with the majority of this work dedicated to enabling predictive maintenance exclusively in informationally rich contexts. As a result, authors are predominantly preoccupied with domains where data is high dimensional, time-dependent, with fine granularity and encoded without error. 
 
 
 While the future may make these ideal circumstances ubiquitous, there is still a wide set of domains where this is not a reality. Sensors may have become increasingly cheap and plentiful but they can still be expensive in absolute terms. The majority of the sensors included in new products are meant to extend functionality and the continuous monitoring they enable is an fortunate but inadvertent consequence. Yet, for many devices the inclusion of additional sensors means an increase in manufacturing costs, which is often prohibitive. No product developer of sound mind would argue for the inclusion of a sensors in a t-shirt to prevent stitching failure. The sensors would vastly increase the final cost of the original product. However, this kind of cost-benefit dilemma is found throughout numerous domains where the sensor costs are higher than the manufacturing cost of the product. In these domains, data is rarely high dimensional, time-dependent, fine and encoded without error. Despite these limitations, there is still a need for predictive maintenance. 
 
 
-This thesis addresses the development of predict maintenance in informationally sparse systems. 
+This thesis hopes to fill a void in the current literature regarding how predictive maintenance can be enabled when there is limited access to operational data. Thus, it addresses the development of a predictive maintenance system in informationally sparse domains.  
 
-This thesis seeks to illustrate and develop the processes required to establish a predictive maintenance system.
+To ground this development, an interesting domain and an industrial device are selected to provide context. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study. 
 
-Geographers of chance.
+The applied methodology is based on time-to-event analysis, a statistical modeling approach which can be used to derive predictions about the remaining lifetime of objects. 
 
-This thesis presents the procedures rquired for the development of a predictive maintenance system. 
-
+In doing so, it hopes to fill a void in the current literature regarding how predictive maintenance can be enabled when there is limited access to operational data. 
 It does so from the perspective of time-to-event analysis
 
-This thesis attempts to address the viability of predictive maintenance within 
-
-
-This thesis attempts to fill this space by addressing the forgotten children of the big data revolution.
-
-
-In the extreme case, this is enables the 'Internet of Things' which seeks to network all devices that generate data.
-
-
-
-
 While the methods demonstrated in this thesis are applicable in those circumstances, we acknowledge instead a less examined but equally plentiful context in which to perform maintenance. That of information scarcity.
-
-
-
-
-
-
-
-
-
-
-
-This thesis is an effort to improve the quality and ease of these maintenance tasks by demonstrating 
-The purpose of this thesis is to making the lives of technicians a bit easier by describing and analyzing methods of performing predictive maintenance in areas with limited data. 
-
-
-To facilitate this, an interesting domain and and industrial device are selected. Specifically, the solar industry with its heavy reliance on dwindling government subsidies and firm requirement to reduce costs 
 
 
 
@@ -105,9 +77,10 @@ To facilitate this, an interesting domain and and industrial device are selected
 As data is a limited resource in these examples, what data is captured and how it is stored and utilized becomes a primary element in the success of preventative maintenance in these context. 
 
 
-
 Reliability analysis, in some form or other, has been a foundational part of the practice of statstics for almost as long as the field has existed. 
 
 
-
+2. Domain
+3. Methods
+4. Analysis
 
