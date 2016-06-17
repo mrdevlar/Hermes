@@ -59,10 +59,14 @@ The transition toward predictive maintenance owes much to the continued developm
 
 While the future may make these ideal circumstances ubiquitous, there is still a wide set of domains where this is not a reality. Sensors may have become increasingly cheap and plentiful but they can still be expensive in absolute terms. The majority of the sensors included in new products are meant to extend functionality and the continuous monitoring they enable is an fortunate but inadvertent consequence. Yet, for many devices the inclusion of additional sensors means an increase in manufacturing costs, which is often prohibitive. No product developer of sound mind would argue for the inclusion of a sensors in a t-shirt to prevent stitching failure. The sensors would vastly increase the final cost of the original product. However, this kind of cost-benefit dilemma is found throughout numerous domains where the sensor costs are higher than the manufacturing cost of the product. In these domains, data is rarely high dimensional, time-dependent, fine and encoded without error. Despite these limitations, there is still a need for predictive maintenance. 
 
+<!-- Make this explicit, you want the reader to know what to expect from the next chapters in the text. -->
 
-This thesis hopes to fill a void in the current literature regarding how predictive maintenance can be enabled when there is limited access to operational data. Thus, it addresses the development of a predictive maintenance system in informationally sparse domains.  
+This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing it will hope to fill the void in the current literature on predictive maintenance in areas of limited access to operational data. 
 
-To ground this development, an interesting domain and an industrial device are selected to provide context. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study. 
+<!-- This thesis hopes to fill a void in the current literature regarding how predictive maintenance can be enabled when there is limited access to operational data. Thus, it addresses the development of a predictive maintenance system in informationally sparse domains.   -->
+
+<!-- To ground this development, an interesting domain and an industrial device are selected to provide context. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study.  -->
+
 
 The applied methodology is based on time-to-event analysis, a statistical modeling approach which can be used to derive predictions about the remaining lifetime of objects. 
 
@@ -83,4 +87,5 @@ Reliability analysis, in some form or other, has been a foundational part of the
 2. Domain
 3. Methods
 4. Analysis
+
 
