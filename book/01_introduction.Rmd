@@ -61,11 +61,14 @@ While the future may make these ideal circumstances ubiquitous, there is still a
 
 <!-- Make this explicit, you want the reader to know what to expect from the next chapters in the text. -->
 
-This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing it will hope to fill the void in the current literature on predictive maintenance in areas of limited access to operational data. 
+This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing, it will attempt to fill the void in the current literature on predictive maintenance in domains where limited access to operational data is the norm. It will attack the problem from the perspective of time-to-event analysis, a statistical modeling approach which is used to estimate the remaining lifetime of an object.
 
-<!-- This thesis hopes to fill a void in the current literature regarding how predictive maintenance can be enabled when there is limited access to operational data. Thus, it addresses the development of a predictive maintenance system in informationally sparse domains.   -->
+The following chapters cover development of this strategy. 
 
-<!-- To ground this development, an interesting domain and an industrial device are selected to provide context. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study.  -->
+The first chapter covers an example domain meant to provide context for the further analysis. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study. 
+
+The second chapter covers the methodology, providing the statistical foundation to understand time-to-event analysis. This chapter will 
+
 
 
 The applied methodology is based on time-to-event analysis, a statistical modeling approach which can be used to derive predictions about the remaining lifetime of objects. 
