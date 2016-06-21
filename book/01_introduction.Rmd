@@ -61,34 +61,14 @@ While the future may make these ideal circumstances ubiquitous, there is still a
 
 <!-- Make this explicit, you want the reader to know what to expect from the next chapters in the text. -->
 
-This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing, it will attempt to fill the void in the current literature on predictive maintenance in domains where limited access to operational data is the norm. It will attack the problem from the perspective of time-to-event analysis, a statistical modeling approach which is used to estimate the remaining lifetime of an object.
+This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing, it will attempt to fill the void in the current literature on predictive maintenance in domains where limited access to operational data is the norm. It will attack the problem from the perspective of Bayesian time-to-event analysis, a statistical modeling approach which is used to estimate the remaining lifetime of an object.
 
-The following chapters cover development of this strategy. 
-
-The first chapter covers an example domain meant to provide context for the further analysis. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study. 
-
-The second chapter covers the methodology, providing the statistical foundation to understand time-to-event analysis. This chapter will 
+The following chapters encompass the development of this strategy. The first chapter examines an example domain meant to provide context for the further analysis. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study. The second chapter considers methodology, providing the probabilistic and statistical foundations required to understand Bayesian time-to-event analysis. These foundations are then used to introduce more complex models centered around the Accelerated Failure Time model with shared Frailties. Finally, it ends on estimation procedures for these models using Hamiltonian Monte Carlo in the probabilistic programming language Stan. The third chapter covers the analytical process using simulated photovoltaic inverter data. It makes use of a series of data scenarios which represent states of informational sparsity. In so doing, it illuminates the various considerations that have to be taken into account when working with limited operational data using the previously developed statistical models. Finally, we conclude with a general summary of the material. 
 
 
-
-The applied methodology is based on time-to-event analysis, a statistical modeling approach which can be used to derive predictions about the remaining lifetime of objects. 
-
-In doing so, it hopes to fill a void in the current literature regarding how predictive maintenance can be enabled when there is limited access to operational data. 
-It does so from the perspective of time-to-event analysis
-
-While the methods demonstrated in this thesis are applicable in those circumstances, we acknowledge instead a less examined but equally plentiful context in which to perform maintenance. That of information scarcity.
+<!-- Optional, so be clear this might not get done -->
+<!-- The fourth and final chapter deals with extensions that improve the model either because more data is has become available or  -->
 
 
-
-
-As data is a limited resource in these examples, what data is captured and how it is stored and utilized becomes a primary element in the success of preventative maintenance in these context. 
-
-
-Reliability analysis, in some form or other, has been a foundational part of the practice of statstics for almost as long as the field has existed. 
-
-
-2. Domain
-3. Methods
-4. Analysis
 
 

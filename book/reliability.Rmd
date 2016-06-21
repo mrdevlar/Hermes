@@ -81,6 +81,7 @@ The relationships are important yadda yadda.
 ### Left-overs
 
 
+Reliability analysis, in some form or other, has been a foundational part of the practice of statstics for almost as long as the field has existed. 
 
 
 
