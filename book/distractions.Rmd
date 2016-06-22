@@ -271,3 +271,13 @@ Tags = [sublime]
 
 CTRL+SHIFT+P -> Install -> WordCount
 
+# Markdown Link Shortcut
+Tags = [autohotkey]
+
+```
+#k::
+SendInput, {[}
+SendInput, ^{Right}
+SendInput, {(}
+return
+```

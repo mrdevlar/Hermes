@@ -1,7 +1,16 @@
 # Extensions
-```
+
+<!-- 
 6. Extensions (Optional)
 	- Time-Dependent Covariates
 	- Time Varying Effects
 	- Improved Baseline Hazard Estimation (Gaussian / Dirchlet Process)
-```
+ -->
+
+
+## Notes from Readings
+
+[Random Survival Forests](https://arxiv.org/pdf/0811.1645.pdf)
+
+- Random Survival Models provide a different estimation technique for evaluating time-to-event data based upon CART and Poisson tree likelihood. 
+- Use of the C-index as a performance estimator
