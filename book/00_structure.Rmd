@@ -11,11 +11,40 @@
 
 1. Introduction
 	- General Summary of entire thesis
-2. Predictive Maintenance
-	- What is? Details.
-3. Domain Knowledge - Photovoltaic Inverter
-	- Low information, limited economic resources
-	- High reliability problem
+3. Domain
+	- Intro: Energy is important!
+	- Solar Industry 
+		- Industry driven by shrinking subidies for the last decade
+		- Requirement to optimize operations as much as possible given the limited resources at their disposal 
+		- Photovoltaic Inverter:
+			- Low information; limited economic resources; High reliability problem. 
+			- Additional sensors uneconomical
+	- Predictive Maintenance, a critical element in optimizing the industry
+		- What is predictive maintenance, formal definition
+		- Where does it sit in the wider maintenance tasks
+		- What does it offer?
+			- Empowerment of maintenance regimes. Optimized outputs, lower replacement costs. Being able to plan against operational hazards rather than being at their mercy. 
+		- Use cases
+			- Residual lifetime estimation, fault identification
+		- Requirements for a system
+			- Data Requirements: Failure history, maintenance history, usage history, device attributes (context) 
+			- Temporal data vs static data
+			- (maybe) Feature engineering
+	- Photovoltaic Inverter Context
+		- Demonstrate this industry doesn't quite meet the requirements for such a system, good old edge cases.
+		- Smaller quantities of accurate temporal data (except energy output)
+		- Abundance of static data
+		- Exogenous temporal data, (like weather) but not at the same unit of analysis, usually quite noisy.
+	- Data Generation 
+		- Introduce data structure, variables, what they are meant to represent.
+		- Show how the context steers the choice of variables.
+		- Aim to give a realistic (not pessimistic) level of data found at today's photovoltaic plants
+	- Justification of Modeling Choice
+		- Numerous ways to tackle this kind of problem.
+		- Given the context:
+			- Choose to focus on Bayesian time-to-event analysis.
+			- Estimate residual lifetime of an inverter
+			- Foundation: accurately predict the remaining lifetime of the device by explaining as much of the variation within the data as possible.
 4. Methods
 	- Reliability Analysis
 	- Censoring
@@ -23,6 +52,7 @@
 	- Frailty & Hierarchical Model
 	- Estimation (HMC and Gibbs)
 	- Model Selection
+		- Handling unbalanced data
 5. Analysis
 	- The scenarios
 		- Simple homogenous system (same model, same plant)
