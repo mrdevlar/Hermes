@@ -11,10 +11,31 @@
 
 1. Introduction
 	- General Summary of entire thesis
-3. Domain
+2. Domain
 	- Intro: Energy is important!
+		- Severe consequences to fossil fuel dependency
+			- Ecological
+				- Oil spills due to transport
+				- Strip Mining
+				- Air and Groundwater pollution through byproducts of production
+				- Global climate change
+					- Ocean Acidification
+					- Rising Sea Levels
+					- Crop Failure
+			- Socio-economic
+				- Mass migration
+				- Destabilization of regions rich in fossil fuels.
+				- [The carbon bubble](http://www.theguardian.com/news/2015/apr/08/can-world-economy-survive-without-fossil-fuels)
+		- *Segway:* Alternative energy production which is based on renewable resources is the key to reducing these socio-economic and ecological consequences. 
+			- An increasing number of alternatives are being developed. 
+			- Solar, Wind, Tidal, Geothermal, Fusion.
+			- [Along with Wind, Solar appears to be the most likely to become viable alternatives in the next decade.](http://www.iea.org/publications/freepublications/publication/technology-roadmap-solar-photovoltaic-energy---2014-edition.html)
 	- Solar Industry 
-		- Industry driven by shrinking subidies for the last decade
+		- Costs associated with photovoltaic power continue to drop, from [$4 a watt in 2008 to $0.80 in 2014](http://www.forbes.com/sites/paulrodgers/2014/09/30/the-rise-of-solar/)
+		- Yet despite this rosy outlook, much of the success of solar energy production thus far has been driven by a favorable regulatory environment and government subsidies.
+		- The economic viability of photovoltaic projects is still questionable, as is solar companies
+			- Note big bankruptcies. Solandro
+		- Industry driven by shrinking subsidies for the last decade
 		- Requirement to optimize operations as much as possible given the limited resources at their disposal 
 		- Photovoltaic Inverter:
 			- Low information; limited economic resources; High reliability problem. 
@@ -45,7 +66,7 @@
 			- Choose to focus on Bayesian time-to-event analysis.
 			- Estimate residual lifetime of an inverter
 			- Foundation: accurately predict the remaining lifetime of the device by explaining as much of the variation within the data as possible.
-4. Methods
+3. Methods
 	- Reliability Analysis
 	- Censoring
 	- Accelerated Failure Time Model
@@ -53,16 +74,16 @@
 	- Estimation (HMC and Gibbs)
 	- Model Selection
 		- Handling unbalanced data
-5. Analysis
+4. Analysis
 	- The scenarios
 		- Simple homogenous system (same model, same plant)
 		- Stratification by Model and Site
 			- Hierarchical Modeling and Frailty
-6. Extensions (Optional)
+5. Extensions (Optional)
 	- Time-Dependent Covariates
 	- Time Varying Effects
 	- Improved Baseline Hazard Estimation (Gaussian / Dirchlet Process)
-7. Conclusion
+6. Conclusion
 
 
 ### Notes
