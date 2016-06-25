@@ -30,16 +30,25 @@
 			- An increasing number of alternatives are being developed. 
 			- Solar, Wind, Tidal, Geothermal, Fusion.
 			- [Along with Wind, Solar appears to be the most likely to become viable alternatives in the next decade.](http://www.iea.org/publications/freepublications/publication/technology-roadmap-solar-photovoltaic-energy---2014-edition.html)
-	- Solar Industry 
+		- The contribution of solar energy to global energy supplies is not limited by resource availability
+	- Solar Industry
+		- ["The amount of solar radiation intercepted by the earth is more than three orders of magnitude higher than global annual use"](http://www.undp.org/content/dam/aplaws/publication/en/publications/environment-energy/www-ee-library/sustainable-energy/world-energy-assessment-energy-and-the-challenge-of-sustainability/World%20Energy%20Assessment-2000.pdf)
+		- Rather these factors are key:	
+		- The availability of low cost technologies to convert solar to electricity or hydrogen
+		- of effective energy storage technology
+		- high efficiency end use technologies <!-- see above ref 163 -->
+		- Central to these factors in continued technological innovation. 
 		- Costs associated with photovoltaic power continue to drop, from [$4 a watt in 2008 to $0.80 in 2014](http://www.forbes.com/sites/paulrodgers/2014/09/30/the-rise-of-solar/)
-		- Yet despite this rosy outlook, much of the success of solar energy production thus far has been driven by a favorable regulatory environment and government subsidies.
-		- The economic viability of photovoltaic projects is still questionable, as is solar companies
-			- Note big bankruptcies. Solandro
-		- Industry driven by shrinking subsidies for the last decade
-		- Requirement to optimize operations as much as possible given the limited resources at their disposal 
-		- Photovoltaic Inverter:
-			- Low information; limited economic resources; High reliability problem. 
-			- Additional sensors uneconomical
+		- Part of that drop is improvements in technology which are able to capture an increasing amount of photovoltaic radiation.
+		- Yet, much of the success of solar energy production thus far has been driven by a favorable regulatory environment and government subsidies.
+			- Technology improves, but is still below the threshold of self-reliance
+		- The economic viability of photovoltaic projects is still questionable, as solar companies do go bankrupt. 
+			- Note big bankruptcies. Solandro <!-- Find that slashdot story about the large photovoltaic power company going bankrupt -->
+		- There are other ways to optimize yields and boost the profitability of solar companies than improvements underlying technology.
+		- Reliability is a big challenge in the photovoltaic area. 
+			- Insert metrics about failure
+		- Predictive maintenance is one solution to the reliability problem.
+		
 	- Predictive Maintenance, a critical element in optimizing the industry
 		- What is predictive maintenance, formal definition
 		- Where does it sit in the wider maintenance tasks
@@ -86,7 +95,5 @@
 6. Conclusion
 
 
-### Notes
-For additional structure ideas
-[PREDICTION OF REMAINING LIFE OF POWER TRANSFORMERS BASED ON LEFT RUNCATED AND RIGHT CENSORED LIFETIME DATA](http://arxiv.org/pdf/0908.2901.pdf)
+
 
