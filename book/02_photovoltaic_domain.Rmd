@@ -41,9 +41,29 @@ This chapter **yadda yadda ...**
 
 Altering the global energy mix is essential to the future evolution of our civilization and possibly our survival as a species. Currently, the global energy mix is dominated by fossil fuels. Approximately, 82% of global energy consumption remains the product of coal, natural gas and petroleum\cite{EIAOutlook2016}. A century of heavy reliance on these non-renewable fossil fuels as the central source of energy has had severe ecological and socio-economic consequences. Locally, there have been countless instances of environmental damage, such as oil spills\cite{OilSpills2015}, air\cite{Tatlow2016} and groundwater\cite{Schlanger2014} contamination. Additionally, regions rich in fossil fuels are destabilized as wealthy nations seek to guarantee future supply\cite{Solnit2015}. Globally, the prospect of catastrophic climate change looms large, with implications including rising sea levels\cite{Davenport2015}, ocean acidification\cite{Feely2008}, crop failure\cite{Parry2004} and the economic devastation of a bursting carbon bubble\cite{Carrington2013}. 
 
-Despite these persistent consequences, a reduction in consumption is highly unlikely. Global energy demand is projected to increase rapidly in the coming decades. As of  2012, global demand was estimated at $5.8\cdot 10^{20}$ Joules and is expected to rise by 48% to $8.6\cdot 10^{20}$ by 2040\cite{EIAOutlook2016}. The majority of this increase is the product of higher demand for electricity, which will increase by 70% before 2040. The majority of this new demand, roughly 87%, is expected to come from countries in the developing world\cite{OECD2015}. Due to their economic conditions, these countries will undoubtedly utilize whichever energy source is cheapest, regardless of the consequences. <!-- something something consequences better segway needed -->
+Despite these persistent consequences, a reduction in consumption is highly unlikely. Global energy demand is projected to increase rapidly in the coming decades. As of  2012, global demand was estimated at $5.8\cdot 10^{20}$ Joules and is expected to rise by 48% to $8.6\cdot 10^{20}$ by 2040\cite{EIAOutlook2016}. The majority of this increase is the product of higher demand for electricity, which will increase by 70% before 2040. The majority of this new demand, roughly 87%, is expected to come from countries in the developing world\cite{OECD2015}. Due to their economic conditions, these countries will undoubtedly utilize whichever energy source is cheapest, regardless of the consequences. 
 
 In this context, alternative energy production, sourced from renewable resources, is required to evade a future of socio-economic instability and ecological collapse. Fortunately, an increasing number of alternatives are being developed with the support of governments. Solar, wind, tidal, geothermal and fusion have all seen major investments over the past decade. In 2015 alone, renewable power capacity received twice the investment compared to new projects based on fossil fuels\cite{FrankfurtSchool2016}. Of these projects, wind and solar appear the most likely to become viable alternatives within the next decade\cite{OECD2014}. 
+
+The contribution of solar energy is particularly attractive as its supplies are not limited by resource availability. At least for the next five billion years, solar energy is expected to reach the earth without interruption. Furthermore, the amount of solar radiation intercepted by the earth is several orders of magnitude higher than global energy consumption\cite{Goldemberg2000}. Given such potential, it is not surprising that the rate of installations of solar systems has increased exponentially in the past decade\cite{EPIA2014}. 
+
+The central drivers of this growth have been continued technological development and innovative government policy. In terms of technological development, three major factors contribute to growth. First, improved efficiency of end-use technologies continues. This ensures that electrical output is utilized optimally by the time it reach consumers\cite{Wilson2012}. Second, is the reduction in cost and enhancement of energy storage technologies\cite{IRENA2015}. This ability is particularly important for the solar energy industry as production fluctuates based upon the availability of sunlight. Finally and most importantly, access to low-cost technologies that convert solar energy into electricity is essential.
+
+It is in this area of cost reduction that statistical modeling and predictive maintenance can play a role. 
+- 
+
+
+For utility-scale systems, hardware costs still make up the majority of the cost per watt \cite{Chung2015}. 
+
+This has increased the availability of low-cost technologies to convert solar into electricity, 
+
+Drivers of this growth have been continued technological innovation that reduce cost for the conversion of solar energy into electricity
+
+This makes it an incredibly attractive resource
+
+but it is one that depends far more on innovation, both technologically and in policy to 
+
+Still solar faces a series of large challenges
 
 The viability of these alternatives is large part due to 
 
@@ -53,7 +73,6 @@ Yet, the size and breadth of conventional generation capacity makes it difficult
 
 These investments allow for these projects to increasingly compete with fossil fuels. 
 
-Along with wind, solar appears to be the most likely to become an economically viable alternative to fossil fuels in the next decade. 
 
 The size and breadth of conventional capacity makes it difficult to displace existing generation methods. 
 
@@ -64,3 +83,10 @@ Fortunately, an increasing number of cleaner alternatives are being developed.
 
 
 
+<!-- 
+The bottleneck for rapid development in the solar energy sector continues to be the current profitability of systems. In sunny countries (and Germany) solar energy is able to rival oil-fueled electricity generation, especially at peak hours. However, in most markets, solar is not yet able to compete with other forms of energy generation without specific policy incentives.\cite[p.19]{OECD2011} These incentives usually come in the form of feed-in tariffs or premiums. Such measures establish long-term contracts guaranteeing the price (usually above market value) of electricity delivered to the grid from solar systems. Such programs are meant to increase investment by offseting the risks of deploying emerging technologies, thus providing stability and continuing sector growth.\cite[p.963]{Couture2010} However, many such programs have been criticized for providing weak stimulus for improving profitability in the solar industry, especially with falling prices of photovoltaics and solar inverters.\cite[p.180]{OECD2011} Such criticisms are likely what fueled the downturn in the European solar market in 2013, as countries decreased their structured support of the sector.\cite[p.25]{EPIA2014}
+
+This has left the sector more subject to market forces and thus reliant on its own ability to optimize efficiency and thus profitability of individual solar systems. There are many innovative methods for cutting costs and improving efficiency of solar systems including: novel material improvements, reduced production costs, better storage systems and the use of solar concentrators. This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
+
+
+ -->
