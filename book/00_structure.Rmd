@@ -25,7 +25,9 @@
 				- [Crop Failure](http://www.dphu.org/uploads/attachements/books/books_2078_0.pdf)
 				- [Ocean acidification](http://science.sciencemag.org/content/320/5882/1490)
 				- [The carbon bubble](http://www.theguardian.com/news/2015/apr/08/can-world-economy-survive-without-fossil-fuels)
-			- 
+		- Continued global demand for the next century
+			- Mainly in electricity
+			- Demand from the developing world
 		- *Segway:* Alternative energy production which is based on renewable resources is the key to reducing these socio-economic and ecological consequences. 
 			- An increasing number of alternatives are being developed. 
 			- Solar, Wind, Tidal, Geothermal, Fusion.
