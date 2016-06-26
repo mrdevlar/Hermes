@@ -47,10 +47,28 @@ In this context, alternative energy production, sourced from renewable resources
 
 The contribution of solar energy is particularly attractive as its supplies are not limited by resource availability. At least for the next five billion years, solar energy is expected to reach the earth without interruption. Furthermore, the amount of solar radiation intercepted by the earth is several orders of magnitude higher than global energy consumption\cite{Goldemberg2000}. Given such potential, it is not surprising that the rate of installations of solar systems has increased exponentially in the past decade\cite{EPIA2014}. 
 
-The central drivers of this growth have been continued technological development and innovative government policy. In terms of technological development, three major factors contribute to growth. First, improved efficiency of end-use technologies continues. This ensures that electrical output is utilized optimally by the time it reach consumers\cite{Wilson2012}. Second, is the reduction in cost and enhancement of energy storage technologies\cite{IRENA2015}. This ability is particularly important for the solar energy industry as production fluctuates based upon the availability of sunlight. Finally and most importantly, access to low-cost technologies that convert solar energy into electricity is essential.
+The central drivers of this growth have been continued technological development and innovative government policy. In terms of technological development, three major factors contribute to growth. First, improved efficiency of end-use technologies continues. This ensures that electrical output is utilized optimally by the time it reach consumers\cite{Wilson2012}. Second, is the reduction in cost and enhancement of energy storage technologies\cite{IRENA2015}. This ability is particularly important for the solar energy industry as production fluctuates based upon the availability of sunlight. Finally, and most importantly, the reduction of costs associated with technologies that convert solar energy into electricity is essential.
+
+In terms of reducing costs and optimizing production, the advances continue. There are regular advancements in novel materials which enable broader capture of solar radiation\cite{Shi2015}. As well as developments that optimize balance of systems, so that  energy produced can be efficiently transfered back to the power grid\cite{Weckx2014}. These technological improvements have led to a substantial decrease in the costs associated with photovoltaic power. The average weighted utility-scale solar photovoltaic installation cost has more than halved in the last five years\cite{IRENA2016}.
+
+Yet, a further cost reductions are needed. The central bottleneck for greater expansion of solar power continues to be its self-sustainability. In most markets, solar is not yet able to compete with other forms of energy generation without innovative government policy incentives\cite{OECD2011}. These usually come in the form of subsidies or feed-in tariffs that provide solar companies with long-term contracts for energy above market value. These are meant to provide stability as well as offset the cost of further technological development\cite{Couture2010}. However, these subsidies are reduced annually by design, as they are only meant to serve as a temporary incentive for cost-saving innovation. 
+
+As the subsidies disappear, the industry is more subject to market forces and more reliant on its own ability to optimize its efficiency. Success is not guaranteed. As is demonstrated by the recent filing for bankruptcy protection by the world's largest solar company, SunEdison\cite{Hals2016}. 
+
+
+
+----
+
+This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
 
 It is in this area of cost reduction that statistical modeling and predictive maintenance can play a role. 
-- 
+
+Still a high potential for cost reduction in the domain.
+
+Further cost reductions are needed.  
+
+Higher competitive pressure, as more actors enter the market and government subsidies are pulled back.
+
 
 
 For utility-scale systems, hardware costs still make up the majority of the cost per watt \cite{Chung2015}. 
@@ -84,7 +102,8 @@ Fortunately, an increasing number of cleaner alternatives are being developed.
 
 
 <!-- 
-The bottleneck for rapid development in the solar energy sector continues to be the current profitability of systems. In sunny countries (and Germany) solar energy is able to rival oil-fueled electricity generation, especially at peak hours. However, in most markets, solar is not yet able to compete with other forms of energy generation without specific policy incentives.\cite[p.19]{OECD2011} These incentives usually come in the form of feed-in tariffs or premiums. Such measures establish long-term contracts guaranteeing the price (usually above market value) of electricity delivered to the grid from solar systems. Such programs are meant to increase investment by offseting the risks of deploying emerging technologies, thus providing stability and continuing sector growth.\cite[p.963]{Couture2010} However, many such programs have been criticized for providing weak stimulus for improving profitability in the solar industry, especially with falling prices of photovoltaics and solar inverters.\cite[p.180]{OECD2011} Such criticisms are likely what fueled the downturn in the European solar market in 2013, as countries decreased their structured support of the sector.\cite[p.25]{EPIA2014}
+
+These incentives usually come in the form of feed-in tariffs or premiums. Such measures establish long-term contracts guaranteeing the price (usually above market value) of electricity delivered to the grid from solar systems. Such programs are meant to increase investment by offseting the risks of deploying emerging technologies, thus providing stability and continuing sector growth.\cite[p.963]{Couture2010} However, many such programs have been criticized for providing weak stimulus for improving profitability in the solar industry, especially with falling prices of photovoltaics and solar inverters.\cite[p.180]{OECD2011} Such criticisms are likely what fueled the downturn in the European solar market in 2013, as countries decreased their structured support of the sector.\cite[p.25]{EPIA2014}
 
 This has left the sector more subject to market forces and thus reliant on its own ability to optimize efficiency and thus profitability of individual solar systems. There are many innovative methods for cutting costs and improving efficiency of solar systems including: novel material improvements, reduced production costs, better storage systems and the use of solar concentrators. This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
 
