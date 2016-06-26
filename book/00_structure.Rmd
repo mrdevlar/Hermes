@@ -12,20 +12,20 @@
 1. Introduction
 	- General Summary of entire thesis
 2. Domain
-	- Intro: Energy is important!
+	- Intro: 
+	- Energy mix is important!
+		- Fed by global demands
 		- Severe consequences to fossil fuel dependency
-			- Ecological
-				- Oil spills due to transport
-				- Strip Mining
-				- Air and Groundwater pollution through byproducts of production
-				- Global climate change
-					- Ocean Acidification
-					- Rising Sea Levels
-					- Crop Failure
-			- Socio-economic
-				- Mass migration
-				- Destabilization of regions rich in fossil fuels.
+			- Local:
+				- air ([Beijing](https://www.theguardian.com/world/2016/feb/22/beijing-raises-red-alert-threshold-for-air-pollution-warning)) and groundwater ([Parker County, Texas](http://europe.newsweek.com/fracking-wells-tainting-drinking-water-texas-and-pennsylvania-study-finds-270735?rm=eu)) pollution
+				- [oil spills](https://en.wikipedia.org/wiki/List_of_oil_spills)
+				- [destabilization of regions rich in fossil fuels](https://www.theguardian.com/commentisfree/2015/dec/08/oil-fuels-war-terrorists-isis-climate-movement-peace-cop-21)
+			- Global:
+				- [Rising Sea Levels](http://www.nytimes.com/interactive/2015/12/02/world/The-Marshall-Islands-Are-Disappearing.html)
+				- [Crop Failure](http://www.dphu.org/uploads/attachements/books/books_2078_0.pdf)
+				- [Ocean acidification](http://science.sciencemag.org/content/320/5882/1490)
 				- [The carbon bubble](http://www.theguardian.com/news/2015/apr/08/can-world-economy-survive-without-fossil-fuels)
+			- 
 		- *Segway:* Alternative energy production which is based on renewable resources is the key to reducing these socio-economic and ecological consequences. 
 			- An increasing number of alternatives are being developed. 
 			- Solar, Wind, Tidal, Geothermal, Fusion.
@@ -38,6 +38,7 @@
 		- of effective energy storage technology
 		- high efficiency end use technologies <!-- see above ref 163 -->
 		- Central to these factors in continued technological innovation. 
+			- [Better energy absorbing technologies that make use of innovative nano-materials continue to evolve.](http://europe.newsweek.com/indoor-solar-cells-made-possible-moth-eye-graphene-breakthrough-430827)
 		- Costs associated with photovoltaic power continue to drop, from [$4 a watt in 2008 to $0.80 in 2014](http://www.forbes.com/sites/paulrodgers/2014/09/30/the-rise-of-solar/)
 		- Part of that drop is improvements in technology which are able to capture an increasing amount of photovoltaic radiation.
 		- Yet, much of the success of solar energy production thus far has been driven by a favorable regulatory environment and government subsidies.

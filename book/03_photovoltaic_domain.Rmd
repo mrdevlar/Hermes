@@ -1,4 +1,4 @@
-# Photovoltaic Domain
+# Domain
 
 <!-- 
 3. Domain Knowledge - Photovoltaic Inverter
@@ -22,4 +22,26 @@
 	- [Reliability the weak link in the solar industry](http://www.interpv.net/tech/tech_view.asp?idx=49&part_code=030190059&page=2)
  -->
 
- 
+- Intro
+- Energy Mix
+- Solar Industry
+- Predictive Maintenance
+- Photovoltaic Inverter
+- Data Generation
+- Model Choice
+
+This chapter **yadda yadda ...**
+
+
+
+## Solar Industry
+
+Altering the global energy mix is essential to the future evolution of our civilization and possibly our survival as a species. Currently, the global energy mix is dominated by fossil fuels. Approximately, 82% of global energy consumption remains the product of coal, natural gas and petroleum\cite{EIAOutlook2016}. A century of heavy reliance on non-renewable fossil fuels as the central source of energy has had severe ecological and socio-economic consequences. Locally, there have been countless instances of environmental damage, such as oil spills\cite{OilSpills2015}, air\cite{Tatlow2016} and groundwater\cite{Schlanger2014} contamination. Additionally, regions rich in fossil fuels are destabilized as wealthy nations seek to guarantee future supply\cite{Solnit2015}. Globally, the prospect of catastrophic climate change looms large, with implications including rising sea levels\cite{Davenport2015}, ocean acidification\cite{Feely2008}, crop failure\cite{Parry2004} and the economic devastation of a bursting of the carbon bubble\cite{Carrington2013}. 
+
+Yet, despite these persistent consequences, a reduction in consumption is highly unlikely. Global energy demand is projected to increase rapidly in the coming decades. In 2012, global demand was estimated at $5.8\cdot 10^{20}$ Joules and is expected to rise by 48% to $8.6\cdot 10^{20}$ by 2040\cite{EIAOutlook2016}. The majority of this increase is the result of higher demand for electricity, which will increase by 70% before 2040. The majority of this new demand, roughly 87%, is expected to come from countries in the developing world\cite{OECD2015}. 
+
+Countries, which due to their economic conditions, are likely to leverage any available energy source. 
+
+The majority of that output being used to further the industrialization of the developing world.  
+, driven primarily by industrialization in developing nations
+
