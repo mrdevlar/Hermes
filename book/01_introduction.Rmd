@@ -6,6 +6,14 @@
 1. Introduction
 	- General Summary of entire thesis
 
+## Introduction Notes 
+ - You hate writing introductions, but you still have to, and it still has to catch the attention of your audience and communicate clearly the priorities of the thesis. It doesn't have to be as thick as you think it does though. 
+ - Make sure to clearly provide a structure for the remaining document. 
+ - There is no need to justify any of the choices, do that within the text.
+ - Event-history analysis vs signal processing
+
+Stick in structure of remaining text
+
  -->
 
 # Acknowledgments
@@ -24,25 +32,17 @@ Thank you, all of you. May you enjoy reading this as much as I enjoyed writing i
 
 # Intended Audience
 
-Good academic literature is the kind that is capable of taking a complex topic and makes it accessible to a broader audience. In an effort to adhere to that standard, the intended audience of this thesis is not a pure mathematician, rather a general practitioner in the area of predictive maintenance or reliability analysis. Emphasized is the development of understanding and intuition for the underlying models and how to handle edge cases. 
+Good academic literature is the kind that is capable of taking a complex topic making it accessible to a broader audience. In an effort to adhere to that standard, the intended audience of this thesis is not a pure mathematician, rather a general practitioner in the area of predictive maintenance or reliability analysis. Emphasized is the development of understanding and intuition for the underlying models and how to handle edge cases. 
 
-However, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang <!-- **REFHERE** --> as well as a first course on Bayesian linear models at the level of McElreath <!-- **REFHERE** -->. 
+However, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang\cite{Blitzstein2014} as well as a first course on Bayesian linear models at the level of McElreath\cite{McElreath2016}. 
 
 To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text.
 
-
-
-
-
 <!-- 
+Maybe include something about the change of voice between the first and second half of the thesis.
+- In chapter 2 I am explaining the state of the world, it's declarative
+- In chapter 3, I am exploring the mechanics of a mathematical system with you, it's meant to be interactive.
 
-## Introduction Notes 
- - You hate writing introductions, but you still have to, and it still has to catch the attention of your audience and communicate clearly the priorities of the thesis. It doesn't have to be as thick as you think it does though. 
- - Make sure to clearly provide a structure for the remaining document. 
- - There is no need to justify any of the choices, do that within the text.
- - Event-history analysis vs signal processing
-
-Stick in structure of remaining text
 
  -->
 
@@ -50,9 +50,7 @@ Stick in structure of remaining text
 
 Maintenance is not sexy, but it is essential. It is the immune system of the modern industrialized world. Without it, the myriad of systems we depend on for safeguarding our collectively quality of life would rapidly deteriorate and disappear. Yet, few sing the praises of the multitude of technicians and engineers which are responsible for ensuring trains run on time, computer systems remain accessible or that bridges do not suddenly collapse. Paradoxically, this lack of visibility is a testament to the uninterrupted success of these activities. 
 
-<!-- Alina suggests: Concretely define maintenance -->
-
-The preceding decades have brought with them rapid innovation in the area of maintenance. What has historically been a manual and labor-intensive activity is increasingly becoming a scientific process, one that leverages technology to optimize operations. Modernization has meant going beyond traditional methods of maintenance based on reactions to failure or scheduled inspection and moving towards those that utilize data and predict failure. Such a trend can have a widespread impact on operational expenses. Reactive methods generally incur greater costs due to downtime and a need for more expensive replacement parts. Scheduled inspections share similar pitfalls, requiring downtime, specialized machinery and also running the risk of inadvertent damage to the objects they seek to maintain. Predictive maintenance minimizes many of these drawbacks. Judgments about the state of a device are made as a result of continuous monitoring of actual operating conditions.<!-- Mobley p.3 --> This reduces downtime and allows for a better allocation of maintenance resources. Most importantly, predictive maintenance enables faults to become apparent *before* failure allowing for contingencies, such as repair or replacement, to ensure constant output.
+The preceding decades have brought with them rapid innovation in the area of maintenance. What has historically been a manual and labor-intensive activity is increasingly becoming a scientific process, one that leverages technology to optimize operations. Modernization has meant going beyond traditional methods of maintenance based on reactions to failure or scheduled inspection and moving towards those that utilize data and predict failure. Such a trend can have a widespread impact on operational expenses. Reactive methods generally incur greater costs due to downtime and a need for more expensive replacement parts. Scheduled inspections share similar pitfalls, requiring downtime, specialized machinery and also running the risk of inadvertent damage to the objects they seek to maintain. Predictive maintenance minimizes many of these drawbacks. Judgments about the state of a device are made as a result of continuous monitoring of actual operating conditions\cite{Mobley2002}. This reduces downtime and allows for a better allocation of maintenance resources. Most importantly, predictive maintenance enables faults to become apparent *before* failure allowing for contingencies, such as repair or replacement, to ensure constant output.
 
 
 The transition toward predictive maintenance owes much to the continued development of sensor technology. More reliable, accurate, and most importantly, inexpensive sensors have enabled continuous monitoring in a wider range of domains. Many modern devices come with built-in sensors that record output or other context-specific data that can be used to assess health. Increasingly, many also include connectivity that allows telemetry to be retrieved remotely on demand. This reality is likely what has spurred widespread innovation in the field, with more than half of the publications on predictive maintenance emerging within the last decade. <!-- Limo Search = 703 / 989 | Google Scholar = 3300 / 5450 --> Unfortunately, this data gluttony has also led to a form of tunnel vision, with the majority of this work dedicated to enabling predictive maintenance exclusively in informationally rich contexts. As a result, authors are predominantly preoccupied with domains where data is high dimensional, time-dependent, with fine granularity and encoded without error. 
