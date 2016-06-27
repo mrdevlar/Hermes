@@ -39,25 +39,71 @@ This chapter **yadda yadda ...**
 
 ## Solar Industry
 
-Altering the global energy mix is essential to the future evolution of our civilization and possibly our survival as a species. Currently, the global energy mix is dominated by fossil fuels. Approximately, 82% of global energy consumption remains the product of coal, natural gas and petroleum\cite{EIAOutlook2016}. A century of heavy reliance on these non-renewable fossil fuels as the central source of energy has had severe ecological and socio-economic consequences. Locally, there have been countless instances of environmental damage, such as oil spills\cite{OilSpills2015}, air\cite{Tatlow2016} and groundwater\cite{Schlanger2014} contamination. Additionally, regions rich in fossil fuels are destabilized as wealthy nations seek to guarantee future supply\cite{Solnit2015}. Globally, the prospect of catastrophic climate change looms large, with implications including rising sea levels\cite{Davenport2015}, ocean acidification\cite{Feely2008}, crop failure\cite{Parry2004} and the economic devastation of a bursting carbon bubble\cite{Carrington2013}. 
+Altering the global energy mix is essential to the future evolution of our civilization and possibly our survival as a species. Currently, the global energy mix is dominated by fossil fuels. Approximately, 82% of global energy consumption remains the product of coal, natural gas and petroleum\cite{EIAOutlook2016}. A century of heavy reliance on these non-renewable fossil fuels as the central source of energy has had severe ecological and socio-economic consequences. Locally, there have been countless instances of environmental damage, such as air\cite{Tatlow2016} and groundwater\cite{Schlanger2014} contamination and oil spills\cite{OilSpills2015}. Additionally, regions rich in fossil fuels are destabilized as wealthy nations seek to guarantee future supply\cite{Solnit2015}. Globally, the prospect of catastrophic climate change looms large, with implications including rising sea levels\cite{Davenport2015}, ocean acidification\cite{Feely2008}, crop failure\cite{Parry2004} and the economic devastation of a bursting carbon bubble\cite{Carrington2013}. 
 
 Despite these persistent consequences, a reduction in consumption is highly unlikely. Global energy demand is projected to increase rapidly in the coming decades. As of  2012, global demand was estimated at $5.8\cdot 10^{20}$ Joules and is expected to rise by 48% to $8.6\cdot 10^{20}$ by 2040\cite{EIAOutlook2016}. The majority of this increase is the product of higher demand for electricity, which will increase by 70% before 2040. The majority of this new demand, roughly 87%, is expected to come from countries in the developing world\cite{OECD2015}. Due to their economic conditions, these countries will undoubtedly utilize whichever energy source is cheapest, regardless of the consequences. 
 
-In this context, alternative energy production, sourced from renewable resources, is required to evade a future of socio-economic instability and ecological collapse. Fortunately, an increasing number of alternatives are being developed with the support of governments. Solar, wind, tidal, geothermal and fusion have all seen major investments over the past decade. In 2015 alone, renewable power capacity received twice the investment compared to new projects based on fossil fuels\cite{FrankfurtSchool2016}. Of these projects, wind and solar appear the most likely to become viable alternatives within the next decade\cite{OECD2014}. 
+In this context, alternative energy production, sourced from renewable resources, is required to evade a future of socio-economic instability and ecological collapse. Fortunately, an increasing number of alternatives are being developed with the support of governments. Solar, wind, tidal, geothermal and fusion have all seen major investments over the past decade. In 2015 alone, renewable power capacity received twice the investment compared to new projects based on fossil fuels\cite{FrankfurtSchool2016}. Of these projects, wind and solar appear the most likely to become viable within the next decade\cite{OECD2014}. 
 
 The contribution of solar energy is particularly attractive as its supplies are not limited by resource availability. At least for the next five billion years, solar energy is expected to reach the earth without interruption. Furthermore, the amount of solar radiation intercepted by the earth is several orders of magnitude higher than global energy consumption\cite{Goldemberg2000}. Given such potential, it is not surprising that the rate of installations of solar systems has increased exponentially in the past decade\cite{EPIA2014}. 
 
-The central drivers of this growth have been continued technological development and innovative government policy. In terms of technological development, three major factors contribute to growth. First, improved efficiency of end-use technologies continues. This ensures that electrical output is utilized optimally by the time it reach consumers\cite{Wilson2012}. Second, is the reduction in cost and enhancement of energy storage technologies\cite{IRENA2015}. This ability is particularly important for the solar energy industry as production fluctuates based upon the availability of sunlight. Finally, and most importantly, the reduction of costs associated with technologies that convert solar energy into electricity is essential.
+The central drivers of this growth have been continued technological development and innovative government policy. In terms of technological development, three major factors contribute to growth. First, the continued improvement of efficiency of end-use technologies. This ensures that electrical output is utilized optimally by the time it reach consumers\cite{Wilson2012}. Second, the reduction in cost and enhancement of energy storage technologies\cite{IRENA2015}. This ability is particularly important for the solar energy industry as production fluctuates based upon the availability of sunlight. Finally, and most importantly, the reduction of costs associated with technologies that convert solar energy into electricity.
 
-In terms of reducing costs and optimizing production, the advances continue. There are regular advancements in novel materials which enable broader capture of solar radiation\cite{Shi2015}. As well as developments that optimize balance of systems, so that  energy produced can be efficiently transfered back to the power grid\cite{Weckx2014}. These technological improvements have led to a substantial decrease in the costs associated with photovoltaic power. The average weighted utility-scale solar photovoltaic installation cost has more than halved in the last five years\cite{IRENA2016}.
+In terms of reducing costs and optimizing production, the advances continue. There are regular invention of novel materials which enable broader capture of solar radiation\cite{Shi2015}. As well as developments that optimize power processing systems, ensuring that energy produced can be efficiently transfered back to the power grid\cite{Weckx2014}. These technological improvements have led to a substantial decrease in the costs associated with photovoltaic power. The average weighted utility-scale solar photovoltaic installation cost has more than halved in the last five years\cite{IRENA2016}.
 
-Yet, a further cost reductions are needed. The central bottleneck for greater expansion of solar power continues to be its self-sustainability. In most markets, solar is not yet able to compete with other forms of energy generation without innovative government policy incentives\cite{OECD2011}. These usually come in the form of subsidies or feed-in tariffs that provide solar companies with long-term contracts for energy above market value. These are meant to provide stability as well as offset the cost of further technological development\cite{Couture2010}. However, these subsidies are reduced annually by design, as they are only meant to serve as a temporary incentive for cost-saving innovation. 
+However, further cost reductions are needed. The central bottleneck for greater expansion of solar power continues to be economic self-sustainability. In most markets, solar is not yet able to compete with other forms of energy generation without  government policy incentives\cite{OECD2011}. These usually come in the form of subsidies or feed-in tariffs that provide solar companies with long-term contracts for energy above market value. These are meant to provide stability as well as offset the cost of further technological development\cite{Couture2010}. However, these subsidies are reduced incrementally by design, as they are meant to serve as a temporary incentive to promote cost-saving innovation. As the subsidies are reduced, the industry is more subject to market forces and more reliant on its own ability to optimize its efficiency. The current low price of oil and coal, coupled with fickle government support for renewable energy\cite{FrankfurtSchool2016} present a difficult status quo\cite{Hals2016}. 
 
-As the subsidies disappear, the industry is more subject to market forces and more reliant on its own ability to optimize its efficiency. Success is not guaranteed. As is demonstrated by the recent filing for bankruptcy protection by the world's largest solar company, SunEdison\cite{Hals2016}. 
+While technological innovation is likely to continue to reduce costs, there are avenues for further optimization given the current infrastructure. Among them are improvements in reliability, specifically in photovoltaic systems. Reliability has been a long-standing challenge\cite{Petrone2008} and a particularly important one given systems long payback periods. Innovation in components and manufacturing are methods for addressing reliability, but other more immediate options exist. Among them, optimized maintenance activities have the potential to dramatically reduce costs. Yet, these optimizations require accurate predictions about the state of component health. To do this, predictive maintenance is required.
+
+Predictive maintenance is generally defined as 
+- Definition
+
+
+
+
+
+
+driven by improved predictions about the state of component health 
+
+Unscheduled downtime due to component failure has a costly effect, reducing output and 
+
+
+For utility-scale systems, hardware still makes up the majority of the cost per watt\cite{Chung2015}. Replacing components
+
+- Replacement components
+- Operational downtime
+
+At their core, all these activities require reliable 
+
+At its core, this optimization requires prediction
+
+
+> Segways! something something Predictive maintenance
+
+
+
+
+
+
+\cite{Dhere2005}
+
+
+
+
+While we wait for solar technology to reduce costs, there exist alternative avenues for optimizing expenses given the current infrastructure. 
+Among them is use of maintenance to optimize output. 
 
 
 
 ----
+
+### Photovoltaic Inverter Context
+
+"A PV system is composed of PV modules and balance-of-system (BOS) components. The BOS components include the array structure, passive or active trackers, connectors, ac and dc wiring, overcurrent protections, disconnects, interconnects, inverters, charge controllers, MPPT controllers, energy storage devices, and system controllers."
+
+
+
+Lack of trained maintenance workers is a constraint on the industry.
 
 This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
 
@@ -65,13 +111,10 @@ It is in this area of cost reduction that statistical modeling and predictive ma
 
 Still a high potential for cost reduction in the domain.
 
-Further cost reductions are needed.  
 
-Higher competitive pressure, as more actors enter the market and government subsidies are pulled back.
-
+Inverters with 3G connectivity to allow for constant monitoring of outputs
 
 
-For utility-scale systems, hardware costs still make up the majority of the cost per watt \cite{Chung2015}. 
 
 This has increased the availability of low-cost technologies to convert solar into electricity, 
 
@@ -100,12 +143,15 @@ Alternative energy production, sourced from renewable resources, coupled with a 
 Fortunately, an increasing number of cleaner alternatives are being developed. 
 
 
+- Difference in failure mode based on string or micro-inverters.
+	- String inverters
+		- Voltage Stress
+		- Small caps fail due to QC issues
+	- Single failure in micro-inverters only eliminates one panel, while a string inverter results in a series of panels going offline.
+- Electrolytic -> Capacitor Plague
 
 <!-- 
-
-These incentives usually come in the form of feed-in tariffs or premiums. Such measures establish long-term contracts guaranteeing the price (usually above market value) of electricity delivered to the grid from solar systems. Such programs are meant to increase investment by offseting the risks of deploying emerging technologies, thus providing stability and continuing sector growth.\cite[p.963]{Couture2010} However, many such programs have been criticized for providing weak stimulus for improving profitability in the solar industry, especially with falling prices of photovoltaics and solar inverters.\cite[p.180]{OECD2011} Such criticisms are likely what fueled the downturn in the European solar market in 2013, as countries decreased their structured support of the sector.\cite[p.25]{EPIA2014}
-
-This has left the sector more subject to market forces and thus reliant on its own ability to optimize efficiency and thus profitability of individual solar systems. There are many innovative methods for cutting costs and improving efficiency of solar systems including: novel material improvements, reduced production costs, better storage systems and the use of solar concentrators. This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
+This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
 
 
  -->

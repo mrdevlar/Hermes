@@ -46,7 +46,7 @@
 		- Yet, much of the success of solar energy production thus far has been driven by a favorable regulatory environment and government subsidies.
 			- Technology improves, but is still below the threshold of self-reliance
 		- The economic viability of photovoltaic projects is still questionable, as solar companies do go bankrupt. 
-			- Note big bankruptcies. Solandro <!-- Find that slashdot story about the large photovoltaic power company going bankrupt -->
+			- Note big bankruptcies. [SunEdison](http://www.reuters.com/article/us-sunedison-inc-bankruptcy-idUSKCN0XI1TC)
 		- There are other ways to optimize yields and boost the profitability of solar companies than improvements underlying technology.
 		- Reliability is a big challenge in the photovoltaic area. 
 			- Insert metrics about failure
@@ -64,6 +64,7 @@
 			- Temporal data vs static data
 			- (maybe) Feature engineering
 	- Photovoltaic Inverter Context
+		- Describe a photovoltaic system
 		- Demonstrate this industry doesn't quite meet the requirements for such a system, good old edge cases.
 		- Smaller quantities of accurate temporal data (except energy output)
 		- Abundance of static data
