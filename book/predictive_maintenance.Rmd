@@ -96,9 +96,6 @@ Maintenance has historically been a labor intensive activity. The task can be ro
 
 
 
-The central motivation being that these tasks incur costs and thus should only 
-The idea being that maintenance as a task incurs costs, and such processes can be used to only perform the task when it is required. 
-
 It has historically been a manual and labor intensive activity. Assuming maintenance is even done at all, it has long-since been subject to the same general pattern. 
 
 

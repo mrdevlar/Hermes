@@ -70,41 +70,49 @@ Something along the lines of:
 > predictive maintenance activities were limited by the availability of data. Vibrational analysis, thermography, fluid analysis and electrical monitoring.
 -->
 
-> Segway needed, going from the definition, and what it offers to use cases then requirements for a general system. Since what we want to do is transition from predictive maintenance generally, to predictive maintenance in a photovoltaic inverter context.
+All predictive maintenance processes attempt to address one or more of the following three generic use cases\cite{Uz2016}. First, is fault identification. Accurately identifying the source of failure of a particular system is essential to developing effective corrective countermeasures. Second, is near-term failure probability. This permits immediate operational risks to be addressed and avoided. Third, and finally, is estimation of residual lifetime. This allows both short and long-term operational risks to be taken into account. All the cases are overlap and should not be treated as mutually exclusive. Yet, each requires slightly different considerations, methodology and inputs when developing a predictive maintenance process.
 
-All predictive maintenance processes attempt to address one or more of the following three generic use cases\cite{Uz2016}. First, is fault identification. Accurately identifying the source of failure of a particular system is essential to developing effective corrective countermeasures. Second, is near-term failure probability. This permits immediate operational risks to be addressed and avoided. Third, and finally, is estimation of residual lifetime. This allows both short and long-term operational risks to be taken into account. All the cases are overlap and should not be treated as mutually exclusive. However, each requires slightly different considerations, methodology and inputs when developing a predictive maintenance process.
+The preconditions for the development of a predictive maintenance process differ depending on the domain and selected use cases. Yet, there is a common core of needs including implementation, data quality and sourcing. 
 
-Requirements for a predictive maintenance process:
-- A corrective mode of action
-	- Without the ability to act, no amount of relevant information will be of value. The obvious fact should be stressed that predictive maintenance, in and of itself, does not extend the lifetime of operational systems, only maintenance actions do\cite{Levitt2011}.
-- Data of sufficient quality
-	- Relevant to the use-case (target of prediction)
-	- With as little noise as possible
-	- The more historical, the better
-	- The more failure observations, the better
-	- Domain knowledge to select subset of relevant data
-- Typical Data Sources\cite{Uz2016}
-	- Failure history
-		- Both normal and failure modes as these are two different patterns.
-	- Maintenance / Repair History
-		- Time-stamped logs, including replaced components and activities performed. 
-		- Provides details on failure modes and allows for fault identification.
-	- Machine conditions
-		- Time-dependent features that capture aging patterns
-		- Can be 
+The ability implement a corrective mode of action is universal requirement. Without the ability to act, no amount of information derived from a predictive model will be of any value. After all, predictive maintenance does not, in and of itself, improve the reliability of operational systems, only maintenance activities do\cite{Levitt2011}. 
+
+As predictive maintenance depends on condition monitoring, data sources of a suitable quality are required. Ideally, data sources should be historical, abundant, balanced, relevant and noiseless. Models that generate predictions about the future require historical data from which to derive patterns about operating conditions. The more historical information is recorded, the greater the opportunity of the model to observe the system along its lifetime. This in turn results in more accurate predictions about future health. Furthermore, the more abundant the data sources the better. As a greater number of repeated observations provides a greater certainty about the state of a system at any given time. Yet, in this context, historicity is of greater importance than abundance. It is possible to be tracking a large quantity of systems, but only for a short period of time. This would be inadequate due to a natural imbalance in the data for this type of process. Even in systems with profoundly poor reliability, healthy observations will greatly outnumber failures. Without a greater quantity of historical data, failures are even less likely to be present in the data. Therefore, a degree of balance is required in the data between the number of observed failures and healthy observations. Additionally, data sources must be relevant to the task. Data sources should be taken advantage of which offer the greatest potential for predictive power. Domain knowledge from subject matter experts should be exploited to provide a contextually appropriate selection. These experts should also implement mechanisms that ensure data sources are as free as possible from measurement error, missing values and other forms of noise. While unavoidable in a practical setting, noise can undercut the reliability of models and introduce a greater degree of uncertainty in predictions. 
+
+<!-- 
+Abundance can offset the effect of noisy observations, but only to a degree. 
+-->
 
 
 
 
 
 
-they seek to identify the cause of failure of a system. Second, they seek to determine the probability of failure given a particular timeframe. Third, they seek to accurately estimate the remaining/residual lifetime of a system. 
+
+----
+<!-- 
+Data of Sufficient Quality
+
+Abundant
+- The more the better
+Historical
+- Observe as much of the lifetime of a system as possible.
+- For example, even if we have a million devices being observed, if they are only observed for a short period of time, it will be difficult to generate accurate predictions about the device's end of life. 
+Diverse
+- Data should provide as many observations as possible for the different states of the machine. Normal operating conditions are more likely to be observed. The conditions leading up to failure are required and will almost certainly be the minority of observations.
+Relevant
+- Data should be relevant to the use case under study. The
+Noiseless
+- The more data the better. A greater quantity of data implies a greater number of observation of the system in different conditions, reducing overall uncertainty. Ideally, we would prefer this data lack measurement error, missing values or other forms of noise.
+
+ -->
 
 
 
 
-Predictive maintenance primarily seeks to answer two questions: First, what is the remaining/residual lifetime of a system? Second, what is the cause of failure? The combination of these questions allows for the correct maintenance measures to be put into place. 
 
+----
+
+For Justification of the Model
 
 Richard, [28.06.16 02:14]
 The irony is that what I'm doing is actually somewhere between two and three
@@ -147,20 +155,6 @@ At their core, all these activities require reliable
 
 At its core, this optimization requires prediction
 
-
-
-
-
-
-
-
-\cite{Dhere2005}
-
-
-
-
-While we wait for solar technology to reduce costs, there exist alternative avenues for optimizing expenses given the current infrastructure. 
-Among them is use of maintenance to optimize output. 
 
 
 

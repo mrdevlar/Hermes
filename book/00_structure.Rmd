@@ -66,14 +66,21 @@
 			- near-term failure probability
 			- Residual lifetime estimation 
 		- Requirements for a predictive maintenance process:
-			- A corrective mode of action
+			- Implement a corrective mode of action
 				- Without the ability to act, no amount of relevant information will be of value. The obvious fact should be stressed that predictive maintenance, in and of itself, does not extend the lifetime of operational systems, only maintenance actions do\cite{Levitt2011}.
 			- Data of sufficient quality
-				- Relevant to the use-case (target of prediction)
-				- With as little noise as possible
-				- The more historical, the better
-				- The more failure observations, the better
-				- Domain knowledge to select subset of relevant data
+				- Abundant
+					- More is better, repeated observations
+				- Historical
+					- The more historical, the better
+				- Balanced
+					- The more failure observations, the better
+				- Relevant 
+					- to the use-case (target of prediction)
+					- Domain knowledge to select subset of relevant data
+				- Noiseless
+					- Measurement error, missing values and other forms of noise.
+					- 
 			- Typical Data Sources\cite{Uz2016}
 				- Failure history
 					- Both normal and failure modes as these are two different patterns.
@@ -84,8 +91,10 @@
 					- Time-dependent features that capture aging patterns
 					- Ideally should capture degrading trend prior to actual event
 					- Can be telemetry data from different sensors.
+				- Machine operator data
 			- Temporal data vs static data
 			- (maybe) Feature engineering
+				- Domain knowledge
 	- Photovoltaic Inverter Context
 		- Describe a photovoltaic system
 		- Demonstrate this industry doesn't quite meet the requirements for such a system, good old edge cases.
