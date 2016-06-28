@@ -54,13 +54,36 @@
 		
 	- Predictive Maintenance, a critical element in optimizing the industry
 		- What is predictive maintenance, formal definition
-		- Where does it sit in the wider maintenance tasks
+			- Mobley - "Uses actual operating conditions to optimize plant performance"
+				- "Predictive maintenance is a condition-driven preventive maintenance program"
+				- predictive maintenance uses direct monitoring of the mechanical condition, system efficiency, and other indicators to determine the actual mean-time-to-failure or loss of efficiency for each machine-train and system in the plant. 
+				- Where does it sit in the wider maintenance tasks
+		<!-- - Historical evolution of predictive maintenance. (Maybe, or is the intro enough) -->
 		- What does it offer?
 			- Empowerment of maintenance regimes. Optimized outputs, lower replacement costs. Being able to plan against operational hazards rather than being at their mercy. 
 		- Use cases
-			- Residual lifetime estimation, fault identification
-		- Requirements for a system
-			- Data Requirements: Failure history, maintenance history, usage history, device attributes (context) 
+			- fault identification
+			- near-term failure probability
+			- Residual lifetime estimation 
+		- Requirements for a predictive maintenance process:
+			- A corrective mode of action
+				- Without the ability to act, no amount of relevant information will be of value. The obvious fact should be stressed that predictive maintenance, in and of itself, does not extend the lifetime of operational systems, only maintenance actions do\cite{Levitt2011}.
+			- Data of sufficient quality
+				- Relevant to the use-case (target of prediction)
+				- With as little noise as possible
+				- The more historical, the better
+				- The more failure observations, the better
+				- Domain knowledge to select subset of relevant data
+			- Typical Data Sources\cite{Uz2016}
+				- Failure history
+					- Both normal and failure modes as these are two different patterns.
+				- Maintenance / Repair History
+					- Time-stamped logs, including replaced components and activities performed. 
+					- Provides details on failure modes and allows for fault identification.
+				- Machine conditions
+					- Time-dependent features that capture aging patterns
+					- Ideally should capture degrading trend prior to actual event
+					- Can be telemetry data from different sensors.
 			- Temporal data vs static data
 			- (maybe) Feature engineering
 	- Photovoltaic Inverter Context

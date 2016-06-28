@@ -53,15 +53,85 @@ In terms of reducing costs and optimizing production, the advances continue. The
 
 However, further cost reductions are needed. The central bottleneck for greater expansion of solar power continues to be economic self-sustainability. In most markets, solar is not yet able to compete with other forms of energy generation without  government policy incentives\cite{OECD2011}. These usually come in the form of subsidies or feed-in tariffs that provide solar companies with long-term contracts for energy above market value. These are meant to provide stability as well as offset the cost of further technological development\cite{Couture2010}. However, these subsidies are reduced incrementally by design, as they are meant to serve as a temporary incentive to promote cost-saving innovation. As the subsidies are reduced, the industry is more subject to market forces and more reliant on its own ability to optimize its efficiency. The current low price of oil and coal, coupled with fickle government support for renewable energy\cite{FrankfurtSchool2016} present a difficult status quo\cite{Hals2016}. 
 
-While technological innovation is likely to continue to reduce costs, there are avenues for further optimization given the current infrastructure. Among them are improvements in reliability, specifically in photovoltaic systems. Reliability has been a long-standing challenge\cite{Petrone2008} and a particularly important one given systems long payback periods. Innovation in components and manufacturing are methods for addressing reliability, but other more immediate options exist. Among them, optimized maintenance activities have the potential to dramatically reduce costs. Yet, these optimizations require accurate predictions about the state of component health. To do this, predictive maintenance is required.
+While technological innovation is likely to continue to reduce costs, there are avenues for further optimization given the current infrastructure. Among them are improvements in reliability, specifically in photovoltaic systems. Reliability has been a long-standing challenge\cite{Petrone2008} and a particularly important one given systems long payback periods\cite{NEEDED}. Innovation in components and manufacturing are methods for addressing reliability, but other more immediate options exist. Among them, optimized maintenance activities have the potential to dramatically reduce costs. Yet, these optimizations require accurate predictions about the state of component health. To do this, predictive maintenance is required.
 
-Predictive maintenance is generally defined as 
-- Definition
+## Predictive Maintenance
+
+Predictive maintenance is generally defined as the process of using direct monitoring of conditions, efficiency and other indicators to determine the health and likelihood of failure of a system. These results indicate when maintenance tasks should be performed\cite{Mobley2002}. Informally, predictive maintenance is an activity geared toward indicating the degree of wear of a piece of equipment and predicting its useful life\cite{Levitt2011}. In doing so, it empowers organizations with the ability to plan and act against operational hazards. This additional time allows for corrective actions to be prepared including the ordering of parts and materials, often at lower prices, coordinating labor and scheduling downtime. In turn, this allows the business, not the environment, to dictate when service interruptions occur. 
+
+<!-- 
+Check the introduction, see if the evolution of predictive maintenance described there needs to be expanded, do so if you think that is right, maybe use a gray box 
+
+Something along the lines of:
+> The rapid evolution of predictive maintenance owes much to the rapid expansion of network connectivity in most consumer products. 
+> A few things have, one is the fact that they no longer stop production to inspect, because they have better data capture technologies
+> The other is that as a result of those data capture technologies, shorter intervals of monitoring are possible
+> So you won't run a big vibrational test every 3 months, rather you'll have a vibration sensor sending out data hourly
+> predictive maintenance activities were limited by the availability of data. Vibrational analysis, thermography, fluid analysis and electrical monitoring.
+-->
+
+> Segway needed, going from the definition, and what it offers to use cases then requirements for a general system. Since what we want to do is transition from predictive maintenance generally, to predictive maintenance in a photovoltaic inverter context.
+
+All predictive maintenance processes attempt to address one or more of the following three generic use cases\cite{Uz2016}. First, is fault identification. Accurately identifying the source of failure of a particular system is essential to developing effective corrective countermeasures. Second, is near-term failure probability. This permits immediate operational risks to be addressed and avoided. Third, and finally, is estimation of residual lifetime. This allows both short and long-term operational risks to be taken into account. All the cases are overlap and should not be treated as mutually exclusive. However, each requires slightly different considerations, methodology and inputs when developing a predictive maintenance process.
+
+Requirements for a predictive maintenance process:
+- A corrective mode of action
+	- Without the ability to act, no amount of relevant information will be of value. The obvious fact should be stressed that predictive maintenance, in and of itself, does not extend the lifetime of operational systems, only maintenance actions do\cite{Levitt2011}.
+- Data of sufficient quality
+	- Relevant to the use-case (target of prediction)
+	- With as little noise as possible
+	- The more historical, the better
+	- The more failure observations, the better
+	- Domain knowledge to select subset of relevant data
+- Typical Data Sources\cite{Uz2016}
+	- Failure history
+		- Both normal and failure modes as these are two different patterns.
+	- Maintenance / Repair History
+		- Time-stamped logs, including replaced components and activities performed. 
+		- Provides details on failure modes and allows for fault identification.
+	- Machine conditions
+		- Time-dependent features that capture aging patterns
+		- Can be 
 
 
 
 
 
+
+they seek to identify the cause of failure of a system. Second, they seek to determine the probability of failure given a particular timeframe. Third, they seek to accurately estimate the remaining/residual lifetime of a system. 
+
+
+
+
+Predictive maintenance primarily seeks to answer two questions: First, what is the remaining/residual lifetime of a system? Second, what is the cause of failure? The combination of these questions allows for the correct maintenance measures to be put into place. 
+
+
+Richard, [28.06.16 02:14]
+The irony is that what I'm doing is actually somewhere between two and three
+
+Richard, [28.06.16 02:14]
+because given my limited access to data (which is a precondition of this thesis), you're never going to get accurate predictions on residual lifetimes
+
+Richard, [28.06.16 02:15]
+so I am compromising, I'm interested in concordance of the population of lifetimes rather than accurate estimating each individual lifetime
+
+
+\cite{Uz2016}
+- What does it offer? What kind of questions can we answer?
+
+
+
+Predictive maintenance improves reliability by detecting deteriorations earlier than it could be by manual means. 
+
+
+
+
+
+
+
+-----
+
+----
 
 driven by improved predictions about the state of component health 
 
@@ -78,7 +148,6 @@ At their core, all these activities require reliable
 At its core, this optimization requires prediction
 
 
-> Segways! something something Predictive maintenance
 
 
 
