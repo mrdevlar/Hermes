@@ -106,7 +106,10 @@
 			- Temporal data vs static data
 			- (maybe) Feature engineering
 	- Photovoltaic Inverter Context
-		- What is a photovoltaic system
+		- What is a photovoltaic system?
+		- Introduce the various components.
+			- PV modules
+			- Balance of System Components
 		- Demonstrate this industry doesn't quite meet the requirements for such a system, good old edge cases.
 		- Smaller quantities of accurate temporal data (except energy output)
 		- Abundance of static data
