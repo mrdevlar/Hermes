@@ -108,18 +108,74 @@ Segway needed.
 
 ### Predictive Maintenance in Photovoltaic Inverters
 
-As stated earlier, predictive maintenance presents an opportunity for improved cost optimization in the solar industry. This section examines one area of application within the solar industry, namely predictive maintenance of photovoltaic inverters. First, a general picture of a typical photovoltaic power system is given, demonstrating the role of inverter reliability in its operation. Second, a description of the considerations are given when developing a predictive maintenance process in this domain. 
+As stated earlier, predictive maintenance presents an opportunity for improved cost optimization in the solar industry. This section examines one area of application within the solar industry, namely predictive maintenance of photovoltaic inverters. First, a general picture of a typical photovoltaic system at the utility-scale is given, demonstrating the role of inverter reliability in its operation. Second, a description of the considerations are given when developing a predictive maintenance process in this domain. 
+
+<!-- 
+Maybe insert:
+https://en.wikipedia.org/wiki/File:From_a_solar_cell_to_a_PV_system.svg 
+-->
+
+A photovoltaic system is composed of two main elements, one is a what is typically described as a solar panel and the other are balance-of-system components. 
+
+A solar panel is usually composed of individual photovoltaic cells wired in series, called a string. This is done to increase the voltage produced by individual cells. The strings are then wired in parallel to increase the current. This collection of strings is then encapsulated in a weather-resistant housing and is what we typically refer to as a solar panel. These panels are then connected to one another to form a solar array. The connection can be done in either series or in parallel depending on the desired voltage or current of the system. 
+
+Balance-of-system (BOS) components encompass everything that is not the solar panels or array. The BOS components include the array structure, solar tracker, connectors, AC and DC wiring, overcurrent protections, disconnects, interconnects, charge and system controllers, maximum power point trackers, batteries, inverters and any other accessories. The purpose of the BOS components is to integrate the solar system into the utility grid.
+
+A photovoltaic inverter is an electrical device that converts the variable DC output of the solar panels to an AC frequency allowing it to be fed to the utility grid. Of all the BOS components, the inverter has historically had the  most reliability problems. A international decade long survery of photovoltaic systems indicated that a majority of failures (65%) were attributed to inverters\cite{Laukamp2002}. The same research also stated there appears to be ongoing reliability improvements, as the rate of failure declined over time. Even with these improvements, recent research confirmed that inverters continued to be the most likely causes of photovoltaic system failure\cite{Golnas2013}. 
+
+Inverter reliability is essential for ensuring steady output of a solar system. When an inverter fails, it disables all photovoltaic cells upstream of it. This makes it the single largest source of productivity loss in a solar system. 
 
 
 
 
+
+
+
+Types of Inverters
+- String
+- Central
+- Micro
+
+
+\cite{Golnas2013}
+The string inverters show a failure rate that is one order of magnitude lower compared with the most reliable central in- verters. While microinverters are not shown here, the available evidence shows a ticket/inverter-year ratio which is 3–4 times lower than that for the string inverters.\cite{Golnas2013}
+
+While there have been numerous studies about the long-term reliabilityofPVmodules,similarstudiesforinvertersareharder to find. The assumption for inverter failures is that they will follow the “bathtub curve” where a relatively high number of infant mortality failures appear in the early life of inverters,to be followed by a low rate of stochastic failures during the bulk of their useful life and by a higher rate of wear-induced, end-of-life failures.
+
+\cite{Golnas2013}
+Since the incapacitation of an inverter knocks out all the PV modules connected upstream of it, it comes as no surprise that inverter failure are the biggest cause of lost productivity in PV systems as well.
+
+However, as the inverter contains most of the intelligence of
+a PV system, its failures are also easier to capture.Subsystems upstream of the inverter are rarely monitored at a resolution that would allow a direct report of a malfunction. It is important to note that communication failures are on par with inverter- related issues in terms of frequency, but they are not counted along with the rest of the failures because they are transient and do not impact production.
+
+\cite{Golnas2013}
+However, the limited capability for deep failure analysis may dampen the value of the collected information.
+
+DC side of the system is distributed, so failures are more likely to 
+
+
+\cite{Dhere2005}
+"Kim et  al  have  suggested  a  PV  system  with  suppression functions  so  as to limit power disturbances such as variation of voltage and frequency and harmonic voltage generation into utility  [24].  The power disturbances are caused  by  unstable output pattems due to variability of weather and customer  load  in a highdensity grid connection"
+
+- Islanding
+- partial shadowing of PV arrays
 
 
 
 
 We now return our attention to the solar industry and introduce predictive maintenance in the context of a photovoltaic system.
 
+Mean  Time  Between  Failures  (MTBF)  of approximately  50  years has been predicted by a theoretical analysis  of  an inverter not exposed  to excessive temperature  [  131.  However, the shockingly different field experience from older systems has shown that the inverter is the most vulnerable component in PV systems and lost  15%  of tbe PV power. Reliability Data at  FSEC  includes information on  103 grid-connected PV systems that used  176  inverters  [31]. The  FSEC  database includes systems using PV arrays from  9  manufacturers and inverters from  4  manufacturers. During  1999-2003,  213  events have been recorded on these  103  systems, of which  139  events i.e.  65%  were attributed to inverters. Most inverter events  were  attributed to  poor maximum power-tracking function and ability to maintain grid connection. They required software upgrades  or  replacementlrepair  of  inverter by the manufacturer. Approximately  6  inverter failures were due to  lightning strikes at or near the PV arrays.  Most  events were recorded during the first year  of  system operation. Many of the inverters that had frequent failures  are  no longer available on the market.  A  fair number of system reliability events were due to  BOS.  They included tripping of  dc breakers and failure of source circuit overcurrent devices, as well as ac overcurrent devices, requiring manual resets  or  replacement of components  [31].
 
+
+Petrone
+
+The field experience has shown that the inverter is the most vulnerable component [5], [11]–[14], [26]. Fig. 1 puts into evidence that investment in a new inverter is required three to five times over the life of a PV system [101]
+
+
+\cite{Laukamp2002}
+	- The information given from owners does not always distinguish between a temporary malfunction, (which automatically resets) and a failure, i.e. a defect requiring a repair. Even less a malfunction can be distinguished from an inverter shut down due to irregular grid conditions. Data for figure 3 include all such effects. Considering true hardware reliability of the inverter, these data are conservative.
+	- Inverter problems as the major source of energy loss
 
 
 
@@ -149,10 +205,6 @@ Predictive maintenance improves reliability by detecting deteriorations earlier 
 
 ----
 
-driven by improved predictions about the state of component health 
-
-Unscheduled downtime due to component failure has a costly effect, reducing output and 
-
 
 For utility-scale systems, hardware still makes up the majority of the cost per watt\cite{Chung2015}. Replacing components
 
@@ -168,58 +220,41 @@ At its core, this optimization requires prediction
 
 ----
 
-### Photovoltaic Inverter Context
-
-"A PV system is composed of PV modules and balance-of-system (BOS) components. The BOS components include the array structure, passive or active trackers, connectors, ac and dc wiring, overcurrent protections, disconnects, interconnects, inverters, charge controllers, MPPT controllers, energy storage devices, and system controllers."
 
 
 
-Lack of trained maintenance workers is a constraint on the industry.
 
-This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
 
-It is in this area of cost reduction that statistical modeling and predictive maintenance can play a role. 
-
-Still a high potential for cost reduction in the domain.
 
 
 Inverters with 3G connectivity to allow for constant monitoring of outputs
 
 
 
-This has increased the availability of low-cost technologies to convert solar into electricity, 
 
-Drivers of this growth have been continued technological innovation that reduce cost for the conversion of solar energy into electricity
-
-This makes it an incredibly attractive resource
-
-but it is one that depends far more on innovation, both technologically and in policy to 
-
-Still solar faces a series of large challenges
-
-The viability of these alternatives is large part due to 
-
-
-Yet, the size and breadth of conventional generation capacity makes it difficult to displace without technological and policy incentives. 
-
-
-These investments allow for these projects to increasingly compete with fossil fuels. 
-
-
-The size and breadth of conventional capacity makes it difficult to displace existing generation methods. 
-
-
-Alternative energy production, sourced from renewable resources, coupled with a decarbonization of electrical production, is crucial to reducing the aforementioned consequences. 
 
 Fortunately, an increasing number of cleaner alternatives are being developed. 
 
-
+Causes of failure
 - Difference in failure mode based on string or micro-inverters.
 	- String inverters
 		- Voltage Stress
 		- Small caps fail due to QC issues
 	- Single failure in micro-inverters only eliminates one panel, while a string inverter results in a series of panels going offline.
+- Excessive temperatures
+		- Requires inverter level data, weather is not enough
+- Surge voltage from the grid
 - Electrolytic -> Capacitor Plague
+- Lightening strikes
+- Water condensation
+- Lack of robust software by certain manufacturers
+
+Superior reliability of smaller form factors
+
+
+
+
+I mean I can state that there is a shortage of skilled maintenance people in the field, (even now) which might play a role in the cost perception of maintenance activities.
 
 <!-- 
 This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.

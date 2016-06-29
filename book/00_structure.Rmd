@@ -106,7 +106,7 @@
 			- Temporal data vs static data
 			- (maybe) Feature engineering
 	- Photovoltaic Inverter Context
-		- What is a photovoltaic system?
+		- What is a photovoltaic power station?
 		- Introduce the various components.
 			- PV modules
 			- Balance of System Components
