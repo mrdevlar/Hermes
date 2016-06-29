@@ -72,39 +72,38 @@ Something along the lines of:
 
 All predictive maintenance processes attempt to address one or more of the following three generic use cases\cite{Uz2016}. First, is fault identification. Accurately identifying the source of failure of a particular system is essential to developing effective corrective countermeasures. Second, is near-term failure probability. This permits immediate operational risks to be addressed and avoided. Third, and finally, is estimation of residual lifetime. This allows both short and long-term operational risks to be taken into account. All the cases are overlap and should not be treated as mutually exclusive. Yet, each requires slightly different considerations, methodology and inputs when developing a predictive maintenance process.
 
-The preconditions for the development of a predictive maintenance process differ depending on the domain and selected use cases. Yet, there is a common core of needs including implementation, data quality and sourcing. 
+The preconditions for the development of a predictive maintenance process differ depending on the domain and selected use cases. Yet, there is a common core of needs including the ability to implement results, high data quality and a typical set of maintenance related sources. 
 
 The ability implement a corrective mode of action is universal requirement. Without the ability to act, no amount of information derived from a predictive model will be of any value. After all, predictive maintenance does not, in and of itself, improve the reliability of operational systems, only maintenance activities do\cite{Levitt2011}. 
 
 As predictive maintenance depends on condition monitoring, data sources of a suitable quality are required. Ideally, data sources should be historical, abundant, balanced, relevant and noiseless. Models that generate predictions about the future require historical data from which to derive patterns about operating conditions. The more historical information is recorded, the greater the opportunity of the model to observe the system along its lifetime. This in turn results in more accurate predictions about future health. Furthermore, the more abundant the data sources the better. As a greater number of repeated observations provides a greater certainty about the state of a system at any given time. Yet, in this context, historicity is of greater importance than abundance. It is possible to be tracking a large quantity of systems, but only for a short period of time. This would be inadequate due to a natural imbalance in the data for this type of process. Even in systems with profoundly poor reliability, healthy observations will greatly outnumber failures. Without a greater quantity of historical data, failures are even less likely to be present in the data. Therefore, a degree of balance is required in the data between the number of observed failures and healthy observations. Additionally, data sources must be relevant to the task. Data sources should be taken advantage of which offer the greatest potential for predictive power. Domain knowledge from subject matter experts should be exploited to provide a contextually appropriate selection. These experts should also implement mechanisms that ensure data sources are as free as possible from measurement error, missing values and other forms of noise. While unavoidable in a practical setting, noise can undercut the reliability of models and introduce a greater degree of uncertainty in predictions. 
 
 <!-- 
-Abundance can offset the effect of noisy observations, but only to a degree. 
--->
+Potentially Insert!
+- Abundance can offset the effect of some types of noisy observations. 
+--> 
 
+<!-- Better Segway needed -->
 
+A typical set of data sources for a predictive maintenance process includes system attributes and conditions, maintenance logs and failure history\cite{Uz2016}. 
 
+Attributes are a set of static values that define the identity of the system. This includes elements such as a system's ID, model number, date of installation, location, a list of components as well as any other technical specifications that might be relevant to its reliability. As these attributes are unlikely to change over time, they provide context which allows for the comparison of systems with one another. 
 
+Conversely, conditions are temporal values that define the state of a system at specific points in time. These values are captured through telemetry from sensors or other periodic observations. They can include, but are not limited to, component status, system yields, environmental conditions or any other time-varying data directly related to system reliability. These conditions are meant to capture the evolution of the system as it ages and provide the degradation pattern leading up to failure. 
 
+Maintenance history logs contain all service interactions with any particular system. These time stamped logs should contain any inspections, identify suspicious or replaced components and provide a listing of any corrective activities that maintenance teams performed. This data is crucial in providing context for the health of any system over time. It not only allows for the determination of the efficacy of maintenance tasks but also improves the ability better understand the sequence of events leading up to a system breakdown.
 
+Finally, failure history records the time and conditions of observed breakdowns across systems. These values are usually encoded manually upon system failure. An accurate and timely declaration that a machine has failed and the cause of that failure is central to the task of predictive maintenance. A generic recording of failure, without determining the cause, is not sufficient. Utmost care must be taken to ensure that the failure history records are current and complete. Delays in recording failure times can detrimentally impact predictive performance. This is likely the single most important data source for a predictive maintenance process. If recorded inaccurately, it will undo the entire endeavor. 
 
-----
 <!-- 
-Data of Sufficient Quality
-
-Abundant
-- The more the better
-Historical
-- Observe as much of the lifetime of a system as possible.
-- For example, even if we have a million devices being observed, if they are only observed for a short period of time, it will be difficult to generate accurate predictions about the device's end of life. 
-Diverse
-- Data should provide as many observations as possible for the different states of the machine. Normal operating conditions are more likely to be observed. The conditions leading up to failure are required and will almost certainly be the minority of observations.
-Relevant
-- Data should be relevant to the use case under study. The
-Noiseless
-- The more data the better. A greater quantity of data implies a greater number of observation of the system in different conditions, reducing overall uncertainty. Ideally, we would prefer this data lack measurement error, missing values or other forms of noise.
-
+**granularity**
+You need to insert somewhere the issue of data granularity, specifically the length of the interval between repeated measures. 
  -->
+
+We now return our attention to the solar industry and introduce predictive maintenance in the context of a photovoltaic system.
+
+
+- What is a photovoltaic system?
 
 
 
@@ -216,5 +215,24 @@ Fortunately, an increasing number of cleaner alternatives are being developed.
 <!-- 
 This thesis will focus on a data-centric approach to improving the current state of solar systems, namely data-driven maintenance.
 
+
+ -->
+
+
+----
+<!-- 
+Data of Sufficient Quality
+
+Abundant
+- The more the better
+Historical
+- Observe as much of the lifetime of a system as possible.
+- For example, even if we have a million devices being observed, if they are only observed for a short period of time, it will be difficult to generate accurate predictions about the device's end of life. 
+Diverse
+- Data should provide as many observations as possible for the different states of the machine. Normal operating conditions are more likely to be observed. The conditions leading up to failure are required and will almost certainly be the minority of observations.
+Relevant
+- Data should be relevant to the use case under study. The
+Noiseless
+- The more data the better. A greater quantity of data implies a greater number of observation of the system in different conditions, reducing overall uncertainty. Ideally, we would prefer this data lack measurement error, missing values or other forms of noise.
 
  -->

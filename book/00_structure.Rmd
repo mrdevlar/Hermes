@@ -81,22 +81,32 @@
 				- Noiseless
 					- Measurement error, missing values and other forms of noise.
 					- 
-			- Typical Data Sources\cite{Uz2016}
+			- Typical data sources\cite{Uz2016}
+				- System Attributes
+					- make, model, 
+					- date of installation
+					- static data
+				- System Conditions and Usage
+					- time-varying features that capture the aging pattern of the system
+					- telemetry from various sensors installed within the system directly related to the conditions of that system
+					- ideally should capture degrading trend leading up to the actual failure event
+					- temporal data
+					- granularity
+				- Maintenance History
+					- dates and times for maintenance activities
+					- logs of maintenance activities
+						- what activities were performed
+						- what components may have been repaired or replaced
+						- absence can cause misleading results
+					- inferring maintenance downtime from sensor logs is not an acceptable recourse
 				- Failure history
-					- Both normal and failure modes as these are two different patterns.
-				- Maintenance / Repair History
-					- Time-stamped logs, including replaced components and activities performed. 
-					- Provides details on failure modes and allows for fault identification.
-				- Machine conditions
-					- Time-dependent features that capture aging patterns
-					- Ideally should capture degrading trend prior to actual event
-					- Can be telemetry data from different sensors.
-				- Machine operator data
+					- dates and times for failure events
+					- including the nature of the failure, the failure mode
+					- very important that it is done in a timely fashion
 			- Temporal data vs static data
 			- (maybe) Feature engineering
-				- Domain knowledge
 	- Photovoltaic Inverter Context
-		- Describe a photovoltaic system
+		- What is a photovoltaic system
 		- Demonstrate this industry doesn't quite meet the requirements for such a system, good old edge cases.
 		- Smaller quantities of accurate temporal data (except energy output)
 		- Abundance of static data
