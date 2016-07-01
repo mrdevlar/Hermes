@@ -95,17 +95,6 @@ Maintenance history logs contain all service interactions with any particular sy
 
 Finally, failure history includes the time and conditions of observed breakdowns across systems. These values are usually entered manually upon system failure. An accurate and timely declaration that a machine has failed and the cause of that failure is central to the task of predictive maintenance. A generic recording of failure, without determining the cause, is not sufficient. Utmost care must be taken to ensure that the failure history records are current and complete. Delays in recording failure times detrimentally impact predictive performance. This is likely the single most important data source for a predictive maintenance process. If recorded inaccurately, it will undo the entire endeavor. 
 
-<!-- 
-**granularity**
-You need to insert somewhere the issue of data granularity, specifically the length of the interval between repeated measures. 
- -->
-
-<!-- 
-Segway needed.
--->
-
-
-
 ### Predictive Maintenance in Photovoltaic Inverters
 
 Predictive maintenance presents an opportunity for improved cost optimization in the solar industry. This section examines one area of application within the solar industry, namely predictive maintenance of photovoltaic inverters. First, a general picture of a typical photovoltaic system at the utility-scale is given, demonstrating the role of inverter reliability in its operation. Second, a description of the considerations are given when developing a predictive maintenance process in this domain. 
@@ -139,18 +128,74 @@ While the system itself may not record a substantial amount of useful data, the 
 
 System attributes are almost always kept complete and up to date. The make, model, installation date, location and other static data are recorded. Utility-scale solar companies often have contracts with manufacturers which depends on the accuracy of this data. This often includes offers to replace faulty elements within a specific time of purchase. 
 
-Maintenance logs and failure history are usually kept but the level of detail depends on an organization's commitment and awareness of the utility of this data. Some companies chose not to employ maintenance logs at all, instead opting for run-to-failure operations. As the name suggests, components in the system are run until they fail and are then replaced. This is an suboptimal reactive approach, and also the most expensive form of maintenance. It leads to to increased downtime and higher costs of repair parts\cite{Mobley2002}. Companies that run-to-failure will usually still store accurate failure times for these components but not always. This can result in discrepancies between failure times and a lack of system electrical output leading to confusion about the exact timing. Companies that invest in some level of preventative maintenance will keep logs which include what components were inspected and what, if any, corrective measures were taken. However, the level of detail of these logs varies highly. If kept, some degree of high-level root cause is almost always included. This may be at a level that is not sufficiently discriminating such the use of "parts and material" or "external cause" as failure categories. Some companies, especially the large ones, do provide further context for these failures, but they are usually still fairly high level, such as "control software" and "AC contactor". However, the limited willingness to engage in deep-failure analysis can dampen the value of collected information\cite{Golnas2013}.
+Maintenance logs and failure history are usually kept but the level of detail depends on an organization's commitment and awareness of the utility of this data. Some companies chose not to employ maintenance logs at all, instead opting for run-to-failure operations. As the name suggests, components in the system are run until they fail and are then replaced. This is an suboptimal reactive approach, and also the most expensive form of maintenance. It leads to to increased downtime and higher costs of repair parts\cite{Mobley2002}. Companies that run-to-failure will usually still store accurate failure times for these components but not always. This can result in discrepancies between failure times and a lack of system electrical output leading to confusion about the exact timing\cite{Laukamp2002}. Companies that invest in some level of preventative maintenance will keep logs which include what components were inspected and what, if any, corrective measures were taken. However, the level of detail of these logs varies highly. If kept, some degree of high-level root cause is almost always included. This may be at a level that is not sufficiently discriminating such the use of "parts and material" or "external cause" as failure categories. Some companies, especially the large ones, do provide further context for these failures, but they are usually still fairly high level, such as "control software" and "AC contactor". However, the limited willingness to engage in deep-failure analysis can dampen the value of collected information\cite{Golnas2013}.
 
 As is clear, there are some significant hurdles to overcome in the development of a predictive maintenance process within the solar energy domain. However, as the industry matures and becomes increasingly self-sustainable it will undoubtedly correct many of these imperfections. 
 
-# Data Generation
+### Simulated Data and Model Justification
 
-The purpose of this section is to lay out the simulated data set used throughout the remainder of the text. The data set uses the basic designs of a real-world photovoltaic system, but lacks the faults generated by poor company data management.
+The purpose of this section is to lay out the simulated data set used throughout the remainder of the text and justify the use of a Bayesian time-to-event model. 
 
-The data set is meant to simulate a real-world photovoltaic system, but one without many of the current issues. 
+The simulated data uses the basic designs of a real-world photovoltaic system, but lacks the faults generated by poor data management, connectivity issues and other recording errors. For the sake of exposition, it is also a simplification of reality, in that it does not cover many of the possible externalities that arise in such a system. The purpose, after all, is to demonstrate how a predictive maintenance process can be developed rather than focusing on eliminating edge-cases. 
 
-Set the scene of not an idealized data set rather one that should be a reality within several years as the industry matures. 
+Five-hundred inverters clustered in ten solar parks are generated. Each of the five-hundred inverters is provided with an ID, a model type, a park and a date of installation. 
 
+Three generic failure modes are used. Two which occur within the first year of operation, representing sources of infant mortality commonly found in inverters\cite{Dhere2005}. The final failure mode is old age wear, which peaks within ten years of operation, on average. Admittedly, this is a pessimistic choice for a time frame given improvements in inverter reliability over the preceding decade. However, it is justified in that most current solar systems will still be making use of older components.
+
+The temporal granularity of the data is daily. A predictive maintenance process could be set up on an hourly, even second basis. However, the inability to act, not to mention the time required to refit the model, makes such such narrow intervals impractical.
+
+Daily inverter electrical output data is provided, with both trend and seasonality removed. Furthermore, a daily count of error codes is provided. Three generic error codes are generated whose combinations are related to the aforementioned failure modes. Park level data is also provided. Temperature and humidity measurements are provided at the solar park level. For each, a centered average is provided based on data that has had both the trend and seasonality removed.
+
+Finally, maintenance logs are compressed into two activities, namely related to component repair or replacement within a photovoltaic inverter. It should be stressed that replacement refers to subcomponents of the inverter, like capacitors, not the inverter itself. 
+
+From this description it is clear that this simulated data could be infinitely more complex. In a real-world setting, there are a greater number of failure modes, error codes and maintenance activities. However, in order to derive the essence of predictive maintenance process, this level of simplification is justified. Additionally, a real-world context is unlikely to have a greater quantity of machine condition data, only further contextual information. Thus, this additional context simply increase the dimensions of the input and the model and does not alter the heuristic required to produce a predictive maintenance process. 
+
+
+<!-- GRAY BOX -->
+----
+
+500 Inverters
+10 Solar Parks
+
+
+System Attributes
+- Inverter ID
+	- inv_001
+- Inverter Type
+	- central, string, microinverter
+- Date of Installation
+	- YYYY-MM-DD
+	- Age in Days
+- Inverter Park
+	- park_001
+
+Failure Modes
+- Infant Mortality
+	- fail_X, fail_Y
+- Old Age
+	- fail_Z
+
+System Conditions
+- Inverter output
+	- Detrended, made stationary
+- Daily count of error codes
+	- Three Error Codes
+
+Park Conditions
+- Temperature
+- Humidity
+
+Maintenance History
+- Repair
+- Replacement
+
+----
+
+
+
+<!-- 
+Segway needed.
+-->
 
 
 Types of Inverters
@@ -165,25 +210,17 @@ The string inverters show a failure rate that is one order of magnitude lower co
 
 While there have been numerous studies about the long-term reliabilityofPVmodules,similarstudiesforinvertersareharder to find. The assumption for inverter failures is that they will follow the “bathtub curve” where a relatively high number of infant mortality failures appear in the early life of inverters,to be followed by a low rate of stochastic failures during the bulk of their useful life and by a higher rate of wear-induced, end-of-life failures.
 
-\cite{Golnas2013}
-However, as the inverter contains most of the intelligence of
-a PV system, its failures are also easier to capture.Subsystems upstream of the inverter are rarely monitored at a resolution that would allow a direct report of a malfunction. It is important to note that communication failures are on par with inverter- related issues in terms of frequency, but they are not counted along with the rest of the failures because they are transient and do not impact production.
-
-\cite{Golnas2013}
-However, the limited capability for deep failure analysis may dampen the value of the collected information.
 
 
 
-\cite{Dhere2005}
-"Kim et  al  have  suggested  a  PV  system  with  suppression functions  so  as to limit power disturbances such as variation of voltage and frequency and harmonic voltage generation into utility  [24].  The power disturbances are caused  by  unstable output pattems due to variability of weather and customer  load  in a highdensity grid connection"
 
 - Islanding
 - partial shadowing of PV arrays
 
 
 
+\cite{Dhere2005}
 
-We now return our attention to the solar industry and introduce predictive maintenance in the context of a photovoltaic system.
 
 Mean  Time  Between  Failures  (MTBF)  of approximately  50  years has been predicted by a theoretical analysis  of  an inverter not exposed  to excessive temperature  [  131.  However, the shockingly different field experience from older systems has shown that the inverter is the most vulnerable component in PV systems and lost  15%  of tbe PV power. Reliability Data at  FSEC  includes information on  103 grid-connected PV systems that used  176  inverters  [31]. The  FSEC  database includes systems using PV arrays from  9  manufacturers and inverters from  4  manufacturers. During  1999-2003,  213  events have been recorded on these  103  systems, of which  139  events i.e.  65%  were attributed to inverters. Most inverter events  were  attributed to  poor maximum power-tracking function and ability to maintain grid connection. They required software upgrades  or  replacementlrepair  of  inverter by the manufacturer. Approximately  6  inverter failures were due to  lightning strikes at or near the PV arrays.  Most  events were recorded during the first year  of  system operation. Many of the inverters that had frequent failures  are  no longer available on the market.  A  fair number of system reliability events were due to  BOS.  They included tripping of  dc breakers and failure of source circuit overcurrent devices, as well as ac overcurrent devices, requiring manual resets  or  replacement of components  [31].
 
@@ -191,11 +228,6 @@ Mean  Time  Between  Failures  (MTBF)  of approximately  50  years has been pred
 Petrone
 
 The field experience has shown that the inverter is the most vulnerable component [5], [11]–[14], [26]. Fig. 1 puts into evidence that investment in a new inverter is required three to five times over the life of a PV system [101]
-
-
-\cite{Laukamp2002}
-	- The information given from owners does not always distinguish between a temporary malfunction, (which automatically resets) and a failure, i.e. a defect requiring a repair. Even less a malfunction can be distinguished from an inverter shut down due to irregular grid conditions. Data for figure 3 include all such effects. Considering true hardware reliability of the inverter, these data are conservative.
-	- Inverter problems as the major source of energy loss
 
 
 
