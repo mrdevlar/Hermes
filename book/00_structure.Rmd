@@ -124,6 +124,7 @@
 			- Choose to focus on Bayesian time-to-event analysis.
 			- Estimate residual lifetime of an inverter
 			- Foundation: accurately predict the remaining lifetime of the device by explaining as much of the variation within the data as possible.
+		- Ideal in cases of small quantities of time-dependent data
 3. Methodology
 	- Reliability Analysis
 		- Basic Functions
