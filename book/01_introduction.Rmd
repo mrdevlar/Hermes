@@ -36,15 +36,10 @@ Good academic literature is the kind that is capable of taking a complex topic m
 
 However, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang\cite{Blitzstein2014} as well as a first course on Bayesian linear models at the level of McElreath\cite{McElreath2016}. 
 
-To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text.
+As the reader will notice, there is a tonal shift between the domain chapter and the remainder of the text. This is intentional. The first is meant to serve as a declarative explanation of the state of the world. The methodology and analysis make use of personal language and the "royal we" to better engage the reader in the mechanics of the process\cite{Urquhart2009}.
 
-<!-- 
-Maybe include something about the change of voice between the first and second half of the thesis.
-- In chapter 2 I am explaining the state of the world, it's declarative
-- In chapter 3, I am exploring the mechanics of a mathematical system with you, it's meant to be interactive.
+<!-- To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text. -->
 
-
- -->
 
 ## Introduction
 

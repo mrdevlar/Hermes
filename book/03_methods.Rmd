@@ -1,5 +1,5 @@
-# Methods
-```
+# Methodology
+<!--
 4. Methods
 	- Reliability Analysis
 	- Censoring
@@ -7,18 +7,70 @@
 	- Frailty & Hierarchical Model
 	- Estimation (HMC and Gibbs)
 	- Model Selection
-@TODO: Do not build here, build in separate files
-```
+-->
+
+Time-to-event analysis/footnote{also known as survival analysis, reliability analysis and event history analysis} concerns itself with the modeling of the expected duration of time until an object experiences a well-defined event. This event should is a transition between a finite number of possible states, such as from operational to non-operational or from alive to dead\cite{Andersen1992}. In this particular context, these states define the transition of a photovoltaic inverter from functional to failed.s
+
+To be able to model the time until these transitions, there needs to be precision in describing our phenomenon, and for that, we require mathematics. The following section describes the mathematical narrative that underly the construction, manipulation and estimation of Bayesian time-to-event models.
+
+We begin with a description of the basic functions required to understand this class of models, their role in defining time-to-event distributions and their relationship to one another. We then examine censoring and truncation which are common characteristics of time-to-event data. From these basics units, we construct the accelerated failure time model, a linear model for time-to-event analysis. We then introduce hierarchical model which describes shared risk, or frailty. Finally, we examine how such a model is estimated using Markov Chain Monte Carlo sampler Stan.
 
 
 
-Proportional Hazards models seek to find a shift in the hazard rate for an individual at every age of *t*. 
+## Time-to-Event Analysis
+
+The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}. 
+
+We begin by defining $T$, a continuous non-negative random variable with an unknown distribution representing the time until a well-defined event. As it is a time, we constrain its support to all positive real numbers, ($T \ge 0, T \in \mathbb{R}$). We then define $t$ to be the realization of this random variable at a specific point in time.
+
+A familiar way of describing a probability distribution is to use probability density function (pdf) and cumulative distribution function (cdf). The pdf is the relative likelihood of a random variable taking a particular realization. 
+
+$$f(t) = \Pr(T = t)$$
+
+The cdf defines the probability that a random variable will take on a value less than or equal to some realization. Thus, it defines a range of outcomes across a random variable. In our case: 
+
+$$F(t) = \Pr(T \le t) = \int^t_0 f(x) dx $$
+
+In our application, the cdf of $T$ may not be particularly interesting as we are interested in random variables that take on values greater than some realization. Fortunately, by definition, a random variable must sum to one and we are able to find the complement of the cdf by subtraction:
+
+$$S(t) = P(T \ge t) = 1 - F(t) = \int^{\infty}_t f(x) dx$$
+
+This gives us the survival function which is the probability that our well-defined event occurs after a specific point in time. Of course, if the event occurs after a specific point in time, the object under study must not have experienced the event up to that point. Thus, the survival function gets its name from the fact that it provides the probability that the object has survived up to a particular point in time. 
+
+As the survival function is the complement of the cdf, it inherits its properties. It is monotonically decreasing, with $S(0) = 1$ and $S(\infty) = \lim_{t\rightarrow \infty}S(t) = 0$. This formalizes the notion that when the event in question is death, in the beginning all devices are operational, but given a long enough time frame all devices eventually fail. 
+
+It is generally true that any pdf can be expressed as a derivative of its cdf, as a result the survival function also provides a route back to the pdf. The negative derivative of the survival function returns the pdf. Such that the pdf can be redefined as:
+
+$$f(t) = \lim_{\Delta t \rightarrow 0^+} \frac{\Pr(t \le T < t + \Delta t) }{\Delta t} = \frac{d F(t)}{dt} = - \frac{d S(t)}{dt}$$
+
+
+As we now have a function that can describe the probability of survival up to a specific point, but what if we want to know whether or not something survives into the next point in time? 
+
+**@TODO**: Better segway between survival and hazard function
+
+$$h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)}$$
+
+This is the hazard function, it defines the rate of survival as $\Delta t \rightarrow 0$, or rephrased it is the instantaneous rate of an event, given that the event has not yet occurred. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than 1. 
+
+If we integrate the hazard from our starting point until a specific point in time, we return a cumulative hazard function. 
+
+$$H(t) = \int^t_0 h(u) du$$
+
+The cumulative hazard is the amount of times we would expect to observe our well-defined event over a given period of time, assuming that event were repeatable. 
+
+
+
+
+
+<!-- 
+Proportional Hazards models seek to find a shift in the hazard rate for an individual at every age of *t*.
 
 
 - Distribution Choice
   - Weibull
   - ?Lognormal
-  - ?Loglogistic 
+  - ?Loglogistic
+  - Gompertz
 
 
 - Stratification == Frailty
@@ -33,6 +85,38 @@ Proportional Hazards models seek to find a shift in the hazard rate for an indiv
 
 # Notes
 
- - "Whereas OLS produces a predicted dependent variable (fitted value) for each individual; Cox regression produces a *probability distribution for the duration of each individual's waiting time*" 
+ - "Whereas OLS produces a predicted dependent variable (fitted value) for each individual; Cox regression produces a *probability distribution for the duration of each individual's waiting time*"
  - "Whereas in OLS a change in the estimated parameter's value implies a linear change in every individual's fitted value; in Cox regression a change in an estimated parameter implies *a proportional shift in each individual's hazard rate* **at all ages**"
 	- [Cite](http://courses.demog.berkeley.edu/mason213F15/)
+
+
+
+The first feature that distinguishes time-to-event analysis from traditional statistical methods is a lack of normally distributed errors.\cite{Guo2010} Time is always positive quantity, this alone should invalidate the normal error model. However, more compelling is the notion that the rate of survival distribution does not necessarily have to have a single mode. For example, when examining the survival time of individuals following a difficult surgical procedure, one would expect to see two groups of deaths. One shortly after the procedure, possibly due to complications, and a second group of deaths long after if the reason for the surgery reoccurs. This type of bimodality is unable to be properly modeled using standard OLS regression. 
+
+The second distinguishing feature is incomplete observation, or censoring, which obscures the time until an event occurs. For example, when analyzing the time until failure of an industrial device, it is often impractical to wait until all the devices in the population have failed before drawing conclusions. Therefore, the data we utilize gives us only a partial view of the duration until the event occurs in the population. Censoring comes in various classes and types, depending on the segment of time is unobserved. Right censoring is the most common class, and refers to the situation where the event is observed only if it occurs prior to some pre-specified time.\cite{Klein2003} In our case, we only observe a photovoltaic inverter failure if it has occurred in the past. Our prespecified time, is this moment, and all functioning inverters are thus right censored. 
+
+
+ -->
+
+
+ <!-- 
+- Basic building blocks
+- Relationships among the basic building blocks
+- Survival function == Reliability function
+- Hazard function == risk, intensity, mortality rate or conditional failure rate
+- Better Segways between functions
+- Maybe add examples?
+ -->
+
+
+<!-- 
+ - Censoring
+ - 
+ -->
+
+<!-- 
+Moar stuff (but does it need a separate chapter or integrate here? Probably integrate here.)
+
+ - Censoring
+ - PH and AFT Models
+ -->
