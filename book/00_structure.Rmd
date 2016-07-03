@@ -131,8 +131,15 @@
 			- $T \rightarrow t$ 
 			- CDF, PDF
 			- Survival -> Hazard Function
-
-	- Censoring
+			- Hazard -> Cumulative Hazard
+			- Return from Cumulative Hazard back to PDF
+	- Censoring and Truncation
+		- Define Truncation
+		- Define Censoring
+		- 
+	- Likelihood Function
+		- 
+	- Mean and Median Residual Lifetime
 	- Accelerated Failure Time Model
 		- Note about Proportional Hazards Models
 	- Bayesian Approach
