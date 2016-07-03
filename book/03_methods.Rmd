@@ -19,9 +19,9 @@ We begin with a description of the basic functions required to understand this c
 
 ## Time-to-Event Analysis
 
-The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}. 
+The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}. 
 
-We begin by defining $T$, a continuous non-negative random variable with an unknown distribution representing the time until a well-defined event. As it is a time, we constrain its support to all positive real numbers, ($T \ge 0, T \in \mathbb{R}$). We then define $t$ to be the realization of this random variable at a specific point in time.
+Begin by defining $T$, a continuous non-negative random variable with an unknown distribution representing the time until a well-defined event. As it is a time, its support is constrained to all positive real numbers, ($T \ge 0, T \in \mathbb{R}$). Further, define $t$ to be the realization of this random variable at a specific point in time.
 
 A familiar way of describing a probability distribution is to use probability density function (pdf) and cumulative distribution function (cdf). The pdf is the relative likelihood of a random variable taking a particular realization. 
 
@@ -31,28 +31,31 @@ The cdf defines the probability that a random variable will take on a value less
 
 $$F(t) = \Pr(T \le t) = \int^t_0 f(x) dx $$
 
-In our application, the cdf of $T$ may not be particularly useful as we are interested in random variables that take on values greater than some realization. This is because in most cases, $T$ will be greater than the value observed $t$. Fortunately, by definition, a random variable must sum to one and we are able to find the complement of the cdf by subtraction.
+In the time-to-event context, the cdf of $T$ may not be particularly useful as the variables of interest that take on values greater than some realization. This is because in most cases, $T$ will be greater than the value observed, $t$. Fortunately, by definition, a random variable must sum to one and the complement of the cdf can be established through subtraction.
 
 $$S(t) = P(T \ge t) = 1 - F(t) = \int^{\infty}_t f(x) dx$$
 
-This gives us the survival function\footnote{also denoted as the reliability function $R(t)$} which is the probability that our well-defined event occurs after a specific point in time. It is considered the survival function because it provides the proportion of the population which have survived up to that point. Clearly, if the event occurs after a specific time, then the event has not yet occured. As the event is death or failure, it is implied that our object of interest has survived up to that point.
+This returns the survival function\footnote{also denoted as the reliability function $R(t)$} which is the probability
+that the well-defined event occurs after a specific point in time. It is considered the survival function because it provides the probability of surviving beyond an observed time $t$. Clearly, if the event occurs after a specific time, then the event has not yet occurred. As the event is death or failure, it is implied that the object of interest has survived up to that point.
 
 As the survival function is the complement of the cdf, it inherits its properties. It is monotonically decreasing, with $S(0) = 1$ and $S(\infty) = \lim_{t\rightarrow \infty}S(t) = 0$. This formalizes the notion that when the event in question is failure, in the beginning all systems are operational, but given a long enough time frame all systems will eventually fail. 
 
-It is generally true that any pdf can be expressed as a derivative of its cdf. As a result, the survival function also provides a route back to the pdf. The negative derivative of the survival function returns the pdf. Such that the pdf can be redefined as follows, which will be useful for later estimation.
+It is generally true that any pdf can be expressed as a derivative of its cdf. As a result, the survival function also provides a route back to the pdf. The negative derivative of the survival function returns the pdf. Such that the pdf can be redefined as follows:
 
 $$f(t) = \lim_{\Delta t \rightarrow 0^+} \frac{\Pr(t \le T < t + \Delta t) }{\Delta t} = \frac{d F(t)}{dt} = - \frac{d S(t)}{dt}$$
 
-While the survival function provides the 
+While the survival function focuses on the event not occurring, the hazard function focuses on the event occurring. The hazard function\footnote{also known as the conditional failure rate and force of mortality} is the instantaneous rate of failure given that failure has not yet occurred. 
+
+$$ h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)} $$
+
+Intuitively, it provides the risk of the event occurring within the next limiting time interval assuming it has not yet taken place. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than one. However, its practical interpretation is consistent with what is generally understood as a hazard. When the hazard is zero, the risk of the event occurring is also zero. Conversely, when the hazard is infinite, the risk of the event is near certain. 
+
+The hazard is far more useful from an intuitive perspective than the other constructions. As its conditional formulation is generally what is thought of as the risk of an event. It takes into account the 
 
 
-We now have a function that can describe the probability of survival up to a specific point, but what if we want to know whether or not something survives into the next point in time? 
+Assuming it were repeatable, the cumulative hazard is the amount of times we would expect to observe the event given a period time. 
 
-**@TODO**: Better segway between survival and hazard function
 
-$$h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)}$$
-
-This is the hazard function, it defines the rate of survival as $\Delta t \rightarrow 0$, or rephrased it is the instantaneous rate of an event, given that the event has not yet occurred. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than 1. 
 
 If we integrate the hazard from our starting point until a specific point in time, we return a cumulative hazard function. 
 
