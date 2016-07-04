@@ -136,9 +136,12 @@
 	- Censoring and Truncation
 		- Define Truncation
 		- Define Censoring
-		- 
+		- Define difference
+		- Define mathematical construction of right-censoring
+		- Type I, Type II and Random Censoring
+		- Mathematical Construction
 	- Likelihood Function
-		- 
+		- Pseudo-observations
 	- Mean and Median Residual Lifetime
 	- Accelerated Failure Time Model
 		- Note about Proportional Hazards Models

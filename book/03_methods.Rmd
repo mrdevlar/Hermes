@@ -19,7 +19,7 @@ A description of the basic functions required to understand this class of models
 
 ## Time-to-Event Functions
 
-The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}.
+The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}\cite{Rodriguez2007}.
 
 Begin by defining $T$, a continuous non-negative random variable with an unknown distribution representing the time until a well-defined event. As it is a time, its support is constrained to all positive real numbers, ($T \ge 0, T \in \mathbb{R}$). Further, define $t$ to be the realization of this random variable at a specific point in time.
 
@@ -44,37 +44,39 @@ While the survival function focuses on the event not occurring, the hazard funct
 
 $$ h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)} $$
 
-It provides the potential of the event occurring within the next (limiting) time interval, assuming it has not yet taken place. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than one.
+It provides the potential of the event occurring within the next (limiting) time interval, assuming it has not taken place until now. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than one.
 
 The hazard is far more useful from a practical perspective than the other constructions. The conditional formulation is especially important, as the hazard defines the risk only after excluding the prior occurrence of the event. This makes it a more natural expression of what is generally expressed as the risk of an event in time, which implicitly presupposes that the event has not yet occurred.
 
-Numerically, the hazard is clearly linked to the future occurrence of the event. When the hazard is zero, the risk of the event occurring in the future is also zero. Conversely, when the hazard is infinite, the risk of the event occurring the in future is near certain.
+Numerically, the hazard is clearly linked to the future occurrence of the event. When the hazard is zero, the risk of the event occurring in the next moment is also zero. Conversely, when the hazard is infinite, the risk of the event occurring the next instance is near certain.
 
-The hazard is a limiting rate, and is concerned with the event within an instantaneous interval. Sometimes, it is beneficial to understand that potential up to an instance in time.
+The hazard is a limiting rate, and is concerned with the event within an instantaneous interval. At times, it is beneficial to understand that potential across an interval of time.
 
 $$ H(t) = \int^t_0 h(u) du $$
 
 This is the cumulative hazard function. It measures the total amount of risk that has been accumulated up to time $t$. The cumulative hazard can be understood as the number of times we would expect to observe the event in a given period of time, assuming the event were repeatable.
 
-The pdf, cdf, survival, hazard and cumulative hazard functions all uniquely define the process generating the time-to-event data. As a result, it is possible to transform any of these functions into any other. This is useful because it provides insight into the relationships among the functions, but also because it allows for the use of the easiest constructions in modeling.
+The relationship between the hazard and cumulative hazard is especially important in providing intuition. The hazard is a rate is defined in $\frac{1}{t}$ units. Whereas the cumulative hazard sums across those $\frac{1}{t}$ units. For example, if a rate of a particular event were 10 and five units of time passed, then 50 events would be expected within those five units. It is important to note, that this logic is one-directional and is based on an assumption of a constant hazard rate over the five units of time. There is nothing that makes this generally true. Thus, when starting with a cumulative hazard of 50, it is possible that the hazard rate is 15, 5, 10, 5, 15 for each of the five units of time. 
+
+The pdf, cdf, survival, hazard and cumulative hazard functions all uniquely define the process generating the time-to-event data. As a result, it is possible to transform any of these functions into any other. This is useful because it provides insight into the relationships among the functions but also because it allows for the use of the easiest constructions in modeling.
 
 It is generally true that any pdf can be expressed as a derivative of its cdf. As a result, the survival function also provides a route back to the pdf. The negative derivative of the survival function returns the pdf. Such that the pdf can be redefined as follows:
 
 $$ f(t) = \lim_{\Delta t \rightarrow 0^+} \frac{\Pr(t \le T < t + \Delta t) }{\Delta t} = \frac{d F(t)}{dt} = - \frac{d S(t)}{dt}$$
 
-The hazard function and survival function are also intimately related to one another. 
-
-From the above identity, it can be seen that the pdf in the definition of the hazard can be replaced with the negative derivative of the survival function. The same can be done in the definition of the hazard. It is then clear that the hazard can be expressed as the negative derivative of the logarithm of the survival function. 
+The hazard function and survival function are also intimately related to one another. From the above identity, it can be seen that the pdf in the definition of the hazard can be replaced with the negative derivative of the survival function. The same can be done in the definition of the hazard. It is then clear that the hazard can be expressed as the negative derivative of the logarithm of the survival function. 
 
 $$ h(t) = \frac{f(t)}{S(t)} = - \frac{d S(t) / dt }{S(t)} = - \frac{d \ln \left( S(t) \right) }{dt} = - \frac{d}{dt} \ln S(t)$$
 
 The above identity can also be used to express the cumulative hazard. Integrating from the starting time until a specific time, we find that the cumulative hazard can be defined as the negative logarithm of the survival function. 
 
-$$ H(t) \int^t_0 \frac{f(u)}{S(u)}du = - \int^t_0 \frac{1}{S(u)} \left( \frac{d}{du} S(u)\right) du = -\ln S(t) $$
+$$ H(t) = \int^t_0 \frac{f(u)}{S(u)}du = - \int^t_0 \frac{1}{S(u)} \left( \frac{d}{du} S(u)\right) du = -\ln S(t) $$
 
-Whatever transformation is expressed in terms of logarithms, can be reversed through exponents. Thus the survival function can be defined as the exponent of the negative integral of the hazard function, or the negative cumulative hazard.
+Whatever transformation is expressed in terms of logarithms, can be reversed through exponents. Thus, the survival function can be defined as the exponent of the negative integral of the hazard function, or the negative cumulative hazard. 
 
 $$ S(t) = \exp \left (- \int_0^t h(u) du  \right ) = \exp(-H(t)) $$
+
+This allows for the conversion of a cumulative hazard back into a probability. Given the earlier example of a cumulative hazard of 50, $S(t) = \exp(-50) = 0.19 \cdot 10^{-22}$ which is a near zero probability of survival.
 
 The pdf can also be expressed in terms of the exponent of the negative integral of the hazard function, or the cumulative hazard.
 
@@ -83,6 +85,10 @@ $$ f(t) = h(t) \exp \left (- \int_0^t h(u) du  \right ) = h(t) \exp(-H(t)) $$
 As can be seen, regardless which of the functions are available, it is possible to produce a transformation which will return all the others. 
 
 <!-- 
+
+SEGWAY NEEDED!
+
+
 Should I include conditional forms of the above, assuming that the onset of risk is not observed.
 
 See: https://books.google.de/books?id=xttbn0a-QR8C&printsec=frontcover&hl=de#v=onepage&q&f=false
@@ -90,14 +96,37 @@ P.9
 -->
 
 
+
+
 ## Truncation and Censoring
 
-Truncation and censoring are defining elements of time-to-event models. 
+Truncation and censoring are defining elements of time-to-event models. The functions that have been described so far have assumed an environment where the waiting time until an event is fully observed. In most real-world applications, however, it is impractical to wait until all systems in the population fail. Therefore, time-to-event models usually exist in incomplete information. Truncation and censoring provide mechanisms to formalize how that state of limited information affects the model. 
 
-The functions that have been described so far have been within the context of complete information. Thus, an environment where the time until an event is fully observed. However, this is unrealistic. In most real-world applications, it is impractical to wait until all systems in our population have failed. Therefore, time-to-event models often exist in incomplete information. Truncation and censoring provide mechanisms to formalize how that state of limited information affects the model. 
+Truncation refers to when values outside a particular bounds are entirely omitted. Simply put, in a truncated data set, systems are only observed if they have survived up to a particular point in time. Truncation is less common in reliability contexts but does still occur. For example, if systems were recorded only if they had not failed prior to a particular date, then those systems that had failed before that date would not be recorded and thus truncated\cite{Hong2009}.
+
+Censoring occurs when a value is only partially known. In a censored data set, the lifetime of a system is only observed up to a certain point in time. This is because the event in question has yet to occur. However, this provides some information, as we know the event has not yet occurred but also that it must occur in the future providing partial information. 
+
+The difference between censorship and truncation can be viewed as the difference between known-unknowns and unknown-unknowns. If truncation exists in a data set, the observations that would have produced the event has been removed from the data. With censoring, the source of the observations is retained, but there is uncertainty as to the exact timing of the observation. Both have detrimental effects on model fit, but the effect of truncation results in a greater bias. 
+
+There are different types of censoring depending on which segment of the data is missing. As the event in question is missing because it is in the future, right-censoring is said to occur. Censoring is also determined based on which observations are subject to censoring. Different schemes exist, mainly from clinical trials, which define mechanisms where censorship occurs if the event is passed a particular end date (Type I) or if it occurs after a specific number of events have been observed (Type II). More common, is random, or non-informative, censoring. As the name suggests, this is when censoring occurs randomly and is therefore independent of failure times.
+
+Censoring can be operationalized by augmenting the underlying distribution of the time until our well-defined event, $T$. First, a binary random variable $d$ is defined. This variable takes on a value depending on what is observed at time $t$. If at time $t$ the event has occurred, then $d$ takes on the value of 1. If at time $t$ the event has not yet occurred and is therefore censored, $d$ takes on the value 0. With the introduction of $d$ it is clear that $T$ is not being directly observed. Rather, another distribution which contains censoring times $C$ is interfering. What is being observed is instead the minimum of both the failure times and the censoring times, which we denote as $Y$. 
+
+$$  Y_i = \min(T_i,C_i) \qquad \text{ and } \qquad d_i = \left\{\begin{matrix} 1 \text{ if } T_i \le C_i\\ 0 \text{ if } C_i < T_i \end{matrix}\right. $$
 
 
 
+<!-- 
+The solution is to create a binary random variable ($\delta_i$) to account for whether a failure is observed and a random variable ($Y_i$) which combines our observation of the time with whether that failure is observed.
+
+Let $T$ denote the lifetime of a device and $C$ a random censor time. Every device has a lifetime $T_i$ and a censor time $C_i$ and for every device we observe a pair ($Y_i, \delta_i$) where:
+
+$$  Y_i = \min(T_i,C_i) \qquad \text{ and } \qquad \delta_i = \left\{\begin{matrix} 1 \text{ if } T_i \le C_i\\ 0 \text{ if } C_i < T_i \end{matrix}\right. $$
+
+% Independence assumption between censoring and failure time
+% Likelihood estimation
+
+ -->
 
 
 
@@ -165,4 +194,4 @@ Moar stuff (but does it need a separate chapter or integrate here? Probably inte
 
 ## Extended Reading
 
-For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger \cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis, Ibrahim, Chen and Sinha\cite{Ibrahim2005} provide a foundational work. 
+For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. 
