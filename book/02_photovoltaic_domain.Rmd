@@ -33,7 +33,13 @@ OLD OUTLINE, KEEP FOR POSTERITY, INTEGRATE THEN DELETE
 - Data Generation
 - Model Choice
 
-This chapter **yadda yadda ...**
+This chapter examines the domain.
+
+It begins with a description of the current state of global energy generation and 
+
+the solar industry
+It first explores the state of the solar industry and why 
+the state of the solar industry and its requirement for further cost-savings. Next, it examines predictive 
 
 
 
@@ -140,7 +146,7 @@ The simulated data uses the basic designs of a real-world photovoltaic system, b
 
 Five-hundred inverters unevenly clustered in five solar parks are generated. Each of the five-hundred inverters is provided with an ID, a model type, a park and a date of installation. 
 
-Three generic failure modes are used. Two which occur within the first year of operation, representing sources of infant mortality commonly found in inverters\cite{Dhere2005}. The final failure mode is old age wear, which peaks within ten years of operation, on average. Admittedly, this is a pessimistic choice for a time frame given improvements in inverter reliability over the preceding decade. However, it is justified in that most current solar systems will still be making use of older components.
+Two generic failure modes are used. One which occurs within the first year of operation, representing sources of infant mortality commonly found in inverters\cite{Dhere2005}. The other failure mode is old age wear, which peaks within ten years of operation, on average. Admittedly, this is a pessimistic choice for a time frame given improvements in inverter reliability over the preceding decade. However, it is justified in that most current solar systems will still be making use of older components.
 
 The temporal granularity of the data is daily. A predictive maintenance process could be set up on an hourly, even second basis. However, the inability to act, not to mention the time required to refit the model, makes such such narrow intervals impractical.
 

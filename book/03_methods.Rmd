@@ -1,13 +1,4 @@
 # Methodology
-<!--
-4. Methods
-	- Reliability Analysis
-	- Censoring
-	- Accelerated Failure Time Model
-	- Frailty & Hierarchical Model
-	- Estimation (HMC and Gibbs)
-	- Model Selection
--->
 
 Time-to-event analysis/footnote{also known as survival analysis, reliability analysis and event history analysis} concerns itself with the modeling of the expected duration of time until an object experiences a well-defined event. This event is a transition between a finite number of possible states, such as from operational to non-operational or from alive to dead\cite{Andersen1992}. In this particular context, these states define the transition of a photovoltaic inverter from functional to failed.
 
@@ -44,7 +35,7 @@ While the survival function focuses on the event not occurring, the hazard funct
 
 $$ h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)} $$
 
-It provides the potential of the event occurring within the next (limiting) time interval, assuming it has not taken place until now. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ), and thus can take on values greater than one.
+It provides the potential of the event occurring within the next (limiting) time interval, assuming it has not taken place until now. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ). It must be non-negative, such that $h(t) \ge 0$, and can take on values greater than one $[0, \infty)$.
 
 The hazard is far more useful from a practical perspective than the other constructions. The conditional formulation is especially important, as the hazard defines the risk only after excluding the prior occurrence of the event. This makes it a more natural expression of what is generally expressed as the risk of an event in time, which implicitly presupposes that the event has not yet occurred.
 
@@ -82,20 +73,88 @@ The pdf can also be expressed in terms of the exponent of the negative integral 
 
 $$ f(t) = h(t) \exp \left (- \int_0^t h(u) du  \right ) = h(t) \exp(-H(t)) $$
 
-As can be seen, regardless which of the functions are available, it is possible to produce a transformation which will return all the others. 
+As can be seen, regardless which of the functions are available, it is possible to produce a transformation which will return all the others. This is useful because generally, the hazard or survival time rather than the density are the objects of interest.
+
+All of these functions can be conditioned to only extend to events that occur after a particular point in time. This is useful when dealing with lifetimes where the system has not been observed from the time it became operational ($t = 0$). It is also useful when constructing expressions about particular intervals of time\cite{Cleves2008}. 
+
+$$ h(t|T > t_0) = h(t) $$
+
+$$ H(t|T > t_0) = H(t) - H(t_0) $$
+
+$$ F(t|T > t_0) = \frac{F(t) - F(t_0)}{S(t_0)} $$
+
+$$ f(t|T > t_0) = \frac{f(t)}{S(t_0)} $$
+
+$$ S(t|T > t_0) = \frac{S(t)}{S(t_0)} $$
+
+One final construction of interest is the expected residual lifetime. This is the amount of life a particular system is expected to have. 
+
+$$ E(t|T > t_0) = \int^\infty_{t_0} S(t) dt \cdot \frac{1}{S(t_0)} $$
+
+<!-- Maybe insert the picture of what you're measuring
+Survival Function, color in the right hand side of that function
+ -->
 
 <!-- 
 
+Maybe introduce 
+
 SEGWAY NEEDED!
 
+Possibly include the Quantile function or Median Residual Lifetime.
 
-Should I include conditional forms of the above, assuming that the onset of risk is not observed.
 
-See: https://books.google.de/books?id=xttbn0a-QR8C&printsec=frontcover&hl=de#v=onepage&q&f=false
-P.9
 -->
 
+## Common Lifetime Distributions
 
+Any continuous distribution defined over the positive numbers can be used as a lifetime distribution. This section briefly covers several commonly used distributions for modeling lifetimes and provides justifications for their use. The exponential, Weibull, Gompertz and Gamma are described.
+
+The simplest lifetime distribution can be defined by assuming a constant hazard rate ($\lambda$) over time.
+
+$$ h(t) = \lambda \tag{ $\lambda$ > 0}$$
+
+As was demonstrated earlier, this can be transformed into a survival function by exponentiating the integral of all values from start until $t$. As the hazard is constant, this will simply be the exponent of the constant multiplied by the number of intervals present. 
+
+$$ S(t) = \exp \left (- \int_0^t \lambda\; du  \right ) = \exp (- \lambda\; t )$$
+
+If transformed into a density, its characterization becomes immediately apparent.
+
+$$ f(t) = - \frac{d S(t)}{dt} = \lambda\; \exp(- \lambda\; t) $$
+
+This is the functional form of exponential distribution. It is useful in two areas in time-to-event analysis. First, it can be used to model events whose likelihood of occurrence does not vary with time. It can model systems that are not affected by wear or aging. For example, the exponential distribution is a suitable model for the release of particles from radioactive material\cite{Jowett1958}. However, these types of events are relatively rare in industrial settings. There are very few systems that do not experience some changes as a result of their length of operation. The second area of use for the exponential distribution is the discretizing of time. Time is continuous but data is not. Thus, there is a need to define how continuous time behaves across recorded intervals. The most consistently used assumption is that the hazard does not change within any given interval. If these intervals are sufficiently small such an assumption is perfectly valid. 
+
+Most lifetime distributions arise as generalizations of the exponential. They provide a more elaborate construction for the hazard over time based on some underlying logic.
+
+The Gompertz distribution is a generalization of the exponential that introduces an exponential effect in the hazard over time.
+
+$$ h(t) = \lambda \exp(\varphi t) $$
+
+The formula was originally derived to characterize the exponential rise in death rates in humans between sexual maturity and old age\cite{Wienke2010}\footnote{The center of the bathtub curve, a concept that will return in the next chapter}. It introduces a shape parameter $\varphi$ which controls the rate of change of the hazard over time. When $\varphi < 0$ the hazard declines over time. This can be used to model component "burn-in", which is the time shortly after beginning operations where mechanical parts often experience high early failures. Conversely, when $\varphi > 0$ the hazard increases over time. This can be used to model end of life failure. If $\varphi = 0$, the Gompertz reduces to an exponential distribution. When the Gompertz hazard is not constant, it is always increasing or decreasing over time. This makes it particularly attractive when it is clear that operational time is the greatest force of mortality.
+
+The Weibull distribution also introduces an exponential effect in the hazard function over time. Yet, it does so in a more flexible manner.
+
+$$ h(t) = \lambda \nu t^{\nu - 1} \tag{ $\lambda >0, \nu > 0$ }$$
+
+It introduces a shape parameter $\nu$ that also controls the increase or decrease of the hazard over time. It is more flexible than the Gompertz in that it is capable of modeling hazards that increase initially, but whose rate of increase declines over time when $(0 < \nu < 1)$. The Weibull also has a common alternative parameterization, which is common in many software packages.
+
+$$ h(t) = \frac{\alpha}{\sigma} \left (\frac{t}{\sigma}  \right )^{\alpha - 1} \tag{$\alpha > 0, \sigma > 0$} $$
+
+This parameterization defines a shape $\alpha$ and a scale $\sigma$ parameter and is equivalent to the rate $\lambda$ in the earlier form as being defined inversely, as an interval or scale, $\sigma = \frac{1}{\lambda}$.
+
+The Weibull distribution was originally developed to assess the catastrophic failure of materials. No material is perfectly uniform and all contain irregularities at some scale. These irregularities such things as pores, mineral inclusions or micro-cracks are distributed throughout the material. While under pressure any one of these irregularities can induce failure. As a result, the Weibull formalizes the notion of the "weakest link"\cite{Quinn2010}. It is the minimum of any collection of independent identically distributed random variables. This is important in reliability of complex systems as different causes of system failure compete with one another and the first cause will result in the failure of the entire system. 
+
+Gamma distribution, like those before it, is also a generalization of the exponential. However, its justification for use as a lifetime distribution is a bit more involved. A system may be exposed to a number of shocks, each of which are exponentially distributed. The system may be resilient to each shock up to a threshold, upon which it fails. The sum of each of those exponentially distributed shocks is gamma distributed\cite{Tso2010}. The hazard function is as follows:
+
+$$ h(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{(1 - I_k(\lambda t)) \Gamma(k)} \tag{$ k>0, \lambda > 0 $}$$
+
+With $k$ being the number of exponentially distributed shocks that occur prior to system failure. As can be seen the hazard is quite complex, making use of both the gamma function $\Gamma(k)$ and the incomplete gamma integral $I_k(\lambda t)$.
+
+$$ \Gamma(k) = \int_0^\infty x^{k-1} \exp(-x) dx \qquad I_k(x) = \frac{\int_0^x s^{k-1} \exp(-s) ds}{\Gamma(k)} $$
+
+In traditional model fitting techniques, the incomplete gamma function imposes numerical problems for parameter estimation\cite{Wienke2010}. This has resulted in the gamma function not finding widespread application. 
+
+Other lifetime distributions exist. However, the preceding cover roughly 99% of common distributions used to model lifetimes. Further, while all the distributions described have mathematical and contextual justifications for their use in specific contexts, these are not always of utmost importance. Historically, the fact that the distribution provides an accurate fit for the data has been an overriding justification for many applications\cite{Marshall2007}. Furthermore, it should be stressed, regardless of which distribution is selected to model lifetimes, its adequacy should be checked. A topic which will be returned to in the following chapter.
 
 
 ## Truncation and Censoring
@@ -116,17 +175,32 @@ $$  Y_i = \min(T_i,C_i) \qquad \text{ and } \qquad d_i = \left\{\begin{matrix} 1
 
 
 
-<!-- 
-The solution is to create a binary random variable ($\delta_i$) to account for whether a failure is observed and a random variable ($Y_i$) which combines our observation of the time with whether that failure is observed.
 
-Let $T$ denote the lifetime of a device and $C$ a random censor time. Every device has a lifetime $T_i$ and a censor time $C_i$ and for every device we observe a pair ($Y_i, \delta_i$) where:
+## Likelihood Function
 
-$$  Y_i = \min(T_i,C_i) \qquad \text{ and } \qquad \delta_i = \left\{\begin{matrix} 1 \text{ if } T_i \le C_i\\ 0 \text{ if } C_i < T_i \end{matrix}\right. $$
+The likelihood function is a function of the parameters of a statistical model given data. 
 
-% Independence assumption between censoring and failure time
-% Likelihood estimation
+Which is how you fit an abstraction to data.
 
- -->
+The introduction of censoring 
+
+$$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta |x_{j})=\arg \max _{\theta }f(x_{j}|\theta )} $$
+
+
+So far we have defined models that only take into account the lifetime of a particular system. While useful, we may wish to understand the effects of additional variables on that lifetime. For this a more complex model is required. 
+
+
+So far we have only defined functions that take $t$ as a parameter. However, we are far more concerned with the conditions that a system may be under at a specific time than with evolution of time. This requires the introduction of additional variables. For this, we require an expansion of our mathematical constructions.
+
+The simplest method to 
+
+We can either be concerned with the modeling of hazard or with the modeling of median residual lifetime. As the hazard formulation is easier to evolve into a complex model we will use it. 
+
+Time is not the cause. Time is correlated with the cause. Accumulation of wear on the device.
+
+Any two systems with the same covariates values at the same time should have the same risk. 
+
+Analysis Time versus some arbitrary timescale in your data. Well defined time.
 
 
 

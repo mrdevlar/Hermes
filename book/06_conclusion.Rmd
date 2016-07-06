@@ -5,7 +5,7 @@
  -->
 
 While it is likely that the price of sensors will continue to decline, ...
-
+As gradual improvments in photovoltaic inverters occur\cite{Fife2012}.
 
 Something for the conclusion, start recording your data correctly and make money yo
 
@@ -14,3 +14,4 @@ Yet, the size and breadth of conventional generation capacity makes it difficult
 
 
 Lack of trained maintenance workers is a constraint on the industry.
+

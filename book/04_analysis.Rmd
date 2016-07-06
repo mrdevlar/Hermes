@@ -1,12 +1,6 @@
 # Analysis
-```
-5. Analysis
-	- The scenarios
-		- Simple homogenous system (same model, same plant)
-		- Stratification by Model and Site
-			- Hierarchical Modeling and Frailty
-```
 
-### Notes
 
-[Comparison of Hazard Estimation in R](https://arxiv.org/pdf/1509.03253.pdf)
+Feature engineering is often thought of as the dark art in statistical modeling and machine learning. Few formally teach the topic because it is often domain-specific and non-generalizable. Yet, in the context of informational sparsity, feature engineering is a uniquely important aspect of the entire process. The ability to derive as much meaningful information from the 
+
+As discussed in the domain chapter, the majority of the data in a photovoltaic system is contextual and time invariant. Such as information about the inverter type, its park and the length of its operation. In an ideal case, the system also produces some time-dependent data, such as the output, maintenance history and some park-level weather data. This data tends to be noisy, prone to error but, more importantly, if fed into a model directly without some transformation will produce poor predictions.

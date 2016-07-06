@@ -133,6 +133,11 @@
 			- Survival -> Hazard Function
 			- Hazard -> Cumulative Hazard
 			- Return from Cumulative Hazard back to PDF
+		- Common Distributions
+			- Exponential
+			- Gompertz
+			- Weibull
+			- Gamma
 	- Censoring and Truncation
 		- Define Truncation
 		- Define Censoring
@@ -158,6 +163,11 @@
 	- Feature Engineering
 		- Doing a lot with a little
 		- Signal Processing is out of scope
+			- Recording Survival Data
+				- How one goes from raw data to usable data.
+				- Observation interval
+				- Censoring
+				- Covariates
 	- The scenarios
 		- Simple homogenous system (same model, same plant)
 		- Stratification by Model and Site
