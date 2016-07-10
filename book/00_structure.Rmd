@@ -133,6 +133,8 @@
 			- Survival -> Hazard Function
 			- Hazard -> Cumulative Hazard
 			- Return from Cumulative Hazard back to PDF
+			- Time shifted functions
+			- Residual Lifetime
 		- Common Distributions
 			- Exponential
 			- Gompertz
@@ -147,9 +149,10 @@
 		- Mathematical Construction
 	- Likelihood Function
 		- Pseudo-observations
-	- Mean and Median Residual Lifetime
-	- Accelerated Failure Time Model
+	- Multiplicative Hazard Model
 		- Note about Proportional Hazards Models
+		- Time-Dependent Covariates
+		- Time-Varying Effects
 	- Bayesian Approach
 		- Frailty & Hierarchical Model
 	- Estimation (HMC and Gibbs)
@@ -175,9 +178,8 @@
 	- Model Selection
 		- Handling unbalanced data
 5. Extensions (Optional)
-	- Time-Dependent Covariates
-	- Time Varying Effects
 	- Improved Baseline Hazard Estimation (Gaussian / Dirchlet Process)
+	- Competing Risk
 6. Conclusion
 
 
