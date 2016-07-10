@@ -4,7 +4,7 @@ Time-to-event analysis/footnote{also known as survival analysis, reliability ana
 
 To be able to model the time until these transitions, there needs to be precision in describing the phenomenon, and for that, mathematics is required. The following section describes the mathematical narrative that underly the construction, manipulation and estimation of Bayesian time-to-event models.
 
-A description of the basic functions required to understand this class of models, their role in defining time-to-event distributions and their relationship to one another is provided. Then, censoring and truncation which are common characteristics of time-to-event data are examined. From these basics units, the accelerated failure time model, a linear model for time-to-event analysis is formulated. Following this,hierarchical model which describes shared risk, or frailty are introduced. Finally, model estimation with Markov Chain Monte Carlo using the statistical software Stan is demonstrated.
+A description of the basic functions required to understand this class of models, their role in defining time-to-event distributions and their relationship to one another is provided. Then, censoring and truncation which are common characteristics of time-to-event data are examined. From these basics units, the Multiplicative Hazard Model, a linear model for time-to-event analysis is formulated. Following this, hierarchical model which describes shared risk, or Frailty is introduced. Finally, the likelihood and model estimation with Markov Chain Monte Carlo is described.
 
 
 
@@ -309,6 +309,8 @@ $$ h(t) = \frac{\lambda \nu t^{\nu - 1}}{1 + \sigma^2 \lambda t^\nu} $$
 
 Where $\sigma^2$ represents the variance of the Gamma distributed Frailty. 
 
+<!-- Possibly introduce covariance structure between independent frailties - Want but not need -->
+
 There are several important issues that should be kept in mind when introducing Frailties to time-to-event models.
 
 A Frailty is assumed to be constant over time. If the random variable $Z$ is introduced as a Frailty into the Multiplicative Hazard Model, then the estimation of $Z$ is fixed for all time points. However, this does not mean that Frailties experience no temporal effects. If the expectation and variance of the Frailty $Z$ are derived:
@@ -336,38 +338,42 @@ The values of $Z_i$ are not estimated for each individual system within the popu
  -->
 
 
+## Estimation
+
+The likelihood is a function of the parameters of a statistical model given data. Its formulation is the means by which the appropriate abstraction is selected once the data is observed. In this section, likelihoods for the models developed so far are formulated. First in the simplest cases, then with the model additions. 
 
 
 
 
 
-## Likelihood Function
 
-The likelihood function is a function of the parameters of a statistical model given data. 
+Baseline hazard estimation is restricted to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard.
+There is a large body of research into non-parametric baseline hazard estimation. 
 
-Which is how you fit an abstraction to data.
+If contrasting the effect of covariates in the predominant interest in the model, semi-parametric or non-parametric methods often serve as better models for such a task. 
+
+
+Likelihood in the presence of right-censoring.
+
+
+$$ \mathcal {L}(\theta|Y_i, d_i) = S(Y_i)^{d_i} f(Y_i)^{(1 - d_i)}$$ 
+
+
+
+A key approach to modeling will be to make use of a parametric baseline hazard function. 
+
+
+
+
+$$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta |\textbf{x}_{i})=\arg \max _{\theta }f(\textbf{x}_{i}|\theta )} $$
+
 
 The introduction of censoring 
 
-$$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta |x_{j})=\arg \max _{\theta }f(x_{j}|\theta )} $$
 
+The type of estimation done on the baseline hazard has implications for future forecasting. Non-parametric models lack the ability to forecast future failure rates beyond the last failure time.
 
-So far we have defined models that only take into account the lifetime of a particular system. While useful, we may wish to understand the effects of additional variables on that lifetime. For this a more complex model is required. 
-
-
-So far we have only defined functions that take $t$ as a parameter. However, we are far more concerned with the conditions that a system may be under at a specific time than with evolution of time. This requires the introduction of additional variables. For this, we require an expansion of our mathematical constructions.
-
-The simplest method to 
-
-We can either be concerned with the modeling of hazard or with the modeling of median residual lifetime. As the hazard formulation is easier to evolve into a complex model we will use it. 
-
-Time is not the cause. Time is correlated with the cause. Accumulation of wear on the device.
-
-Any two systems with the same covariates values at the same time should have the same risk. 
-
-Analysis Time versus some arbitrary timescale in your data. Well defined time.
-
-<!-- However, several decades of research into multiplicative models has provided insight into their behavior under different conditions as well as allowing for extensions into areas required for a predictive maintenance process.  -->
+The introduction of the Frailty also complicates estimation. The 
 
 
 <!--
@@ -375,7 +381,7 @@ Analysis Time versus some arbitrary timescale in your data. Well defined time.
 - Stratification == Frailty
   - Traditional regression methods would presume a shared fixed effect for the shape or scale of the distribution.
 
-- The type of estimation done on the baseline hazard has implications for future forecasting. Non-parametric models lack the ability to forecast future failure rates beyond the last failure time.
+- 
 
 
 The first feature that distinguishes time-to-event analysis from traditional statistical methods is a lack of normally distributed errors.\cite{Guo2010} Time is always positive quantity, this alone should invalidate the normal error model. However, more compelling is the notion that the rate of survival distribution does not necessarily have to have a single mode. For example, when examining the survival time of individuals following a difficult surgical procedure, one would expect to see two groups of deaths. One shortly after the procedure, possibly due to complications, and a second group of deaths long after if the reason for the surgery reoccurs. This type of bimodality is unable to be properly modeled using standard OLS regression.

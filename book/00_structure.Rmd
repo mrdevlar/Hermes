@@ -147,14 +147,14 @@
 		- Define mathematical construction of right-censoring
 		- Type I, Type II and Random Censoring
 		- Mathematical Construction
-	- Likelihood Function
-		- Pseudo-observations
 	- Multiplicative Hazard Model
 		- Note about Proportional Hazards Models
 		- Time-Dependent Covariates
 		- Time-Varying Effects
-	- Bayesian Approach
 		- Frailty & Hierarchical Model
+	- Likelihood Function
+		- Pseudo-observations
+	- Bayesian Approach
 	- Estimation (HMC and Gibbs)
 		- Why needed? Lack of log-concavity
 4. Analysis

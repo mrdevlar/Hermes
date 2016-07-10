@@ -9,3 +9,12 @@ As discussed in the domain chapter, the majority of the data in a photovoltaic s
 - Considerations for how deal with data recording, what to record and why?
 	- Failure autopsy, sensors or maintenance testing
 	- Continuous monitoring (economically impractical)
+
+
+We can either be concerned with the modeling of hazard or with the modeling of median residual lifetime. As the hazard formulation is easier to evolve into a complex model we will use it. 
+
+Time is not the cause. Time is correlated with the cause. Accumulation of wear on the device.
+
+Any two systems with the same covariates values at the same time should have the same risk. 
+
+Analysis Time versus some arbitrary timescale in your data. Well defined time.
