@@ -338,58 +338,75 @@ The values of $Z_i$ are not estimated for each individual system within the popu
  -->
 
 
-## Estimation
+## Model Likelihoods
 
 The likelihood is a function of the parameters of a statistical model given data. Its formulation is the means by which the appropriate abstraction is selected once the data is observed. In this section, likelihoods for the models developed so far are formulated. First in the simplest cases, then with the model additions. 
 
+Generally, a parametric model is fit by finding the maximum values for a set of parameters, $\theta$, of its probability density function, $f(\cdot)$, given a vector of data, $T = (t_1, \dots, t_n)$. This process is encapsulated in the likelihood function:
+
+$$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta | T)=\arg \max _{\theta }f(T|\theta )} $$
+
+In the time-to-event context, there is an added complication. As noted earlier, this type of data often features censoring and truncation. When non-informative right-censoring is present, it is required to extend the likelihood. Data is now input as a pair, $(Y_i, d_i)$. The $Y_i$ random variable is defined as the minimum of the actual and censored lifetime. It represents the observed lifetimes found in the data. A binary random variable, $d$, is introduced to make explicit when censoring occurs\footnote{See Censoring and Truncation section for details}. The likelihood is altered as follows:
+
+$$ \mathcal {L}(\theta|Y, d) = \prod^n_i S(Y_i)^{d_i} f(Y_i)^{(1 - d_i)}$$ 
+
+The probability density function, $f(Y_i)$, of the parametric distribution is still present in the above equation, much like in the standard likelihood. However, its contribution is now controlled by the $d$ random variable. When the variable $d$ equals one, it implies a failure event and zero when censoring occurs. The variable will be the number of events across the data set. 
+
+Given the identities found at the beginning of this chapter, it is possible to transform the joint likelihood to make use of hazards. Such that:
+
+$$ \mathcal {L}(\theta|Y, d) = \prod^n_i h(Y_i)^{d_i} \exp(-H(Y_i)) $$
+
+It should be noted that baseline hazard estimation is restricted here to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard. There is a large body of research into non-parametric baseline hazard estimation, including the Kaplan-Meier and Nelson-Aalen estimators. If contrasting the effect of covariates is the predominant purpose of the model, semi-parametric or non-parametric methods are often preferred\cite{NEEDED}. However, the structure of the baseline hazard has substantive implications for the ability to understand the model and predict of future hazard. This is especially the case when Frailties are involved as parametric hazards can aide in understanding the evolution of group over time. Furthermore, non-parametric methods lack the ability to forecast future hazard rates beyond the last failure time, as any value beyond the last time is simply undefined. 
+
+
+Simplest form of the Multiplicative Hazards Model, as follows:
+
+$$ h_i(y|\textbf{x}_i) = h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i) $$
+
+In this case the data is input as a triple, $(Y_i, d_i, \textbf{x}_i)$ as the covariates are also introduced. The likelihood for this function is as follows:
+
+$$ \mathcal {L}(\theta|Y, d, \textbf{x}, \theta) = \prod^n_i \left (h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+
+The last parameter in the likelihood, $\theta$ contains whichever parameters are required for the parametric distribution selected to represent the hazard in the model. For example, the shape and scale of the Weibull distribution, where $\theta = (\lambda, \nu)$. 
+
+The introduction of Frailties into the Multiplicative Hazard Model is relatively straight-forward. As stated earlier, the Frailty model can be generally stated as:
+
+$$ h_{ij}(y|\textbf{x}_i, Z_j) = Z_j \cdot h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_{ij})  $$
+
+Thus the likelihood with Frailty and non-informative right censoring simply expands to:
+
+$$ \mathcal {L}(\theta|Y, Z_j, d, \textbf{x}, \theta) = \prod^n_i \prod^k_j \left (Z_j \cdot h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_j \cdot H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+
+As can be seen from the above, a product is now required to handle the additional, $k$, Frailty terms.
+
+These likelihoods are generic and the parametric forms for both the baseline hazard and the Frailty are required to estimate the model. 
+
+<!-- Maybe insert Weibull with Gamma Frailties -->
+
+
+## Bayesian Model Estimation
+
+Model estimation can be done in a number of ways. However, as the model complexity increases with the addition of covariates and Frailties, there are increasing difficulties in using traditional methods of model fitting. Many of these issues arise from a lack of closed form solutions for many of the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm along with the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo. 
+
+The introduction of Frailties into the Multiplicative Hazards Model, leads to conditionally independent observations. 
+
+In most hierarchical models, the posterior distribution is difficult to work with as it is hardly ever possible to integrate out to find the marginal posterior of each of the random parameters. However, sampling is possible. Broadly speaking the MCMC method consists of generating 
+
+Fitting complex survival models is reasonably. The existence of Bayesian software for fitting such models, like BUGS, JAGS and most recently Stan greatly eases implementation.
+
+MCMC makes it possible to infer from any sample size without resorting to asymptotic calculations, which are not always possible for all models. 
+
+Features in complex models, like variances, often require asymptotic arguments to be computed, that is assuming these arguments are possible in the first place. In contrast, in the Bayesian framework these features are simply by-products of sampling from the posterior and their calculation is trivial\cite{Ibrahim2005}.
+
+Bayesian methods provide a straight-forward means by which to introduce prior knowledge into the current analysis. This is especially important in this domain, where both the level and quality of the data can often be minimal. 
 
 
 
 
 
-Baseline hazard estimation is restricted to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard.
-There is a large body of research into non-parametric baseline hazard estimation. 
-
-If contrasting the effect of covariates in the predominant interest in the model, semi-parametric or non-parametric methods often serve as better models for such a task. 
+<!-- The Bayesian approach is in fact natural when dealing with conditionally independent observations and when working with hierarchical models, with the frailty variables at an intermediate stage between the observations and the hyperparameters. In the Bayesian context, the frailty distribution represents a ”prior” of the model, and its parameters (hyperparameters) are considered as random variables following some noninformative distribution, meaning a distribution with huge variance. The MCMC method consists of generating a set of Markov chains whose joint stationary distribution corresponds to the joint posterior of the model, this one being, in the Bayesian framework, the distribution of the random parameters given the observed data. In most hierarchical models, the posterior distribution is often very difficult to work with and hardly ever possible to integrate out in order to find the marginal posterior of each of the random parameters. By MCMC methods we can circumvent this problem. The posterior of each parameter is approximated by the empirical distribution of the values of the corresponding Markov chain, and empirical summary statistics calculated along each chain can be used to make inferences about the true value of the corresponding parameter (see Gilks et al. 1996). The Gibbs sampling (Geman and Geman 1984) is one of the algorithms that have been created in order to obtain Markov chains with the desired stationary distribution. The basic idea behind the Gibbs sampling is to successively sample from the conditional distribution of each random node, given all the other nodes in the model. These distributions are known as ”full conditional distributions”. It can be shown that, under broad conditions, this process eventually provides samples from the joint posterior distribution of the unknown quantities. -->
 
 
-Likelihood in the presence of right-censoring.
-
-
-$$ \mathcal {L}(\theta|Y_i, d_i) = S(Y_i)^{d_i} f(Y_i)^{(1 - d_i)}$$ 
-
-
-
-A key approach to modeling will be to make use of a parametric baseline hazard function. 
-
-
-
-
-$$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta |\textbf{x}_{i})=\arg \max _{\theta }f(\textbf{x}_{i}|\theta )} $$
-
-
-The introduction of censoring 
-
-
-The type of estimation done on the baseline hazard has implications for future forecasting. Non-parametric models lack the ability to forecast future failure rates beyond the last failure time.
-
-The introduction of the Frailty also complicates estimation. The 
-
-
-<!--
-
-- Stratification == Frailty
-  - Traditional regression methods would presume a shared fixed effect for the shape or scale of the distribution.
-
-- 
-
-
-The first feature that distinguishes time-to-event analysis from traditional statistical methods is a lack of normally distributed errors.\cite{Guo2010} Time is always positive quantity, this alone should invalidate the normal error model. However, more compelling is the notion that the rate of survival distribution does not necessarily have to have a single mode. For example, when examining the survival time of individuals following a difficult surgical procedure, one would expect to see two groups of deaths. One shortly after the procedure, possibly due to complications, and a second group of deaths long after if the reason for the surgery reoccurs. This type of bimodality is unable to be properly modeled using standard OLS regression.
-
-The second distinguishing feature is incomplete observation, or censoring, which obscures the time until an event occurs. For example, when analyzing the time until failure of an industrial device, it is often impractical to wait until all the devices in the population have failed before drawing conclusions. Therefore, the data we utilize gives us only a partial view of the duration until the event occurs in the population. Censoring comes in various classes and types, depending on the segment of time is unobserved. Right censoring is the most common class, and refers to the situation where the event is observed only if it occurs prior to some pre-specified time.\cite{Klein2003} In our case, we only observe a photovoltaic inverter failure if it has occurred in the past. Our prespecified time, is this moment, and all functioning inverters are thus right censored.
-
-
- -->
 
 
 
