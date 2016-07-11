@@ -342,7 +342,7 @@ The values of $Z_i$ are not estimated for each individual system within the popu
 
 The likelihood is a function of the parameters of a statistical model given data. Its formulation is the means by which the appropriate abstraction is selected once the data is observed. In this section, likelihoods for the models developed so far are formulated. First in the simplest cases, then with the model additions. 
 
-Generally, a parametric model is fit by finding the maximum values for a set of parameters, $\theta$, of its probability density function, $f(\cdot)$, given a vector of data, $T = (t_1, \dots, t_n)$. This process is encapsulated in the likelihood function:
+Generally, a parametric model is fit by finding the maximum values for a set of parameters, $\theta$, of its probability density function, $f(\cdot)$, given a vector of data, $T = (t_1, \dots, t_n)$. This process is encapsulated in Maximum Likelihood Estimation:
 
 $$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta | T)=\arg \max _{\theta }f(T|\theta )} $$
 
@@ -386,31 +386,52 @@ These likelihoods are generic and the parametric forms for both the baseline haz
 
 ## Bayesian Model Estimation
 
-Model estimation can be done in a number of ways. However, as the model complexity increases with the addition of covariates and Frailties, there are increasing difficulties in using traditional methods of model fitting. Many of these issues arise from a lack of closed form solutions for many of the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm along with the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo. 
+Model estimation can be done in a number of ways. However, as the model complexity increases with the addition of covariates and Frailties, there are increasing difficulties in using traditional methods of model fitting. Many of these issues arise from a lack of closed form solutions for the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm and provide some intuition as to the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo. 
 
-The introduction of Frailties into the Multiplicative Hazards Model, leads to conditionally independent observations. 
+In the preceding section, likelihoods for the various models were presented. It was stated that these parametric models could be fit by finding the maximum of the likelihood function. While in simple cases this is practical, as model complexity increases this becomes considerably more difficult. The introduction of random effects, like shared Frailties, pose an especially large challenge as closed form solutions for the models either become too complicated or cease to exist. 
 
-In most hierarchical models, the posterior distribution is difficult to work with as it is hardly ever possible to integrate out to find the marginal posterior of each of the random parameters. However, sampling is possible. Broadly speaking the MCMC method consists of generating 
+In the Bayesian paradigm, the posterior distribution encompasses the credibility of the parameter values, of a particular model. Unlike in traditional statistics, the vector of unknown parameter values, $\theta$, is assumed to be random variable with its own distribution as well as a prior distribution, $\Pr(\theta)$\cite{Ibrahim2005}. Inferences concerning the parameter values are based on the posterior distribution, given by:
 
-Fitting complex survival models is reasonably. The existence of Bayesian software for fitting such models, like BUGS, JAGS and most recently Stan greatly eases implementation.
+$$ \Pr(\theta|D) = \frac{\mathcal {L}(\theta|D)\Pr(\theta)}{\int_\theta\mathcal {L}(\theta|D)\Pr(\theta) d\theta} $$
 
-MCMC makes it possible to infer from any sample size without resorting to asymptotic calculations, which are not always possible for all models. 
+Where $D$ is the observed data. It can be seen from the above equation, that the posterior probability is proportional to the likelihood multiplied by the prior. This is because the denominator is a normalizing constant. Thus,
 
-Features in complex models, like variances, often require asymptotic arguments to be computed, that is assuming these arguments are possible in the first place. In contrast, in the Bayesian framework these features are simply by-products of sampling from the posterior and their calculation is trivial\cite{Ibrahim2005}.
+$$ \Pr(\theta|D) \propto  \mathcal {L}(\theta|D)\Pr(\theta) $$
 
-Bayesian methods provide a straight-forward means by which to introduce prior knowledge into the current analysis. This is especially important in this domain, where both the level and quality of the data can often be minimal. 
+This normalizing constant is interesting because in Bayesian models, it often lacks a closed form solution and has to be estimated through an alternative process. This produces a similar situation to the one found in the time-to-event models described so far in the text. When the closed form solution is not available, the methods of Bayesian model estimation become useful. This is especially the case when shared Frailties are introduced into the model, as they act on the posterior in the same manner as Bayesian hierarchical models, making the model difficult to fit. However, even when closed form solutions are available, these alternative methods of fitting may prevent the need to manually derive a likelihood with a large number of parameters.
+
+<!-- Features in complex models, like variances, often require asymptotic arguments to be computed, that is assuming these arguments are possible in the first place. In contrast, in the Bayesian framework these features are simply by-products of sampling from the posterior and their calculation is trivial\cite{Ibrahim2005}. -->
+
+The most common approach for describing the posterior distributions make use of Markov Chain Monte Carlo (MCMC) methods. These methods use generate representative samples from the posterior distribution. 
+
+The general process, also known as the Metropolis-Hastings algorithm\cite{Metropolis1953}, for generating these representative samples proceeds as follows: First, an arbitrary starting point along the distribution is selected and its value is recorded. Next, a candidate point is randomly selected around the starting point. If the value of the candidate point is greater than the starting point, then the algorithm moves to that new point. If the value of the candidate point is less than the starting point, then the the move is made probabilistically. The probability of the move is determined by the ratio of values between the starting point and the candidate point. Such that:
+
+$$ \Pr_{\text{accept}} = \min\left (\frac{\Pr(\theta_{\text{proposed}}|D)}{\Pr(\theta_{\text{current}}|D)} , 1 \right )$$
+
+Once the algorithm decides whether or not to move, the process begins again, with that position being the new starting point. This process is repeated a very large number of times, which creates a representative sample of the posterior distribution.
+
+There have been numerous attempts to improve the efficiency of this simple algorithm. The largest inefficiencies arise in two areas in two areas. First, the tails of the distribution require a large amount of iterations to accurately map. Second, distributions with several local optima requires a greater amount of iterations for the algorithm to escape these minima/maxima. Many of the attempts to improve the efficiency of this algorithm have tried to address these points. The most recent is Hamiltonian Monte Carlo (HMC), which was codified into the Stan statistical software package\cite{NEEDED}. The key difference between what was described above and HMC, is the proposal distribution\cite{Kruschke2015}. 
+
+After the algorithm selects a starting point, it has to randomly select a candidate point. These candidates are usually drawn from a symmetric distribution like a multivariate Gaussian. This fixed shape leads to candidates being selected regardless of where in the distribution the starting point is. As a result, candidates can just as easily travel away from the posterior mode as towards it. HMC uses a proposal distribution that differs based upon the current position. It alters the proposal by calculating the gradient, or the direction of change, of the posterior distribution. It then distorts the proposal distribution to match that gradient. 
+
+The process of selecting from candidates is also altered in HMC. Rather than simply selecting a point from the proposal distribution and evaluating it, HMC uses a 'momentum', $\phi$ around the candidate point. The area around the selected point is then allowed to be sampled given this momentum. The final point is selected based on the value that the point 'rolls' into\cite{Kruschke2015}. The probability of acceptance takes into account this momentum when finally deciding on a move. 
+
+$$ \Pr_{\text{accept}} = \min\left (\frac{\Pr(\theta_{\text{proposed}}|D)\Pr(\phi_{\text{proposed}}|D)}{\Pr(\theta_{\text{current}}|D)\Pr(\phi_{\text{current}}|D)} , 1 \right )$$
+
+As before, this process is repeated a multitude of times until the posterior probability distribution is approximated. From this approximation, it is possible to extract the features necessary to facilitate model fitting.
+
+Numerous additional technical details are required to properly understand HMC which are not covered in this text, such as No U-Turn sampling, step size and duration tuning. Fortunately, software will largely take care of these particularities. If the reader is interested in these topics, the 'Extended Reading' section provides some references of interest.
 
 
-
-
-
-<!-- The Bayesian approach is in fact natural when dealing with conditionally independent observations and when working with hierarchical models, with the frailty variables at an intermediate stage between the observations and the hyperparameters. In the Bayesian context, the frailty distribution represents a ”prior” of the model, and its parameters (hyperparameters) are considered as random variables following some noninformative distribution, meaning a distribution with huge variance. The MCMC method consists of generating a set of Markov chains whose joint stationary distribution corresponds to the joint posterior of the model, this one being, in the Bayesian framework, the distribution of the random parameters given the observed data. In most hierarchical models, the posterior distribution is often very difficult to work with and hardly ever possible to integrate out in order to find the marginal posterior of each of the random parameters. By MCMC methods we can circumvent this problem. The posterior of each parameter is approximated by the empirical distribution of the values of the corresponding Markov chain, and empirical summary statistics calculated along each chain can be used to make inferences about the true value of the corresponding parameter (see Gilks et al. 1996). The Gibbs sampling (Geman and Geman 1984) is one of the algorithms that have been created in order to obtain Markov chains with the desired stationary distribution. The basic idea behind the Gibbs sampling is to successively sample from the conditional distribution of each random node, given all the other nodes in the model. These distributions are known as ”full conditional distributions”. It can be shown that, under broad conditions, this process eventually provides samples from the joint posterior distribution of the unknown quantities. -->
-
-
-
+<!-- 
+Consider explaining:
+- No U-Turn
+- Step Size
+- Duration
+ -->
 
 
 
 ## Extended Reading
 
-For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. For a detailed description of Frailty Modeling, including detailed mathematical derivations of incrementally complex models, Wienke\cite{Wienke2010}, as well as Duchateau and Janssen\cite{Duchateau2008}.
+For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. For a detailed description of Frailty Modeling, including detailed mathematical derivations of incrementally complex models, Wienke\cite{Wienke2010}, as well as Duchateau and Janssen\cite{Duchateau2008}. For more details on Hamiltonian Monte Carlo, the reader is directed to Kruschke\cite{Kruschke2015}, Gelman et al.\cite{Gelman2014} For a technical review of Bayesian estimation, Marin and Roberts\cite{Marin2007} are suggested.
