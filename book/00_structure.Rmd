@@ -152,11 +152,19 @@
 		- Time-Dependent Covariates
 		- Time-Varying Effects
 		- Frailty & Hierarchical Model
-	- Likelihood Function
-		- Pseudo-observations
-	- Bayesian Approach
 	- Estimation (HMC and Gibbs)
-		- Why needed? Lack of log-concavity
+		- Bayesian Approach
+			- Likelihood Function
+		- Metropolis Algorithm
+			- Random walk through parameter space
+				- Favoring steps that have relatively high posterior probability
+				- Propose a jump, jump sampled randomly from current position
+					- Move if jump is a higher posterior probability than current position
+					- Otherwise move probabilistically, ratio of probabilities
+		- Proposal distribution must be symmetric centered around the current position
+			- Usually multivariate Gaussian
+			- Inefficient, especially in the tails of the distribution
+			- Fixed shape causes inefficiencies
 4. Analysis
 	- Goal
 		- Predict residual lifetime, if possible
