@@ -404,6 +404,8 @@ This normalizing constant is interesting because in Bayesian models, it often la
 
 The most common approach for describing the posterior distributions make use of Markov Chain Monte Carlo (MCMC) methods. These methods use generate representative samples from the posterior distribution. 
 
+<!-- Make explicit what value is being recorded -->
+
 The general process, also known as the Metropolis-Hastings algorithm\cite{Metropolis1953}, for generating these representative samples proceeds as follows: First, an arbitrary starting point along the distribution is selected and its value is recorded. Next, a candidate point is randomly selected around the starting point. If the value of the candidate point is greater than the starting point, then the algorithm moves to that new point. If the value of the candidate point is less than the starting point, then the the move is made probabilistically. The probability of the move is determined by the ratio of values between the starting point and the candidate point. Such that:
 
 $$ \Pr_{\text{accept}} = \min\left (\frac{\Pr(\theta_{\text{proposed}}|D)}{\Pr(\theta_{\text{current}}|D)} , 1 \right )$$
