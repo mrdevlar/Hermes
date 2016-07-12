@@ -182,9 +182,9 @@
 			- Encode subject matter expertise into covariates, statistics is **not itself** the answer
 	- Data Generation Redux - Now with Numbers
 		- N = 500, 5 Parks, uneven number of inverters at parks
-		- $T = H_0^{-1}\left [\frac{-\ln(U)}{w_{ij} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $
+$$ T = H_0^{-1}\left [\frac{-\ln(U)}{w_{ij} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
 		- Weibull Version
-		- $ T = \left [\frac{-\ln(U)}{w_{ij}\lambda \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\nu} $
+$$ T = \left [\frac{-\ln(U)}{w_{ij}\lambda \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\nu} $$
 		- Big Table
 			- Define Failure Mode (Failure is requires replacement)
 				- Infant Mortality
