@@ -1,2 +1,87 @@
 # Analysis
 
+<!-- Intro Here -->
+
+This section outlines the mechanism for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms, illustrating what is possible given the volume of data available. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnigns fully exposed. A comprehensive structure of the simulated data set is provided. A brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model is fit, the evaluation of model performance is given.
+
+## The Goal
+
+The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by hazard at a given time. Such that:
+
+$$ h_{(1)}(t) > h_{(2)}(t) > \dots h_{(n)}(t) $$
+
+Where the time point, $t$ is fixed at the current moment for prediction. As a hazard defines an instantaneous failure rate it is the logical choice for the central unit of modeling. It should be noted, the absolute value of the hazard is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest hazard is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Thus the exact amount of risk or the remaining usable life are secondary to the action they prompt. 
+
+<!-- Possibly state alternatives here -->
+
+
+## Feature Engineering and Data Management
+
+Feature engineering is often considered the dark art of the statistical modeling process\cite{NEEDED}. While a multitude of effort is expended generating novel and elaborate models which explain and predict better, considerably less attention is focused on what is inputs are useful in these models. In a practical setting like the development of a predictive maintenance process, 
+
+
+## Outline
+
+
+- Data management and Feature Engineering
+	- Doing a lot with a little
+	- The data comes in parts but that is not the format that is required for the model
+	- We talked about the data sources in the first chapter, here are examples of what those data sources will look like in raw form
+	- Here is how they can/should be collapsed into a workable data set that is the quadruple $(Y_i, d_i, X_i, Z_i)$
+	- Averages across periods to diminish volatility, vs raw data
+	- Counts of binary variables over time
+	- Time dependent covariates are just interval censored
+	- Signals Processing is out of scope
+	- Testing the resulting covariates is more important than their logical construction, use what works!
+		- Encode subject matter expertise into covariates, statistics is **not itself** the answer
+- Data Generation Redux - Now with Numbers
+	- N = 500, 5 Parks, uneven number of inverters at parks
+	- $T = H_0^{-1}\left [\frac{-\ln(U)}{w_{ij} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $
+	- Weibull Version
+	- $ T = \left [\frac{-\ln(U)}{w_{ij}\lambda \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\nu} $
+	- Big Table
+		- Define Failure Mode (Failure is requires replacement)
+			- Infant Mortality
+			- Old Age Mortality
+		- Define each category $w_{ij}$
+			- Park - Big $\sigma^2$
+			- Inverter Type - Small $\sigma^2$
+		- Define each covariate, $\textbf{x}_{ij}$
+			- Days of operation
+			- Standardized Electrical Output - $\mathcal{N}(0,1)$
+			- Maintenance Logs
+				- Count of repairs
+				- Days since last repair
+				- Count of replacement
+				- Days since last replacement part
+			- Park Level Data
+				- Standardized Avg Temperature
+				- Standardized Humidity
+				- Interaction effect between low avg temp and low humidity
+- Stan and a medium for model fitting
+	- Introduce Stan
+		- Successor to BUGS and JAGS
+		- Give BRIEF introduction to the components
+			- Data
+			- Parameters
+			- Model
+			- Derived Quantities
+			- Functions (Recent)
+		- Model construction
+			- Define hazard functions
+			- Allow Stan to take care of the rest
+- Predictive performance and model comparison
+	- Ideal case
+		- Model residual lifetime
+		- Concordance between prediction and failure
+		- It is highly like that it this is not the metric to evaluate the model by, due to censoring will always pose challenges
+	- Compromise Case
+		- Highest hazard in next instantaneous period
+		- Some indication of the urgency of the first instance of failure
+	- Evaluating Model Performance
+		- Deviance-based methods, WAIC
+		- Hazards of cross validation in sequence learning
+			- Weaker cross validation that retains sequences. 
+		- Unbalanced data issues (99% not failed)
+- Fit Model
+	- Present output

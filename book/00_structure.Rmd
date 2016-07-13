@@ -216,6 +216,8 @@ $$ T = \left [\frac{-\ln(U)}{w_{ij}\lambda \exp(\boldsymbol\beta^T \textbf{x}_{i
 			- Model construction
 				- Define hazard functions
 				- Allow Stan to take care of the rest
+	- Fit Model
+		- Present output
 	- Predictive performance and model comparison
 		- Ideal case
 			- Model residual lifetime
@@ -229,8 +231,6 @@ $$ T = \left [\frac{-\ln(U)}{w_{ij}\lambda \exp(\boldsymbol\beta^T \textbf{x}_{i
 			- Hazards of cross validation in sequence learning
 				- Weaker cross validation that retains sequences. 
 			- Unbalanced data issues (99% not failed)
-	- Fit Model
-		- Present output
 5. Extensions (Optional)
 	- Improved Baseline Hazard Estimation (Gaussian / Dirchlet Process)
 	- Competing Risk for repeated failure events
