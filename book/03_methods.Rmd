@@ -134,7 +134,7 @@ Most lifetime distributions arise as generalizations of the exponential. They pr
 
 The Gompertz distribution is a generalization of the exponential that introduces an exponential effect in the hazard over time.
 
-$$ h(t) = \lambda \exp(\varphi t) $$
+$$ h(t) = \lambda \exp(\varphi t) \tag{ $\lambda > 0, \varphi \in (-\infty, \infty) $}$$
 
 The formula was originally derived to characterize the exponential rise in death rates in humans between sexual maturity and old age\cite{Wienke2010}\footnote{The center of the bathtub curve, a concept that will return in the next chapter}. It introduces a shape parameter $\varphi$ which controls the rate of change of the hazard over time. When $\varphi < 0$ the hazard declines over time. This can be used to model component "burn-in", which is the time shortly after beginning operations where mechanical parts often experience high early failures. Conversely, when $\varphi > 0$ the hazard increases over time. This can be used to model end of life failure. If $\varphi = 0$, the Gompertz reduces to an exponential distribution. When the Gompertz hazard is not constant, it is always increasing or decreasing over time. This makes it particularly attractive when it is clear that operational time is the greatest force of mortality.
 
