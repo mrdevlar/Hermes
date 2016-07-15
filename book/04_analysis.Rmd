@@ -17,7 +17,7 @@ Where the time point, $t$ is fixed at the current moment for prediction. As a ha
 
 ## Feature Engineering
 
-Feature engineering is sometimes considered the dark art of the statistical modeling process. Its informal nature makes it difficult to find a general consensus as to what the concept actually means within academic literature\cite{Zabokrtsky2015}. Loosely speaking, feature engineering is the art of creating covariates that conceptually embody aspects of a phenomena or object of observation. In this case, it refers to the task of finding and encoding historical data that can describe an inverter's health at any given moment. 
+Feature engineering is sometimes considered the dark art of the statistical modeling process. Its informal nature makes it difficult to find a general consensus as to what the concept actually means within academic literature\cite{Zabokrtsky2015}. Loosely speaking, feature engineering is the art of creating covariates that conceptually embody aspects of a phenomena or object of observation. In this case, it refers to the task of finding and encoding historical information that can describe an inverter's health at any given moment. 
 
 While a multitude of effort is expended generating novel  models which explain and predict better, considerably less attention is focused on what is inputs are useful in these models. No domain ever comes with all the ideal features built into existing data sets. Thus a degree of skill is required to extract and encode what is important. In a practical setting, like the development of a predictive maintenance process, the proper application of feature engineering is the difference between an effective or ineffective process\cite{Yu2010a}. Part of this limited attention stems from the fact that feature engineering is often domain-specific and cannot be adequately generalized. That said, there are themes that can be used to guide the process. The two primary sources of features are subject matter expertise and experimentation. Subject matter expertise can be further subdivided into model-specific and domain-specific insights.
 
@@ -30,37 +30,83 @@ Experimentation is the last source of feature engineering and is meant to comple
 
 Feature engineering is more an art-form than a science. Despite the lack of a clear heuristic, there are some guidelines for working with time-to-event models. 
 
-<!-- NEED MOAR ? -->
+<!-- NEED ONE MOAR ? -->
 
 Time-to-event models have difficulty in dealing with noisy variables across small intervals. The purpose of these models is to determine the contribution of covariates to the probability of failure. However, the introduction of stochastic variables, such as daily temperature, may not have that desired effect. This is because the effect of temperature on an inverter is only relevant in certain extreme cases and not in any one case. The effect of a single day of extreme temperature is unlikely to result in a failure on that day. In effect, this violates the association that the model demands between covariate value and inverter status. This can be partially offset by the use of rolling aggregates, like average temperature over five days, that provide an average temperature over a specific interval. However, by definition, these extreme events are rare, and will likely be smoothed out in these rolling aggregates. Furthermore, this does not account for compounding effects. A better solution is the use of monotonically increasing variables like a count of extreme temperatures across a specific interval. Of course, such a feature requires a definition for 'extreme', one which should be subject to experimentation on a validation set. 
 
 
 ## Data Management and Simulation
 
-Raw data can rarely be input into a model as-is. The first chapter broadly examined the standard data sources for a predictive maintenance process as well as provided a general outline of the simulated data. This section returns to these topics and examines the structure of the input data as well as how it is generated. 
+Raw data can rarely be input into a model as-is. The first chapter broadly examined the standard data sources for a predictive maintenance process as well as provided a general outline of the simulated data. This section returns to these topics and examines the structure of the input data. It then turns its attention to the process of data simulation, introducing the quantile function and the inverse cumulative hazard. Finally, it presents the data used in the subsequent analysis.
 
-Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. Time-to-event models, require a slight expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required. 
+Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required. 
 
+$$ (Y_{i(t_0)}, Y_{i(t_1)}, Z_j, W_k,  \textbf{x}_{ijk}) $$
+<!-- Down Arrow -->
 <!-- Insert table with example -->
 
-<!-- Probability interval transformation -->
+The above table gives an illustration of how data should be structured on input to a time-to-event model. As shown above, the rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
+
+<!-- Inputs should be structured as a tuple, $(Y_i, d_i, Z_j, \textbf{x}_{ij}, )$, such that $Y_i$ is the observed time, $d_i$ is the censoring indicator, $Z_j$ the category  -->
+
+<!-- ## Simulation Process -->
+
+Data is simulated using inverse transform sampling. This method generates random values from any distribution using only uniform random values as inputs. Generally speaking, this enables the generation of values from any continuous distribution. 
+
+Briefly, let $F$ be a continuous cdf. This guarantees that $F^{-1}$ exists as a function from $[0,1]$ to $\mathbb{R}$. If $U$ is defined as a uniform random variable on the unit interval, $[0,1]$ and $T = F^{-1}(U)$, then $T$ is a random variable with the cdf, $F(\cdot)$. As the function of a random variable is also a random variable itself, the inverse of the cdf, $F^{-1}(U)$, known as the quantile function, is also a random variable\cite{Blitzstein2014}. This implies that, $F^{-1}(U) = T$ if and only if $U = F(T)$. Thus, all that is required to generate random values from any given distribution is the quantile function and uniform random variables. 
+
+In this case, there is a desire to generate survival lifetimes. In the previous chapter, the cdf of a lifetime distribution was given as:
+
+$$ F(t) = 1 - S(t) = 1 - \exp(-H(t)) $$
+
+Due to symmetry, a uniform random variable is defined on the unit interval for the survival function as well as the cdf. If $U \sim \text{Unif}[0,1]$ then $(U-1) \sim \text{Unif}[0,1]$ as well. Thus:
+
+$$ U = \exp(-H(T)) \sim \text{Unif}[0,1] $$
+
+As long as all hazards are defined to be strictly positive, $h(t) > 0$, the cumulative hazard, $H(t)$ is invertible and the survival time can be expressed as:
+
+$$ T = H^{-1}(-\ln(U)) $$
+
+Fortunately, for all of the models presented thus far an inverse of the cumulative hazard exists\footenote{except for the Gamma function}. From this starting point it is possible to generate models with considerably more complex features.
+
+For the Multiplicative Hazards Model with covariates, survival times are generated the following manner\cite{Bender2005}:
+
+$$ T = H_0^{-1}(-\ln(U) \exp(-\boldsymbol\beta^T \textbf{x})) $$
+
+Where $H_0^{-1}$ is the inverse of the baseline cumulative hazard function which is multiplied by the exponentiated effect of the covariates. 
+
+This simulation can be extended further to include the a Frailty term, $Z_j$, it then becomes\cite{Romdhane2015}:
+
+$$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{j} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
+
+Or a time-dependent covariate:
+
+$$ T = \left [\frac{1}{k} \ln\left ( \frac{(1 + \nu)(-\ln(u))}{\beta_t \lambda \nu \exp(\boldsymbol\beta^T \textbf{x}) } \right )  \right ]^{\frac{1}{(1+\nu)}} $$
+
+Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}. 
+
+Of course, the precise model depends on the parameterization of the baseline cumulative hazard. As stated in the previous chapter, numerous different distributions can be used for modeling lifetimes and can therefore be used for this baseline cumulative hazard. 
+
+For the simulated data, a Weibull baseline hazard is employed. The resulting model with shared Frailties can therefore be simulated as follows:
+
+$$T = \left [\frac{- \ln(u) }{Z_{j} \lambda \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\nu} $$
+
+Where $u$ is the realization of a uniformly distributed random variable, $U \sim \text{Unif}[0,1]$ and $\nu$ and $\lambda$ are, respectively, the shape and scale parameters of Weibull distribution.
+
+<!-- 
+Maybe include an explicit extension about simulating time-dependent covariates 
+-->
 
 
-Inputs should be structured as a tuple, $(Y_i, d_i, Z_j, \textbf{x}_{ij}, )$, such that $Y_i$ is the observed time, $d_i$ is the censoring indicator, $Z_j$ the category 
+
+
+
+
 
 
 ## Outline
 
-- Data management and Feature Engineering
-	- Doing a lot with a little
-	- The data comes in parts but that is not the format that is required for the model
-	- Here is how they can/should be collapsed into a workable data set that is the quadruple $(Y_i, d_i, X_i, Z_i)$
-	- Averages across periods to diminish volatility, vs raw data
-	- Counts of binary variables over time
-	- Time dependent covariates are just interval censored
-	- Signals Processing is out of scope
-	- Testing the resulting covariates is more important than their logical construction, use what works!
-		- Encode subject matter expertise into covariates, statistics is **not itself** the answer
+
 - Data Generation Redux - Now with Numbers
 	- N = 500, 5 Parks, uneven number of inverters at parks
 	- $T = H_0^{-1}\left [\frac{-\ln(U)}{w_{ij} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $
@@ -121,4 +167,4 @@ IF we know that certain factors contribute to the deterioration of objects in th
 
 ## Extended Reading
 
-For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}
+For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}.

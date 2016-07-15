@@ -256,6 +256,13 @@ $$ h_i(t|\textbf{x(t)}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textb
 
 Here, $Z$, is defined as a non-negative random variable, with some distribution, $\mathfrak{g}(\cdot)$, varying across the population\cite{Wienke2010} with $Z_i$ being the realization of the Frailty for each individual system. Generally, the Frailty distribution is standardized, resulting in an average value equal to one, $\mathrm{E}[Z] = 1$, and a variance parameter that is estimated from the data, $\text{Var}(Z) = \theta$.
 
+<!-- State the difference between frailties and random effects
+h_i(t|\textbf{x(t)}_i, Z_{ij}) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i + b_i^t z_ij)
+
+Where Z_{ij} = \exp(b_i^t z_{ij})
+ -->
+}
+
 As the average value of the Frailty is set to one, divergences from the average characterize the effect on the hazard. Individual systems with Frailties greater than one will have a higher than average hazard, implying they are more frail. Meanwhile, individual systems with Frailties less than one will have lower than average hazard implying they are less frail. Those that are more frail will die earlier than those that are less frail. 
 
 Estimating a regression model without the introduction of random effects can bias the resulting predictions if individual observations are not truly independent. In time-to-event data, this issue is compounded by temporal effects. Individual systems that are more robust will almost certainly live longer and produce more data. The population hazard declines as a result of high-risk individuals failing, but the individual hazard may continue to increase. This systematic observation of the most robust individuals will skew the computation of the average hazard. Thus, an estimate of the individual hazard rate without taking into account unobserved frailty will underestimate the hazard function to an increasingly greater extent as time goes by\cite{Aalen2008}.
@@ -365,9 +372,9 @@ $$ h_i(y|\textbf{x}_i) = h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i) $$
 
 In this case the data is input as a triple, $(Y_i, d_i, \textbf{x}_i)$ as the covariates are also introduced. The likelihood for this function is as follows:
 
-$$ \mathcal {L}(\theta|Y, d, \textbf{x}, \theta) = \prod^n_i \left (h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+$$ \mathcal {L}(\theta|Y, d, \textbf{x}, \vartheta) = \prod^n_i \left (h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
-The last parameter in the likelihood, $\theta$ contains whichever parameters are required for the parametric distribution selected to represent the hazard in the model. For example, the shape and scale of the Weibull distribution, where $\theta = (\lambda, \nu)$. 
+The last parameter in the likelihood, $\vartheta$ contains whichever parameters are required for the parametric distribution selected to represent the hazard in the model. For example, the shape and scale of the Weibull distribution, where $\vartheta = (\lambda, \nu)$. 
 
 The introduction of Frailties into the Multiplicative Hazard Model is relatively straight-forward. As stated earlier, the Frailty model can be generally stated as:
 
@@ -375,13 +382,22 @@ $$ h_{ij}(y|\textbf{x}_i, Z_j) = Z_j \cdot h_0(y) \exp(\boldsymbol\beta^T \textb
 
 Thus the likelihood with Frailty and non-informative right censoring simply expands to:
 
-$$ \mathcal {L}(\theta|Y, Z_j, d, \textbf{x}, \theta) = \prod^n_i \prod^k_j \left (Z_j \cdot h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_j \cdot H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+$$ \mathcal {L}(\theta|Y, Z_j, d, \textbf{x}, \vartheta) = \prod^n_i \prod^k_j \left (Z_j \cdot h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_j \cdot H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
 As can be seen from the above, a product is now required to handle the additional, $k$, Frailty terms.
+
+<!-- Log likelihood 
+
+$$ l(\beta_i, h_0, b_i) = \sum^{n_i}_{j=1} \left [ d_{ij} (\ln h_0(t_{ij}) + \beta^tx_{ij} + b_i z^t_{ij})  - H_0(t_{ij} \exp(\beta^tx_{ij} + b_i z^t_{ij}))\right ] $$
+
+See\cite{Romdhane2015}.
+-->
 
 These likelihoods are generic and the parametric forms for both the baseline hazard and the Frailty are required to estimate the model. 
 
 <!-- Maybe insert Weibull with Gamma Frailties -->
+
+
 
 
 ## Bayesian Model Estimation
@@ -412,7 +428,7 @@ $$ \Pr_{\text{accept}} = \min\left (\frac{\Pr(\theta_{\text{proposed}}|D)}{\Pr(\
 
 Once the algorithm decides whether or not to move, the process begins again, with that position being the new starting point. This process is repeated a very large number of times, which creates a representative sample of the posterior distribution.
 
-There have been numerous attempts to improve the efficiency of this simple algorithm. The largest inefficiencies arise in two areas in two areas. First, the tails of the distribution require a large amount of iterations to accurately map. Second, distributions with several local optima requires a greater amount of iterations for the algorithm to escape these minima/maxima. Many of the attempts to improve the efficiency of this algorithm have tried to address these points. The most recent is Hamiltonian Monte Carlo (HMC), which was codified into the Stan statistical software package\cite{NEEDED}. The key difference between what was described above and HMC, is the proposal distribution\cite{Kruschke2015}. 
+There have been numerous attempts to improve the efficiency of this simple algorithm. The largest inefficiencies arise in two areas in two areas. First, the tails of the distribution require a large amount of iterations to accurately map. Second, distributions with several local optima requires a greater amount of iterations for the algorithm to escape these minima/maxima. Many of the attempts to improve the efficiency of this algorithm have tried to address these points. The most recent is Hamiltonian Monte Carlo (HMC), which was codified into the Stan statistical software package\cite{Carpenter2016}. The key difference between what was described above and HMC, is the proposal distribution\cite{Kruschke2015}. 
 
 After the algorithm selects a starting point, it has to randomly select a candidate point. These candidates are usually drawn from a symmetric distribution like a multivariate Gaussian. This fixed shape leads to candidates being selected regardless of where in the distribution the starting point is. As a result, candidates can just as easily travel away from the posterior mode as towards it. HMC uses a proposal distribution that differs based upon the current position. It alters the proposal by calculating the gradient, or the direction of change, of the posterior distribution. It then distorts the proposal distribution to match that gradient. 
 
