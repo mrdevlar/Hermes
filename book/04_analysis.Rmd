@@ -99,19 +99,9 @@ Maybe include an explicit extension about simulating time-dependent covariates
 
 
 
-
-
-
-
-
-## Outline
-
-
+<!-- 
 - Data Generation Redux - Now with Numbers
 	- N = 500, 5 Parks, uneven number of inverters at parks
-	- $T = H_0^{-1}\left [\frac{-\ln(U)}{w_{ij} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $
-	- Weibull Version
-	- $ T = \left [\frac{-\ln(U)}{w_{ij}\lambda \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\nu} $
 	- Big Table
 		- Define Failure Mode (Failure is requires replacement)
 			- Infant Mortality
@@ -131,6 +121,57 @@ Maybe include an explicit extension about simulating time-dependent covariates
 				- Standardized Avg Temperature
 				- Standardized Humidity
 				- Interaction effect between low avg temp and low humidity
+ -->
+
+
+
+## Stan
+
+<!-- \footnote{The technical details of the fitting process that Stan uses were discussed in the previous chapter.} -->
+
+Stan is the most recent addition to the toolkit for fitting Bayesian models. Like its predecessors BUGS and JAGS, Stan seeks to abstract the task of fitting complex models with general programmatic process. A Stan program defines a statistical model through a conditional probability function, $\Pr(\theta|y,x)$, where $\theta$ is a sequence of unknown modeled values while $y$ is composed of modeled known values and $x$ of unmodeled covariates and constants\cite{StanDevelopmentTeam2016}. 
+
+The reason for the existence of Stan stems from the performance difficulties of its predecessors in multilevel modeling contexts. 
+
+BUGS and JAGS make use of Gibbs sampling to 
+
+Gibbs sampling has difficulty in dealing with models where the posterior probability is not log-concave as is the case with many multi-level models. 
+
+In our context, the introduction of Frailties 
+
+Stan is an imperative probabilistic programming language. This means precise instructions have to be written out verbatim to achieve the desired outcome. 
+
+Stan inputs use a C++-like syntax to 
+
+
+<!-- Define imperative, state that order matters -->
+
+A Stan program consists of variable type declarations and statements. 
+
+
+
+A Stan program is divided into a series of blocks.
+Variables are declared in the block within which they are used.
+
+Random variables are handled differently depending on whether or not they are observed. Observed random variables are declared as data while unobserved random variables are declared as parameters. Unobserved random variables can be sampled
+
+
+A Stan program is first translated into C++ code by a compiler before being executed. The program begins by validating the known values of $y$ and $x$ then generates a sequence of non-independent identically distributed parameter values, which have a marginal distribution of $\Pr(\theta|y,x)$. 
+
+This translation into C++ code greatly improves the speed and portability of Stan-built models. However, it also results in a few conditions that do not arise in earlier Bayesian samplers. Notably, Stan is statically typed and requires that all variables have their constraints explicitly defined. Any parameters in the model must have a non-zero posterior probability or else the sampler will halt. 
+
+
+Stan makes use of Hamiltonian Monte Carlo for the sampling of continuous parameters from a model. The method was described briefly in the previous chapter. 
+
+
+
+The recent introduction of an arbitrary function block into the Stan language has largely enabled the fitting of time-to-event models. While Stan does have some support for dealing with censoring and truncation, the nature of this support is fairly inflexible. The ability to explicitly define the likelihood function of the model 
+
+
+
+
+## Outline
+
 - Stan and a medium for model fitting
 	- Introduce Stan
 		- Successor to BUGS and JAGS
@@ -167,4 +208,4 @@ IF we know that certain factors contribute to the deterioration of objects in th
 
 ## Extended Reading
 
-For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}.
+For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}.

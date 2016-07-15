@@ -446,6 +446,8 @@ Consider explaining:
 - No U-Turn
 - Step Size
 - Duration
+
+All from Stan Manual, 24-25
  -->
 
 
