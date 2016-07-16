@@ -122,9 +122,6 @@ From this description it is clear that this simulated data could be infinitely m
 
 
 
-
-
-
 <!-- Rewrite me -->
 
-There are numerous available techniques for generating predictions of remaining lifetime. The selection of Bayesian time-to-event analysis as the methodological foundation of this approach is based on the desire to accurately predict the remaining lifetime of devices by explaining as much of the variation within the data as possible. While other methods exist, such a multiclass classification models or multiclass logit models or regression trees. None of these models operate well in a context with a limited amount of time-dependent data. 
+There are numerous available techniques for generating predictions of remaining lifetime. However, most of these techniques require a greater volume of condition monitoring data than is available in an average photovoltaic system. The selection of Bayesian time-to-event analysis is based on a desire to optimally use the information that is available. While other methods exist that could facilitate the development of a predictive maintenance process, like multiclass classification models or multiclass logit models or regression trees, none of these methods operate well in a context with a limited amount of time-dependent data. Meanwhile, Bayesian methods 

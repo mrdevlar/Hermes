@@ -183,7 +183,7 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 <!-- Any parameters in the model must have a non-zero posterior probability or else the sampler will halt.  -->
 
 
-
+<!-- Due to contractual obligations, the exact lifetimes of the data were obsficated as to not potentially disclose any source material. -->
 
 
 ## Outline
