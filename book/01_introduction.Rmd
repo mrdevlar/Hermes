@@ -32,13 +32,13 @@ Thank you, all of you. May you enjoy reading this as much as I enjoyed writing i
 
 # Intended Audience
 
-Good academic literature is the kind that is capable of taking a complex topic making it accessible to a broader audience. In an effort to adhere to that standard, the intended audience of this thesis is not a pure mathematician, rather a general practitioner in the area of predictive maintenance or reliability analysis. Emphasized is the development of understanding and intuition for the underlying models and how to handle edge cases. 
+Good research is the kind that is capable of taking a complex topic making it accessible to a broader audience. In an effort to adhere to that standard, the intended audience of this thesis is not a pure mathematician, rather a general practitioner in the area of predictive maintenance or reliability analysis. Emphasized is the development of understanding and intuition for the underlying models and how to handle edge cases. 
 
-However, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang\cite{Blitzstein2014} as well as a first course on Bayesian linear models at the level of McElreath\cite{McElreath2016}. 
+While great effort is undertaken to be accessible, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang\cite{Blitzstein2014} as well as a first course on Bayesian linear models at the level of McElreath\cite{McElreath2016}. 
 
 <!-- As the reader will notice, there is a tonal shift between the domain chapter and the remainder of the text. This is intentional. The first is meant to serve as a declarative explanation of the state of the world. The methodology and analysis make use of personal language and the "royal we" to better engage the reader in the mechanics of the process\cite{Urquhart2009}. -->
 
-<!-- To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text. -->
+To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text.
 
 
 ## Introduction
@@ -61,9 +61,10 @@ The following chapters encompass the development of this strategy.
 
 The first chapter examines predictive maintenance and introduces an example domain meant to provide a business case for the further analysis. The solar industry with its heavy reliance on dwindling government subsidies and firm need to reduce costs prove an ideal domain for such systems. Further, the photovoltaic inverter, a device with limited output found at every solar power plant is a highly relevant object of study. 
 
-The second chapter considers methodology, providing the probabilistic and statistical foundations required to understand Bayesian time-to-event analysis. These foundations are then used to introduce more complex models centered around the Accelerated Failure Time model with shared Frailties. Additionally, estimation procedures for these models using Hamiltonian Monte Carlo in the probabilistic programming language Stan are examined. 
+The second chapter considers methodology, providing the probabilistic and statistical foundations required to understand Bayesian time-to-event models. These foundations are then used to introduce more complex models centered around the Multiplicative Hazard Model with shared Frailties. Finally, estimation procedures for these models using Bayesian Methods are introduced with a brief introduction to Hamiltonian Monte Carlo. 
 
-The third chapter covers the analytical process using simulated photovoltaic inverter data. It makes use of a series of data scenarios which represent states of informational sparsity. In so doing, it illuminates the various considerations that have to be taken into account when working with limited operational data using the previously developed statistical models. 
+The third chapter covers the analytical process using simulated photovoltaic inverter data. It restates the goal of the analysis in concrete terms, then examines the steps needed to develop a predictive maintenance process. Feature engineering is examined, including what resources must be made available for such a system to be put into place. Then, data management and the simulation process are discussed, formally presenting the data used. The method for fitting Bayesian model is examined, Stan, and an implementation of the model is given. Finally, predictive performance in the context of time-to-event models is provided to enable optimal performance.
+
 
 Finally, we conclude with a general summary of the material. 
 
