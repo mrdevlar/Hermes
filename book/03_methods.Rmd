@@ -146,7 +146,7 @@ It introduces a shape parameter $\nu$ that also controls the increase or decreas
 
 $$ h(t) = \frac{\alpha}{\sigma} \left (\frac{t}{\sigma}  \right )^{\alpha - 1} \tag{$\alpha > 0, \sigma > 0$} $$
 
-This parameterization defines a shape $\alpha$ and a scale $\sigma$ parameter and is equivalent to the rate $\lambda$ in the earlier form as being defined inversely, as an interval or scale, $\sigma = \frac{1}{\lambda}$.
+This parameterization defines a shape $\alpha$ and a scale $\sigma$ parameter and is equivalent to the rate $\lambda$ in the earlier form as being defined inversely, as an interval or scale, $\sigma = \left (\frac{1}{\lambda}  \right )^\alpha$.
 
 The Weibull distribution was originally developed to assess the catastrophic failure of materials. No material is perfectly uniform and all contain irregularities at some scale. These irregularities such things as pores, mineral inclusions or micro-cracks are distributed throughout the material. While under pressure any one of these irregularities can induce failure. As a result, the Weibull formalizes the notion of the "weakest link"\cite{Rinne2008}. It is the minimum of any collection of independent identically distributed random variables. This is important in reliability of complex systems as different causes of system failure compete with one another and the first cause will result in the failure of the entire system\cite{Quinn2010}. 
 
