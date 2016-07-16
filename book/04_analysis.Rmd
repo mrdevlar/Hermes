@@ -12,6 +12,8 @@ $$ h_{(1)}(t) > h_{(2)}(t) > \dots h_{(n)}(t) $$
 
 Where the time point, $t$ is fixed at the current moment for prediction. As a hazard defines an instantaneous failure rate it is the logical choice for the central unit of modeling. It should be noted, the absolute value of the hazard is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest hazard is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Thus the exact amount of risk or the remaining usable life are secondary to the action they prompt. 
 
+<!-- Change me to Mean Residual Lifetime Estimation -->
+
 <!-- Possibly state alternatives here -->
 
 
