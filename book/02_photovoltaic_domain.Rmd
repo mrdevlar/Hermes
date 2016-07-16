@@ -1,45 +1,19 @@
 # Domain
 
 <!-- 
+Check the introduction, see if the evolution of predictive maintenance described there needs to be expanded, do so if you think that is right, maybe use a gray box 
 
-OLD OUTLINE, KEEP FOR POSTERITY, INTEGRATE THEN DELETE
+Something along the lines of:
+> The rapid evolution of predictive maintenance owes much to the rapid expansion of network connectivity in most consumer products. 
+> A few things have, one is the fact that they no longer stop production to inspect, because they have better data capture technologies
+> The other is that as a result of those data capture technologies, shorter intervals of monitoring are possible
+> So you won't run a big vibrational test every 3 months, rather you'll have a vibration sensor sending out data hourly
+> predictive maintenance activities were limited by the availability of data. Vibrational analysis, thermography, fluid analysis and electrical monitoring.
+-->
 
-3. Domain Knowledge - Photovoltaic Inverter
-	- Low information, limited economic resources
-	- High reliability problem
+It is impossible to perform an analysis without a thorough understanding of context in which it is performed. At its heart, the purpose of statistics and machine learning sciences is to glue the crystalline dimension of mathematics to a messy and unstructured world. A comprehensive understanding of the conditions in which models are built is needed for those tasks to be successful. Predictive maintenance is not except from that reality. 
 
-- Describe the state of the industry as still subsidy-fueled, and why predictive maintenance is needed. 
-- Describe a basic photovoltaic system
-- Describe why the situation is different for photovoltaic plants compared to other energy sources. e.g. Information sparcity.
-- Describe the failure mechanism a.k.a. The failure mode
-	- Note that infant mortality is not part of the failure mode
-	- Early failures are considered right censored at the time of failure
-	- Potentially resolved through either two different models, one for early failure and mode failure, or some form of mixture model.
-- Describe the explanatory variables
-	- Manufacturer
-	- Site
-	- Location
-	- Noisy Alarm
-	- Qty of Lab Tests
-- Failure Mode for Photovoltaic Inverter
-	- [Reliability the weak link in the solar industry](http://www.interpv.net/tech/tech_view.asp?idx=49&part_code=030190059&page=2)
- -->
-
-- Intro
-- Energy Mix
-- Solar Industry
-- Predictive Maintenance
-- Photovoltaic Inverter
-- Data Generation
-- Model Choice
-
-This chapter examines the domain.
-
-It begins with a description of the current state of global energy generation and 
-
-the solar industry
-It first explores the state of the solar industry and why 
-the state of the solar industry and its requirement for further cost-savings. Next, it examines predictive 
+This chapter covers the domain in which a predictive maintenance process is developed. It begins with an introduction of the solar industry, its role and current state and its need for further cost reduction. It then turns its attention to predictive maintenance and provides the aims and requirements for the process. Next, the photovoltaic system is explored. Its composition, data sources and challenges in enabling predictive maintenance are discussed. Finally, a brief overview of the simulated data and model justification is given. 
 
 
 
@@ -65,16 +39,6 @@ While technological innovation is likely to continue to reduce costs, there are 
 
 Predictive maintenance is generally defined as the process of using direct monitoring of conditions, efficiency and other indicators to determine the health and likelihood of failure of a system. These results indicate when maintenance tasks should be performed\cite{Mobley2002}. Informally, predictive maintenance is an activity geared toward indicating the degree of wear of a piece of equipment and predicting its useful life\cite{Levitt2011}. In doing so, it empowers organizations with the ability to plan and act against operational hazards. This additional time allows for corrective actions to be prepared including the ordering of parts and materials, often at lower prices, coordinating labor and scheduling downtime. In turn, this allows the business, not the environment, to dictate when service interruptions occur. 
 
-<!-- 
-Check the introduction, see if the evolution of predictive maintenance described there needs to be expanded, do so if you think that is right, maybe use a gray box 
-
-Something along the lines of:
-> The rapid evolution of predictive maintenance owes much to the rapid expansion of network connectivity in most consumer products. 
-> A few things have, one is the fact that they no longer stop production to inspect, because they have better data capture technologies
-> The other is that as a result of those data capture technologies, shorter intervals of monitoring are possible
-> So you won't run a big vibrational test every 3 months, rather you'll have a vibration sensor sending out data hourly
-> predictive maintenance activities were limited by the availability of data. Vibrational analysis, thermography, fluid analysis and electrical monitoring.
--->
 
 All predictive maintenance processes attempt to address one or more of the following three generic use cases\cite{Uz2016}. First, is fault identification. Accurately identifying the source of failure of a particular system is essential to developing effective corrective countermeasures. Second, is near-term failure probability. This permits immediate operational risks to be addressed and avoided. Third, and finally, is estimation of residual lifetime. This allows both short and long-term operational risks to be taken into account. All the cases are overlap and should not be treated as mutually exclusive. Yet, each requires slightly different considerations, methodology and inputs when developing a predictive maintenance process.
 
