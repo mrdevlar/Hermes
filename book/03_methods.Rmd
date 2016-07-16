@@ -148,6 +148,7 @@ $$ h(t) = \frac{\alpha}{\sigma} \left (\frac{t}{\sigma}  \right )^{\alpha - 1} \
 
 This parameterization defines a shape $\alpha$ and a scale $\sigma$ parameter and is equivalent to the rate $\lambda$ in the earlier form as being defined inversely, as an interval or scale, $\lambda = \left (\frac{1}{\sigma}  \right )^\alpha$.
 
+
 The Weibull distribution was originally developed to assess the catastrophic failure of materials. No material is perfectly uniform and all contain irregularities at some scale. These irregularities such things as pores, mineral inclusions or micro-cracks are distributed throughout the material. While under pressure any one of these irregularities can induce failure. As a result, the Weibull formalizes the notion of the "weakest link"\cite{Rinne2008}. It is the minimum of any collection of independent identically distributed random variables. This is important in reliability of complex systems as different causes of system failure compete with one another and the first cause will result in the failure of the entire system\cite{Quinn2010}. 
 
 Gamma distribution, like those before it, is also a generalization of the exponential. However, its justification for use as a lifetime distribution is a bit more involved. A system may be exposed to a number of shocks, each of which are exponentially distributed. The system may be resilient to each shock up to a threshold, upon which it fails. The sum of each of those exponentially distributed shocks is gamma distributed\cite{Tso2010}. The hazard function is as follows:
