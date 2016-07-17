@@ -1,6 +1,6 @@
 # Analysis
 
-<!-- Intro Here REWRITE ME! -->
+<!-- Needs two or three opening sentences -->
 
 This section outlines the course and mechanism for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms, illustrating what is possible given the volume of data available. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model is fit and a discussion of model evaluation and performance is presented.
 
