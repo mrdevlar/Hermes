@@ -194,7 +194,6 @@ To incorporate covariates into the model of lifetimes, a function, $g(\cdot)$, t
 
 $$ h_i(t|\textbf{x}_i) = g(t, \beta_1 x_1 + \dots + \beta_m x_m)  $$
 
-<!-- Maybe insert note about intercept vanishing -->
 
 This function should alter the hazard by a given vector of covariates, $\textbf{x}_i = (x_1, \dots, x_n)$, for each individual system, and a shared vector of coefficients $\boldsymbol\beta = (\beta_1, \dots, \beta_m)$. Together, this is a linear model, $\boldsymbol\beta^T \textbf{x}_i = \beta_1 x_1 + \dots + \beta_m x_n$. 
 
@@ -207,7 +206,7 @@ Once the positive output hazard is ensured, there remains the question of the fu
 
 $$ h_i(t|\textbf{x}_i) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i) $$
 
-The baseline hazard, $h_0(t)$ is the common hazard when  covariates are zero, as $\exp(0) = 1$. In this way, it is the considered the "baseline" as it occurs prior to considering any additional variables\cite{Kleinbaum2005}. 
+The baseline hazard, $h_0(t)$ is the common hazard when  covariates are zero, as $\exp(0) = 1$. In this way, it is the considered the "baseline" as it occurs prior to considering any additional variables\cite{Kleinbaum2005}. Note the linear predictor does not contain an intercept term and rather begins with $beta_1 x_1$. This is because the baseline hazard already acts as an intercept for the model. The absence of the effect of the covariates would simply be the baseline hazard at that time. 
 
 This is the simplest form of the Multiplicative Hazard Model\footnote{Also known as the Cox Regression Model}. Whereas in a standard linear model, the estimated parameter value implies a linear change in every individual's fitted value, in this Multiplicative Hazard Model, a change in an estimated parameter implies a proportional shift in each individuals hazard at all time points\cite{Mason2015}. 
 
