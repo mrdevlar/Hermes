@@ -2,9 +2,11 @@
 
 <!-- Intro Here REWRITE ME! -->
 
-This section outlines the mechanism for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms, illustrating what is possible given the volume of data available. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnigns fully exposed. A comprehensive structure of the simulated data set is provided. A brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model is fit, the evaluation of model performance is given.
+This section outlines the course and mechanism for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms, illustrating what is possible given the volume of data available. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model is fit and a discussion of model evaluation and performance is presented.
 
 ## The Goal
+
+<!-- Possibly rewrite this to make it easier -->
 
 The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by hazard at a given time. Such that:
 
