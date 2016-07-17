@@ -207,6 +207,13 @@ Examine three methods of model performance, WAIC, leave-one-out cross-validation
 
 
 
+Define performance of a predictive maintenance system.
+Inbalanced prediction. Predicting true negatives is far more important that predicting true positives. A degree of false positives is permissible as 
+
+The costs associated with false positives and false negatives are different. False positives simply result in a poor allocation of maintanence resources, whereas false negatives result in breakdown, lack of system uptime, replacement parts and all the other things that were mentioned in the first chapter.
+
+Time-to-event models pose a structural problem for evaluating predictive potential. The commonly used methods of cross validation do not 
+
 
 - Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
 - In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
