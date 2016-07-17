@@ -127,6 +127,11 @@ Maybe include an explicit extension about simulating time-dependent covariates
 				- Interaction effect between low avg temp and low humidity
  -->
 
+Several complications were added to the data.
+- Random noise on a proportion of data 10%
+- Certain categories were given baseline distributions with different parameters
+- 
+
 
 
 ## Stan
@@ -187,18 +192,35 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 <!-- Due to contractual obligations, the exact lifetimes of the data were obsficated as to not potentially disclose any source material. -->
 
+## Model Performance
+
+Time-to-event models focused on predictive outcomes create a unique problem in evaluating model performance. 
+
+On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. These are always monotonically related to expected residual lifetimes. So an estimate of the remaining of lifetime could be used to assess model performance, given some degree of certainty.
+
+On the other hand, an exact determination of the failure time is not required to schedule maintenance activities. 
+This is especially true in circumstances where the amount of information present is actually relatively limited. 
+
+Due to the sequential nature of the data, conventional methods of cross validation are not applicable. 
+
+Examine three methods of model performance, WAIC, leave-one-out cross-validation and concordance index. All of these methods measure the out-of-sample predictive performance of the model, but do so through different means. As such, if the model is stable, all three should result in the same conclusion being reached about the model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a sign to reevaluate the current model. 
+
+
+
+
+- Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
+- In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
+- The use of regularizing priors can be used to compensate for 
+
+create a unique circumstances 
+
+- Robustness of Fit
+- Residual Overdispersion
+
 
 ## Outline
 
 - Stan and a medium for model fitting
-	- Introduce Stan
-		- Successor to BUGS and JAGS
-		- Give BRIEF introduction to the components
-			- Data
-			- Parameters
-			- Model
-			- Derived Quantities
-			- Functions (Recent)
 		- Model construction
 			- Define hazard functions
 			- Allow Stan to take care of the rest
@@ -215,8 +237,10 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 		- Hazards of cross validation in sequence learning
 			- Weaker cross validation that retains sequences. 
 		- Unbalanced data issues (99% not failed)
-- Fit Model
-	- Present output
+- Model Extensions
+	- Repeated Failures - Repeated Events
+	- Competing Risk
+	- Improved Baseline Hazard Estimation
 
 <!-- 
 ## Conclusion?
