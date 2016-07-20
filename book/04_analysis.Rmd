@@ -194,14 +194,24 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 ## Evaluating Model Performance
 
-Time-to-event models focused on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are always monotonically related to expected residual lifetimes. So an estimate of the remaining of lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required. Therefore, the order in which failure occurs is sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. The c-index and Widely-Applicable Information Criterion (WAIC) are discussed for model discrimination and calibration. 
+Time-to-event models focused on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are always monotonically related to expected residual lifetimes. So an estimate of the difference between the estimated and real remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
+
+This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the difficulties that arise from predicting time-to-even models. It then introduces the C-index and Widely-Applicable Information Criterion (WAIC) are discussed for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
 <!-- Insert content sentences -->
 
-Conventional methods for assessing performance encounter problems with time-to-event models. The data itself poses problems, both in terms of its sequential nature as well as its balance. 
+Conventional methods for assessing performance encounter problems with time-to-event models. Data structure creates difficulties, both in terms of its sequential structure as well as the balance between events and non-events. 
 
-Due to the sequential nature of the data, conventional methods of cross validation are not applicable. It is not possible to perform a conventional k-fold cross-validation in this context. The removal of a random selection of data points from the sequence would result in underfitting and instability in the evaluation process. 
+Conventional methods of evaluating out of sample performance include some form of cross-validation. To escape the prospect of a model that has simply memorized the data, or overfit, a measure that examines data that was not included during the fitting of the model is used to assess performance. This out-of-sample data is essential 
+
+As a result of the sequential nature of the data, conventional methods of cross validation are not applicable. Conventional k-fold cross validation is not appropriate in this context. This method randomly selects 
+
+It is not possible to perform a conventional k-fold cross-validation in this context. The removal of a random selection of data points from the sequence would result in underfitting and instability in the evaluation process. 
 
 Due to censoring, the data is generally severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Total observations that are composed of 95% or higher non-event are common. This leads to difficulties in assessing the predictive accuracy of model, in balanced terms. Simply predicting all observations as non-events would lead to high accuracy. As a result some degree of costs have to be involved in the accuracy process. 
+
+
+
+The solution to these issues 
 
 
 
