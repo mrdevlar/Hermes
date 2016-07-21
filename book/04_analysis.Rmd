@@ -196,7 +196,7 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 Time-to-event models focused on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are always monotonically related to expected residual lifetimes. So an estimate of the difference between the estimated and real remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
-This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in time-to-event models. It then introduces the C-index and Widely-Applicable Information Criterion (WAIC) which are used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
+This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in time-to-event models. It then introduces the Concordance-Index (C-Index) and Widely-Applicable Information Criterion (WAIC) which are used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
 
 Ideally, a well-performing time-to-event model should behave in a manner that generalizes the relationship between the covariates and the lifetime. After all, the purpose of any model is discover the patterns that reveal the phenomena generating a class of data rather than any specific data set. Thus, the model of lifetimes should apply to observations of new photovoltaic inverters just as well as it does to those already in the data. To assess this generality, it is important to ensure that the model performs well out-of-sample. Failure to do so can be a sign of either underfitting or overfitting, both of which are detrimental aspects of model performance. 
 
@@ -208,11 +208,15 @@ Unfortunately, with time-to-event data, k-fold cross-validation becomes difficul
 
 Censoring also creates problems. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Total observation datasets that are composed of 95% or higher non-event are the rule not the exception. As a result, the comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion of the data. 
 
-Clearly any performance metric for time-to-event models must take these features into account. 
+Clearly any performance metric for time-to-event models must take into account. Two applicable metrics are the C-index and WAIC. 
 
-The C-index is commonly used in prognostic studies in the medical domain. 
+In the time-to-event context, the Concordance Index (C-index) measures the relationship between an indicator of the risk and its eventual event time. As was seen in the previous chapter, the hazard function encapsulates the immediate risk of an event at any given moment and is the predominant. 
 
-As the C-index generally removes all non-events from its computation, it also suffers from issues arising from censoring. There have been attempts at generalizing the C-index to include censored observations. However, many of these require an estimation of the censoring distribution. This in most practical cases becomes impractical. 
+The C-index is commonly used in prognostic studies in the medical domain\cite{NEEDED}. 
+
+Asymptotics of C-index. How many failures do you need to observe to stabilize?
+
+As the C-index generally removes all non-events from its computation, it also suffers from issues arising from censoring. There have been attempts at generalizing the C-index to include censored observations. However, many of these require an estimation of the censoring distribution. This is impractical in most practical cases. 
 
 Information Criteria (IC) provide an good route to determining out-of-sample performance. 
 
