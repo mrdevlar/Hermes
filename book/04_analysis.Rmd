@@ -212,6 +212,16 @@ Clearly any performance metric for time-to-event models must take these features
 
 The C-index is commonly used in prognostic studies in the medical domain. 
 
+As the C-index generally removes all non-events from its computation, it also suffers from issues arising from censoring. There have been attempts at generalizing the C-index to include censored observations. However, many of these require an estimation of the censoring distribution. This in most practical cases becomes impractical. 
+
+Information Criteria (IC) provide an good route to determining out-of-sample performance. 
+
+The ICs have one substantial advantage over the C-index in the time-to-event context. Namely, as they use the likelihood function 
+
+ICs however, suffer from a hefty drawback. 
+Comparison between the distribution encapsulated within the model and the true distribution. The true distribution is factored out.
+They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does.
+
 
 
 
