@@ -194,7 +194,7 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 ## Evaluating Model Performance
 
-Time-to-event models focused on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are always monotonically related to expected residual lifetimes. So an estimate of the difference between the estimated and real remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
+Time-to-event models focused on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the estimated and real remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
 This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in time-to-event models. It then introduces the Concordance-Index (C-Index) and Widely-Applicable Information Criterion (WAIC) which are used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
 
@@ -206,13 +206,43 @@ As both underfitting and overfitting affect out-of-sample performance, it is imp
 
 Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes matter. This method would result in historical information about a lifetime being randomly excluded from model fitting. As a result, it would systematically underfitting of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
 
-Censoring also creates problems. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Total observation datasets that are composed of 95% or higher non-event are the rule not the exception. As a result, the comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion of the data. 
+<!-- Maybe include statement about this being the result of time-to-event data coming from skewed distributions -->
 
-Clearly any performance metric for time-to-event models must take into account. Two applicable metrics are the C-index and WAIC. 
+Censoring also creates problems. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Datasets where the majority of observations are non-events are the rule, not the exception. As a result, the balanced comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion of the data. Clearly any performance metric for time-to-event models must take into account.
 
-In the time-to-event context, the Concordance Index (C-index) measures the relationship between an indicator of the risk and its eventual event time. As was seen in the previous chapter, the hazard function encapsulates the immediate risk of an event at any given moment and is the predominant. 
+In the time-to-event context, the Concordance Index (C-index) serves as an adequate measure of the predictive performance of a model. It is commonly used in prognostic studies in the medical domain\cite{NEEDED}. The C-Index is the conditional concordance probability measure of a lifetime and a predictive score variable. In this case, the predictive score is the hazard, as it estimates the risk a system is in at a given time. The C-Index compares the relationship between the actual lifetime and the hazard of a particular model. Its computation is also relatively straight forward and is capable of being extended to include censorship.
 
-The C-index is commonly used in prognostic studies in the medical domain\cite{NEEDED}. 
+Let $(t_i, h(t)_i)$ be the observed time and hazard of an individual system in a collection of $n$ systems. 
+
+Concordance is defined as:
+
+$$\mathbb{P}_c  = \Pr(t_i  < t_j \text{ AND } h(t)_i < h(t)_j \text{ OR } t_i  > t_j \text{ AND } h(t)_i > h(t)_j)  $$
+
+Discordance is defined as:
+
+$$\mathbb{P}_d  = \Pr(t_i  < t_j \text{ AND } h(t)_i > h(t)_j \text{ OR } t_i  > t_j \text{ AND } h(t)_i < h(t)_j)  $$
+
+The computation of the C-Index then becomes:
+
+$$ C_{t\; h(t)} = \frac{\mathbb{P}_c}{\mathbb{P}_c + \mathbb{P}_d} $$
+
+There are two clear limitations on the above construction. Ties are not possible and it does not account for censoring. Ties are slightly 
+
+As is clear, there are two limitations on this computation. First, there is no censoring introduced yet. The other is that ties are not possible. In this context, ties are a non-issue as both the hazard and the lifetime are treated 
+
+
+
+
+
+
+
+
+measures the relationship between an indicator of the risk and the observed lifetime of a system. As was seen in the previous chapter, the hazard function encapsulates the immediate risk of an event at any given moment. This should provide an indicator of the degree of 
+
+It is better to recast the model as a ranking problem. Two applicable metrics are the C-index and WAIC. 
+
+
+
 
 Asymptotics of C-index. How many failures do you need to observe to stabilize?
 
