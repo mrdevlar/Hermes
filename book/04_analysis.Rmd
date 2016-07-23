@@ -194,59 +194,65 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 ## Evaluating Model Performance
 
-Time-to-event models focused on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the estimated and real remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
+Time-to-event models focusing on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the hazard and observed remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
-This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in time-to-event models. It then introduces the Concordance-Index (C-Index) and Widely-Applicable Information Criterion (WAIC) which are used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
+This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in the time-to-event context. It then introduces the Concordance-Index (C-Index) and Widely-Applicable Information Criterion (WAIC) which are used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
 
-Ideally, a well-performing time-to-event model should behave in a manner that generalizes the relationship between the covariates and the lifetime. After all, the purpose of any model is discover the patterns that reveal the phenomena generating a class of data rather than any specific data set. Thus, the model of lifetimes should apply to observations of new photovoltaic inverters just as well as it does to those already in the data. To assess this generality, it is important to ensure that the model performs well out-of-sample. Failure to do so can be a sign of either underfitting or overfitting, both of which are detrimental aspects of model performance. 
+Ideally, a well-performing time-to-event model should behave in a manner that generalizes the relationship between the covariates and the lifetime. After all, the purpose of any model is to discover the patterns that reveal the phenomena generating a class of data rather than any specific data set. Thus, the model of lifetimes should apply to observations of new photovoltaic inverters just as well as it does to those already in operation. To assess this generality, it is important to ensure that the model performs well out-of-sample. Failure to do so can be a sign of either underfitting or overfitting, both of which are detrimental aspects of model performance. 
 
-Underfitting refers to when a model is unable to capture the complexity of the underlying phenomena. This is caused by the sin of omission. Such as when important structural features or relevant covariates are not included in the model. As a result, the model is inflexible and will systematically bias results both in and out-of-sample. This is because underfitting results in an insensitivity to the structure of any sample. Overfitting refers to when random variation is treated as structure by a model. In an extreme case, overfitting can be explained as a model that memorizes the sample used to fit it. This makes it incredibly accurate in-sample. However, since new data is unlikely to have the exact same configuration as any single sample, it would result in poor out-of-sample, or generalized, performance. As may be visible from the above, the difference between underfitting and overfitting rests in the complexity of the model as well as the sensitivity of that model to the exact composition of the sample used to fit it\cite{XXXRethinking}. 
+Underfitting refers to when a model is unable to capture the complexity of the underlying phenomena. This is caused by the sin of omission. Such as when important structural features or relevant covariates are not included in the model. As a result, the model is inflexible and will systematically bias results both in and out-of-sample. This is because underfitting results in an insensitivity to the structure of any sample. Overfitting refers to when random variation is treated as structure by a model. In an extreme case, overfitting can be thought of as data memorization. Thus the model memorizes the sample used to fit it. This makes it incredibly accurate in-sample. However, since new data is unlikely to have the exact same configuration as any single sample, it would result in poor out-of-sample, or generalized, performance. As may be visible from the above, the difference between underfitting and overfitting rests in the complexity of the model as well as the sensitivity of that model to the exact composition of the sample used to fit it\cite{McElreath2016}. 
 
-As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared-error (MSE) or median-absolute-deviation (MAD), both of which measure the distance of predicted values to the values observed in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as out-of-sample data. An average of the MSE or MAD can then be taken to provide the general performance of any model. 
+As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared-error (MSE) or median-absolute-deviation (MAD), both of which measure the distance of predicted values to the observed values in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as a replacement for out-of-sample data. An average of the MSE or MAD can then be taken to provide the general performance of any model. 
 
-Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes matter. This method would result in historical information about a lifetime being randomly excluded from model fitting. As a result, it would systematically underfitting of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
+Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes matter. As such, this method would result in historical information about a lifetime being randomly excluded from model fitting. As a result, it would systematically underfit of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
 
 <!-- Maybe include statement about this being the result of time-to-event data coming from skewed distributions -->
 
-Censoring also creates problems. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Datasets where the majority of observations are non-events are the rule, not the exception. As a result, the balanced comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion of the data. Clearly any performance metric for time-to-event models must take into account.
+Censoring also creates problems for this technique. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization\cite{Petrone2008}. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Datasets where the majority of observations are non-events are the rule in time-to-event contexts, not the exception. As a result, the balanced comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion. 
 
-In the time-to-event context, the Concordance Index (C-index) serves as an adequate measure of the predictive performance of a model. It is commonly used in prognostic studies in the medical domain\cite{NEEDED}. The C-Index is the conditional concordance probability measure of a lifetime and a predictive score variable. In this case, the predictive score is the hazard, as it estimates the risk a system is in at a given time. The C-Index compares the relationship between the actual lifetime and the hazard of a particular model. Its computation is also relatively straight forward and is capable of being extended to include censorship.
+In the time-to-event context, the Concordance Index (C-Index) serves as a proper measure of the predictive performance of a model. It is commonly used in prognostic studies in the medical domain\cite{Tripepi2010}. The C-Index is the conditional concordance probability measure of a lifetime and a predictive score variable\cite{Kang2015}. In this case, the predictive score is the hazard, as it estimates the risk a system is in at a given time. The C-Index compares the relationship between the actual lifetime and the hazard of a particular model. Its computation is also relatively straight forward and is capable of being extended to include censorship.
 
-Let $(t_i, h(t)_i)$ be the observed time and hazard of an individual system in a collection of $n$ systems. 
+In the case for non-censored observations the following applies. Let $(t_i, h_i)$ be the observed time and hazard of an individual system, $i$, in a collection of $n$ systems.
 
-Concordance is defined as:
+Probability of concordance is defined as:
 
-$$\mathbb{P}_c  = \Pr(t_i  < t_j \text{ AND } h(t)_i < h(t)_j \text{ OR } t_i  > t_j \text{ AND } h(t)_i > h(t)_j)  $$
+$$\mathbb{P}_c  = \Pr(t_i  < t_j \text{ AND } h_i < h_j \text{ OR } t_i  > t_j \text{ AND } h_i > h_j)  $$
 
-Discordance is defined as:
+Probability of discordance is defined as:
 
-$$\mathbb{P}_d  = \Pr(t_i  < t_j \text{ AND } h(t)_i > h(t)_j \text{ OR } t_i  > t_j \text{ AND } h(t)_i < h(t)_j)  $$
+$$\mathbb{P}_d  = \Pr(t_i  < t_j \text{ AND } h_i > h_j \text{ OR } t_i  > t_j \text{ AND } h_i < h_j)  $$
 
-The computation of the C-Index then becomes:
+Then, the C-Index is:
 
-$$ C_{t\; h(t)} = \frac{\mathbb{P}_c}{\mathbb{P}_c + \mathbb{P}_d} $$
+$$ C_{t, h} = \frac{\mathbb{P}_c}{\mathbb{P}_c + \mathbb{P}_d} $$
 
-There are two clear limitations on the above construction. Ties are not possible and it does not account for censoring. Ties are slightly 
-
-As is clear, there are two limitations on this computation. First, there is no censoring introduced yet. The other is that ties are not possible. In this context, ties are a non-issue as both the hazard and the lifetime are treated 
+As can be seen from the above, the C-Index is simply the fraction of concordant pairs to all pairs. Put another way, it is the proportion of times the hazard correctly orders the lifetime of a system. Of course, the above is only applicable if all lifetimes are observed and as noted earlier this is rarely the case. However, to extend the C-Index to censored observations a more imperative version of the above is required. 
 
 
+To introduce the effect of censored observations, it is easier to think of time-to-event data as an ordered graph, $\mathcal{G} = (\mathcal{V}, \mathcal{E})$\cite{Steck2008}. Each observation is a triple, $(t_i, h_i, d_i)$, with the observed time, hazard and censoring indicator for any individual system. The set of vertices $\mathcal{V}$ represent all individual triples in the data set. Each vertex, $\mathcal{V_i}$, is indicated to be either an event or censored using the censoring indicator, $d_i$. Edges, $\mathcal{E}_{ij}$ between the vertices of the graph are only drawn such that $t_i < t_j$ and no edges can come from a censored observation.
+
+<!-- Insert Picture from Steck 2008 -->
+
+In such a context, the C-Index is:
+
+$$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{\mathcal{E}_{ij}} I(h_i < h_j) $$
+
+With $I(\cdot)$ being the indicator function, which is one if $h_i < h_j$, and zero otherwise. The $\mathcal{|E|}$ is the number of edges in the graph.
+
+It is important to take a moment and understand what this construction implies. Censored observations contribute to the C-Index only in one direction. Specifically, if and only if an uncensored failure time is smaller than a censored survival time. This makes intuitive sense. If a pair of observations are given, $i,j$, where $t_i < t_j$, then if the first observation, $i$, is an event it can still be compared to the censored observation later in time. If the hazard of the first observation is larger, then a concordant pair results, if not, the result is a discordant pair. However, if the first observation is censored, nothing can be said about the pair. This is because, by definition, a censored observation will have a lifetime greater than that of an event. So there is nothing to determine whether that censored observation will continue to survive until it has a lifetime less than or greater than the event observation. 
+
+The C-Index can have this one-directionality made more explicit in the following way\cite{Steck2008}:
+
+$$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{t_i < t_j} I(h_i < h_j) $$
+
+The C-Index is a generalization of the ROC curve which is a general plot used for determining the performance of binary classification models\cite{NEEDED}. 
+
+The C-Index is a generalization of the Area Under Curve (AUC) or Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifier.
+
+Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
 
 
 
-
-
-
-measures the relationship between an indicator of the risk and the observed lifetime of a system. As was seen in the previous chapter, the hazard function encapsulates the immediate risk of an event at any given moment. This should provide an indicator of the degree of 
-
-It is better to recast the model as a ranking problem. Two applicable metrics are the C-index and WAIC. 
-
-
-
-
-Asymptotics of C-index. How many failures do you need to observe to stabilize?
-
-As the C-index generally removes all non-events from its computation, it also suffers from issues arising from censoring. There have been attempts at generalizing the C-index to include censored observations. However, many of these require an estimation of the censoring distribution. This is impractical in most practical cases. 
 
 Information Criteria (IC) provide an good route to determining out-of-sample performance. 
 
@@ -263,31 +269,13 @@ They only seek to compare the relative performance of any series of models, thus
 
 The situation is somewhat more 
 
-As a result of the sequential nature of the data, conventional methods of cross validation are not applicable. Conventional k-fold cross validation is not appropriate in this context. This method randomly selects 
-
-
-
-This leads to difficulties in assessing the predictive accuracy of model, in balanced terms. Simply predicting all observations as non-events would lead to high accuracy. As a result some degree of costs have to be involved in the accuracy process. 
-
-
-
-The solution to these issues 
-
 
 
 Discrimination defines the performance of a model in separating events from non-events in the data.
 
-The c-index is equivalent to the probability that predicted hazard is higher when an event takes place than not. 
-
-The c-index describes how well a model can rank order events and non-events, but is not a function of actual predicted probabilities. 
-
 
 Calibration refers to how well the predicted hazards agree with observed risk. 
 Goodness of Fit
-
-
-
-
 
 
 Calibration is as important as predictive performance. 
@@ -299,8 +287,6 @@ Ultimately, both methods evaluate performance but through different means. Both 
 
 
 
-Define performance of a predictive maintenance system.
-Inbalanced prediction. Predicting true negatives is far more important that predicting true positives. A degree of false positives is permissible as 
 
 The costs associated with false positives and false negatives are different. False positives simply result in a poor allocation of maintanence resources, whereas false negatives result in breakdown, lack of system uptime, replacement parts and all the other things that were mentioned in the first chapter.
 
@@ -353,4 +339,4 @@ IF we know that certain factors contribute to the deterioration of objects in th
 
 ## Extended Reading
 
-For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}.
+For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. 
