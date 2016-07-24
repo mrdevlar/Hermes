@@ -20,6 +20,9 @@ Lack of trained maintenance workers is a constraint on the industry.
 
 IF we know that certain factors contribute to the deterioration of objects in the environment, whether from literature or subject-matter experts in the company, we should make use of them. Simply inputing data from existing systems and expecting perfect prediction is naive and foolish. Regardless of the perpetual drive toward greater automation in model optimization, ultimately, it is people that determine what is input. A mixed model can help provide a degree of flexibility to offset what is not being input. However, it is not magic (even if it may seem that way), and its performance can be easily overcome by a more sensible strategy of inputting variables.  -->
 
+- Make extensive use domain knowledge
+- Codify everything that can be codified
+- Do not expect sensors to save you
 
 In summation, general guidelines for time-to-event modeling in a predictive context can be constructed. However, to quote Harrell\cite{Harrell2001}, "we are for better or worse forced to develop models empirically in the majority of cases". Thus, general guidelines should be treated more as horoscopes than rigid battle plans\cite{McElreath2016}. They should not override domain knowledge, modeling experience or common sense. 
 
