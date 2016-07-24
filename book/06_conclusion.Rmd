@@ -29,6 +29,7 @@ In summation, general guidelines for time-to-event modeling in a predictive cont
 - Increment model development. 
 - Check the assumptions of the model. 
 	- Parameterization of the baseline hazard
+	- Check HDPI of covariates
 	- The affect of Frailties
 - For each set of relevant covariates:
 	- Fit model

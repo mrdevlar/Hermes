@@ -58,8 +58,6 @@ The above table gives an illustration of how data should be structured on input 
 
 It should be noted from the above table that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
 
-<!-- Inputs should be structured as a tuple, $(Y_i, d_i, Z_j, \textbf{x}_{ij}, )$, such that $Y_i$ is the observed time, $d_i$ is the censoring indicator, $Z_j$ the category  -->
-
 <!-- ## Simulation Process -->
 
 Data is simulated using inverse transform sampling. This method generates random values from any distribution using only uniform random values as inputs. Generally speaking, this enables the generation of values from any continuous distribution. 
