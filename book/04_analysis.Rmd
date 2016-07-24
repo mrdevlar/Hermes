@@ -196,13 +196,13 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 Time-to-event models focusing on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the hazard and observed remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
-This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in the time-to-event context. It then introduces the Concordance-Index (C-Index) and Widely-Applicable Information Criterion (WAIC) which are used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
+This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in the time-to-event context. It then introduces the Concordance-Index (C-Index) which is used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
 
 Ideally, a well-performing time-to-event model should behave in a manner that generalizes the relationship between the covariates and the lifetime. After all, the purpose of any model is to discover the patterns that reveal the phenomena generating a class of data rather than any specific data set. Thus, the model of lifetimes should apply to observations of new photovoltaic inverters just as well as it does to those already in operation. To assess this generality, it is important to ensure that the model performs well out-of-sample. Failure to do so can be a sign of either underfitting or overfitting, both of which are detrimental aspects of model performance. 
 
 Underfitting refers to when a model is unable to capture the complexity of the underlying phenomena. This is caused by the sin of omission. Such as when important structural features or relevant covariates are not included in the model. As a result, the model is inflexible and will systematically bias results both in and out-of-sample. This is because underfitting results in an insensitivity to the structure of any sample. Overfitting refers to when random variation is treated as structure by a model. In an extreme case, overfitting can be thought of as data memorization. Thus the model memorizes the sample used to fit it. This makes it incredibly accurate in-sample. However, since new data is unlikely to have the exact same configuration as any single sample, it would result in poor out-of-sample, or generalized, performance. As may be visible from the above, the difference between underfitting and overfitting rests in the complexity of the model as well as the sensitivity of that model to the exact composition of the sample used to fit it\cite{McElreath2016}. 
 
-As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared-error (MSE) or median-absolute-deviation (MAD), both of which measure the distance of predicted values to the observed values in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as a replacement for out-of-sample data. An average of the MSE or MAD can then be taken to provide the general performance of any model. 
+As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared-error (MSE) or mean-absolute-error (MAE), both of which measure the distance of predicted values to the observed values in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as a replacement for out-of-sample data. An average of the MSE or MAE can then be taken to provide the general performance of any model. 
 
 Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes matter. As such, this method would result in historical information about a lifetime being randomly excluded from model fitting. As a result, it would systematically underfit of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
 
@@ -245,24 +245,57 @@ The C-Index can have this one-directionality made more explicit in the following
 
 $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{t_i < t_j} I(h_i < h_j) $$
 
-The C-Index is a generalization of the ROC curve which is a general plot used for determining the performance of binary classification models\cite{NEEDED}. 
+The C-Index is a generalization of the Area Under Curve (AUC) and Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{}. Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
 
-The C-Index is a generalization of the Area Under Curve (AUC) or Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifier.
+The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which model is the best model given a set of covariate. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Vehtari2015}. It is also easily to implement in  Stan\cite{Vehtari2014}. 
 
-Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
-
-
+ 
 
 
-Information Criteria (IC) provide an good route to determining out-of-sample performance. 
+
+
+- We are for better or worse forced to develop models empirically in most the majority of cases.\cite{Harrell2001}
+
+
+<!--
+The C-Index should be applied to a hold-out sample using the last n 
+ -->
+
+<!-- 
+
+Widely-Applicable Information Criterion (WAIC) 
+
+
+
+In a real-world setting where all variables are prone to measurement error, this can result in a 
+
+
+ -->
+
+
+In summary, there are some general guidelines for time-to-event modeling in a predictive context.
+- Check the assumptions of the model. 
+	- Parameterization of the baseline hazard
+	- The affect of Frailties
+- For each set of relevant covariates:
+	- Fit model
+	- Refit model with regularizing priors
+
+- 
+
+
+
+
+
+
+
+<!-- Information Criteria (IC) provide an good route to determining out-of-sample performance. 
 
 The ICs have one substantial advantage over the C-index in the time-to-event context. Namely, as they use the likelihood function 
 
 ICs however, suffer from a hefty drawback. 
 Comparison between the distribution encapsulated within the model and the true distribution. The true distribution is factored out.
-They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does.
-
-
+They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does. -->
 
 
 
@@ -281,7 +314,7 @@ Goodness of Fit
 Calibration is as important as predictive performance. 
 Calibration can be seen as model fit, but over-calibration comes with the potential for overfitting. 
 
-- We are for better or worse forced to develop models empirically in most the majority of cases.\cite{Harrell2001}
+
 
 Ultimately, both methods evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, all three should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
@@ -339,4 +372,4 @@ IF we know that certain factors contribute to the deterioration of objects in th
 
 ## Extended Reading
 
-For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. 
+For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. For more information about WAIC, Vehtari, Gelman and Garby cover the derivation and properties\cite{Vehtari2015}.
