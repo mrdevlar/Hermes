@@ -42,13 +42,21 @@ Time-to-event models have difficulty in dealing with noisy variables across smal
 
 Raw data can rarely be input into a model as-is. The first chapter broadly examined the standard data sources for a predictive maintenance process as well as provided a general outline of the simulated data. This section returns to these topics and examines the structure of the input data. It then turns its attention to the process of data simulation, introducing the quantile function and the inverse cumulative hazard. Finally, it presents the data used in the subsequent analysis.
 
+<!-- Reason for using simulated data -->
+
 Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required. 
 
-$$ (Y_{i(t_0)}, Y_{i(t_1)}, Z_j, W_k,  \textbf{x}_{ijk}) $$
-<!-- Down Arrow -->
-<!-- Insert table with example -->
+$$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$
 
-The above table gives an illustration of how data should be structured on input to a time-to-event model. As shown above, the rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
+These values can then be transformed into a table which can be fed into Stan. Given a set of features, it can appear as follows:
+
+```
+start_time	end_time	censor	id	park	type	kWh_l30d	weather_l30d	err_code01_l30d	err_code02_l30d	repair_days
+```
+
+The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
+
+It should be noted from the above table that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
 
 <!-- Inputs should be structured as a tuple, $(Y_i, d_i, Z_j, \textbf{x}_{ij}, )$, such that $Y_i$ is the observed time, $d_i$ is the censoring indicator, $Z_j$ the category  -->
 
