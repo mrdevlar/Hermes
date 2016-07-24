@@ -1,30 +1,12 @@
-# Introduction
-
-<!-- 
-0. Acknowledgments
-0.5 Intended Audience
-1. Introduction
-	- General Summary of entire thesis
-
-## Introduction Notes 
- - You hate writing introductions, but you still have to, and it still has to catch the attention of your audience and communicate clearly the priorities of the thesis. It doesn't have to be as thick as you think it does though. 
- - Make sure to clearly provide a structure for the remaining document. 
- - There is no need to justify any of the choices, do that within the text.
- - Event-history analysis vs signal processing
-
-Stick in structure of remaining text
-
- -->
-
 # Acknowledgments
 
 No man is an island.
 
-While a single name appears on the cover of this document, it should not be implied that anything was, or could be done alone. Everyone is the product of their environments and I've had the esteemed privilege to be assisted and inspired by many wonderful people. 
+While a single name appears on the cover of this document, it should not be implied that anything was, or could be done, alone. Everyone is the product of their environments and I've had the esteemed privilege to be assisted and inspired by many wonderful people. 
 
 So my great appreciation to Ewa Podkolinska, Jerzy Podkolinski, Alina Kroeker, Raymond Kroeker, Tom Ruette, Wannes Meert, Mathias Verbeke, Gregory Schiano, Jan Aerts, Gerda Glaskens, Luc De Raedt, Roel Braekers, Geert Verbeke, Eric Schmitt, Rui Barbosa, Stijn Van Weezel, Akshat Dwivedi, Irzam Hardiansyah, Zhu Meng, Sytze Elzinga, Justin Fischedick and most importantly Rianne Hartemink.
 
-Thank you, all of you. May you enjoy reading this as much as I enjoyed writing it.
+Thank you for your support and motivation. 
 
 - Richard Podkolinski
 	- Den Haag, The Netherlands, 2016
@@ -34,9 +16,7 @@ Thank you, all of you. May you enjoy reading this as much as I enjoyed writing i
 
 Good research is the kind that is capable of taking a complex topic making it accessible to a broader audience. In an effort to adhere to that standard, the intended audience of this thesis is not a pure mathematician, rather a general practitioner in the area of predictive maintenance or reliability analysis. Emphasized is the development of understanding and intuition for the underlying models and how to handle edge cases. 
 
-While great effort is undertaken to be accessible, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang\cite{Blitzstein2014} as well as a first course on Bayesian linear models at the level of McElreath\cite{McElreath2016}. 
-
-<!-- As the reader will notice, there is a tonal shift between the domain chapter and the remainder of the text. This is intentional. The first is meant to serve as a declarative explanation of the state of the world. The methodology and analysis make use of personal language and the "royal we" to better engage the reader in the mechanics of the process\cite{Urquhart2009}. -->
+While great effort is undertaken to be as accessible as possible, a certain degree of mathematical development is required to understand this text. Recommended is an understanding of the calculus of probabilities at the level of Blitzstein and Huang\cite{Blitzstein2014} as well as a first course on Bayesian linear models at the level of McElreath\cite{McElreath2016}. A basic understanding of how basic linear models are fit and their performance evaluated is required.
 
 To ensure access to rigorous results, an extensive list of references and resources are made available at the end of each chapter, dubbed "Extended Reading". These resources elucidate many of the technical aspects of the modeling process and mathematical foundations which are beyond the scope of this text.
 
@@ -63,10 +43,9 @@ The first chapter examines predictive maintenance and introduces an example doma
 
 The second chapter considers methodology, providing the probabilistic and statistical foundations required to understand Bayesian time-to-event models. These foundations are then used to introduce more complex models centered around the Multiplicative Hazard Model with shared Frailties. Finally, estimation procedures for these models using Bayesian Methods are introduced with a brief introduction to Hamiltonian Monte Carlo. 
 
-The third chapter covers the analytical process using simulated photovoltaic inverter data. It restates the goal of the analysis in concrete terms, then examines the steps needed to develop a predictive maintenance process. Feature engineering is examined, including what resources must be made available for such a system to be put into place. Then, data management and the simulation process are discussed, formally presenting the data used. The method for fitting Bayesian model is examined, Stan, and an implementation of the model is given. Finally, predictive performance in the context of time-to-event models is provided to enable optimal performance.
+The third chapter covers the analytical process using simulated photovoltaic inverter data. It restates the goal of the analysis in concrete terms, then examines the steps needed to develop a predictive maintenance process. Feature engineering is examined, including what resources must be made available for such a system to be put into place. Then, data management and the simulation process are discussed. Stan, a recently development in fitting Bayesian models is examined and its implementation method is described. Finally, an exploration of how to assess the predictive performance in the context of time-to-event models is provided.
 
-
-Finally, we conclude with a general summary of the material. 
+Finally, we conclude with a summary of the material and provide a general guidelines for time-to-event modeling in a predictive context.
 
 
 <!-- Optional, so be clear this might not get done -->
