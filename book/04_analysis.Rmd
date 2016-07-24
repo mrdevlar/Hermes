@@ -2,7 +2,7 @@
 
 <!-- Needs two or three opening sentences -->
 
-This section outlines the course and mechanism for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms, illustrating what is possible given the volume of data available. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model is fit and a discussion of model evaluation and performance is presented.
+This section outlines the course for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model fit, evaluation and performance are presented.
 
 ## The Goal
 
@@ -12,11 +12,8 @@ The goal of a predictive maintenance process in the photovoltaic domain is to cr
 
 $$ h_{(1)}(t) > h_{(2)}(t) > \dots h_{(n)}(t) $$
 
-Where the time point, $t$ is fixed at the current moment for prediction. As a hazard defines an instantaneous failure rate it is the logical choice for the central unit of modeling. It should be noted, the absolute value of the hazard is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest hazard is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Thus the exact amount of risk or the remaining usable life are secondary to the action they prompt. 
+Where the time point, $t$ is fixed at the current moment for prediction. As a hazard defines an instantaneous failure rate it is the logical choice for the central unit of modeling. It should be noted, the absolute value of the hazard is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest hazard is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk are secondary to the action they prompt. This recasts the time-to-event analysis as a rank-order prediction, where the order of failures, and thus maintenance tasks is the central goal. 
 
-<!-- Change me to Mean Residual Lifetime Estimation -->
-
-<!-- Possibly state alternatives here -->
 
 
 ## Feature Engineering
@@ -202,6 +199,10 @@ Ideally, a well-performing time-to-event model should behave in a manner that ge
 
 Underfitting refers to when a model is unable to capture the complexity of the underlying phenomena. This is caused by the sin of omission. Such as when important structural features or relevant covariates are not included in the model. As a result, the model is inflexible and will systematically bias results both in and out-of-sample. This is because underfitting results in an insensitivity to the structure of any sample. Overfitting refers to when random variation is treated as structure by a model. In an extreme case, overfitting can be thought of as data memorization. Thus the model memorizes the sample used to fit it. This makes it incredibly accurate in-sample. However, since new data is unlikely to have the exact same configuration as any single sample, it would result in poor out-of-sample, or generalized, performance. As may be visible from the above, the difference between underfitting and overfitting rests in the complexity of the model as well as the sensitivity of that model to the exact composition of the sample used to fit it\cite{McElreath2016}. 
 
+<!-- - Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
+- In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
+- The use of regularizing priors -->
+
 As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared-error (MSE) or mean-absolute-error (MAE), both of which measure the distance of predicted values to the observed values in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as a replacement for out-of-sample data. An average of the MSE or MAE can then be taken to provide the general performance of any model. 
 
 Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes matter. As such, this method would result in historical information about a lifetime being randomly excluded from model fitting. As a result, it would systematically underfit of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
@@ -247,42 +248,9 @@ $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{
 
 The C-Index is a generalization of the Area Under Curve (AUC) and Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{}. Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
 
-The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which model is the best model given a set of covariate. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Vehtari2015}. It is also easily to implement in  Stan\cite{Vehtari2014}. 
+<!-- C-Index holdout sample? Leave One Out CV? -->
 
- 
-
-
-
-
-- We are for better or worse forced to develop models empirically in most the majority of cases.\cite{Harrell2001}
-
-
-<!--
-The C-Index should be applied to a hold-out sample using the last n 
- -->
-
-<!-- 
-
-Widely-Applicable Information Criterion (WAIC) 
-
-
-
-In a real-world setting where all variables are prone to measurement error, this can result in a 
-
-
- -->
-
-
-In summary, there are some general guidelines for time-to-event modeling in a predictive context.
-- Check the assumptions of the model. 
-	- Parameterization of the baseline hazard
-	- The affect of Frailties
-- For each set of relevant covariates:
-	- Fit model
-	- Refit model with regularizing priors
-
-- 
-
+The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which model is the best model given a set of covariate. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Vehtari2015}. It is also easily to implement in  Stan\cite{Vehtari2014}. Both the C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
 
 
@@ -295,79 +263,22 @@ The ICs have one substantial advantage over the C-index in the time-to-event con
 
 ICs however, suffer from a hefty drawback. 
 Comparison between the distribution encapsulated within the model and the true distribution. The true distribution is factored out.
-They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does. -->
+They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does. 
+-->
 
 
 
 
-The situation is somewhat more 
-
-
-
-Discrimination defines the performance of a model in separating events from non-events in the data.
-
-
-Calibration refers to how well the predicted hazards agree with observed risk. 
-Goodness of Fit
-
-
-Calibration is as important as predictive performance. 
-Calibration can be seen as model fit, but over-calibration comes with the potential for overfitting. 
-
-
-
-Ultimately, both methods evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, all three should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
 
 
 
-The costs associated with false positives and false negatives are different. False positives simply result in a poor allocation of maintanence resources, whereas false negatives result in breakdown, lack of system uptime, replacement parts and all the other things that were mentioned in the first chapter.
-
-Time-to-event models pose a structural problem for evaluating predictive potential. The commonly used methods of cross validation do not 
 
 
-While concordance can be used to estimate the predictive capability of a time-to-event model, it has its drawbacks. As concordance is a rank XXX, it removes the distance between  predictions. As a result, the influence of any individual covariates on the model is minimized
-
-So while it can be used to estimate predictive performance it should not be used to determine which covariates you include in the model
-
-- Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
-- In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
-- The use of regularizing priors can be used to compensate for 
-
-create a unique circumstances 
-
-- Robustness of Fit
-- Residual Overdispersion
 
 
-## Outline
 
-- Stan and a medium for model fitting
-		- Model construction
-			- Define hazard functions
-			- Allow Stan to take care of the rest
-- Predictive performance and model comparison
-	- Ideal case
-		- Model residual lifetime
-		- Concordance between prediction and failure
-		- It is highly like that it this is not the metric to evaluate the model by, due to censoring will always pose challenges
-	- Compromise Case
-		- Highest hazard in next instantaneous period
-		- Some indication of the urgency of the first instance of failure
-	- Evaluating Model Performance
-		- Deviance-based methods, WAIC
-		- Hazards of cross validation in sequence learning
-			- Weaker cross validation that retains sequences. 
-		- Unbalanced data issues (99% not failed)
-- Model Extensions
-	- Repeated Failures - Repeated Events
-	- Competing Risk
-	- Improved Baseline Hazard Estimation
 
-<!-- 
-## Conclusion?
-
-IF we know that certain factors contribute to the deterioration of objects in the environment, whether from literature or subject-matter experts in the company, we should make use of them. Simply inputing data from existing systems and expecting perfect prediction is naive and foolish. Regardless of the perpetual drive toward greater automation in model optimization, ultimately, it is people that determine what is input. A mixed model can help provide a degree of flexibility to offset what is not being input. However, it is not magic (even if it may seem that way), and its performance can be easily overcome by a more sensible strategy of inputting variables.  -->
 
 
 ## Extended Reading
