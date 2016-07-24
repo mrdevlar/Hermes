@@ -48,7 +48,6 @@ The third chapter covers the analytical process using simulated photovoltaic inv
 Finally, we conclude with a summary of the material and provide a general guidelines for time-to-event modeling in a predictive context.
 
 
-<!-- Optional, so be clear this might not get done -->
 <!-- The fourth and final chapter deals with extensions that improve the model either because more data is has become available or  -->
 
 
