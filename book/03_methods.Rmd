@@ -355,7 +355,7 @@ $$ {\displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta | T)=\arg \max _{\th
 
 In the time-to-event context, there is an added complication. As noted earlier, this type of data often features censoring and truncation. When non-informative right-censoring is present, it is required to extend the likelihood. Data is now input as a pair, $(Y_i, d_i)$. The $Y_i$ random variable is defined as the minimum of the actual and censored lifetime. It represents the observed lifetimes found in the data. A binary random variable, $d$, is introduced to make explicit when censoring occurs\footnote{See Censoring and Truncation section for details}. The likelihood is altered as follows:
 
-$$ \mathcal {L}(\theta|Y, d) = \prod^n_i S(Y_i)^{d_i} f(Y_i)^{(1 - d_i)}$$ 
+$$ \mathcal {L}(\theta|Y, d) = \prod^n_i f(Y_i)^{(d_i)} S(Y_i)^{1 - d_i} $$ 
 
 The probability density function, $f(Y_i)$, of the parametric distribution is still present in the above equation, much like in the standard likelihood. However, its contribution is now controlled by the $d$ random variable. When the variable $d$ equals one, it implies a failure event and zero when censoring occurs. The variable will be the number of events across the data set. 
 
