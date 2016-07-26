@@ -103,7 +103,7 @@ Five-hundred inverters unevenly clustered in five solar parks are generated. Eac
 
 Two generic failure modes are used. One which occurs within the first year of operation, representing sources of infant mortality commonly found in inverters\cite{Dhere2005}. The other failure mode is old age wear, which peaks within ten years of operation, on average. Admittedly, this is a pessimistic choice for a time frame given improvements in inverter reliability over the preceding decade. However, it is justified in that most current solar systems will still be making use of older components.
 
-The temporal granularity of the data is daily. A predictive maintenance process could be set up on an hourly, even second basis. However, the inability to act, not to mention the time required to refit the model, makes such such narrow intervals impractical.
+<!-- The temporal granularity of the data is daily. A predictive maintenance process could be set up on an hourly, even second basis. However, the inability to act, not to mention the time required to refit the model, makes such such narrow intervals impractical. -->
 
 Daily inverter electrical output data is provided, with both trend and seasonality removed. Furthermore, a daily count of error codes is provided. Two generic error codes are generated whose combinations are related to the aforementioned failure modes. Park level data is also provided. Temperature and humidity measurements are provided at the solar park level. For each, a centered average is provided based on data that has had both the trend and seasonality removed. 
 

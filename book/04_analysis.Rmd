@@ -51,16 +51,73 @@ $$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$
 These values can then be transformed into a table which can be fed into Stan. Given a set of features, it can appear as follows:
 
 ```
-start_time	end_time	censor	id	park	type	kWh_l30d	weather_l30d	err_code01_l30d	err_code02_l30d	repair_days
+start_time	end_time	censor	id	park	type	kWh_l30d	weather_l6m	err_code01_l30d	err_code02_l30d	repair_days
 ```
 
 The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
 
 It should be noted from the above table that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
 
+The general summary of the simulated data is as follows:
+
+```
+500 Inverters
+
+5 Parks with 150, 150, 100, 50, 50 inverters, respectively.
+
+3 Types of inverters: central, string, micro. Which are distributed among the parks in the following manner:
+
+(125, 25, 0,
+75 , 50, 25,
+0  , 75, 25,
+40 ,  0, 10,
+0  , 30, 20)
+
+
+Park Level Covariates
+weather_l6m: Number of Extreme Weather Events in last 6 months
+
+Covariates
+kWh: kWh inverter output, detrended and made stationary
+
+err_code01: Count of errors
+err_code02: Count of critical errors
+
+repair_days: Days since last repair
+```
+
+<!-- 
+- Data Generation Redux - Now with Numbers
+	- N = 500, 5 Parks, uneven number of inverters at parks
+	- Big Table
+		- Define Failure Mode (Failure is requires replacement)
+			- Infant Mortality
+			- Old Age Mortality
+		- Define each category $w_{ij}$
+			- Park - Big $\sigma^2$
+			- Inverter Type - Small $\sigma^2$
+		- Define each covariate, $\textbf{x}_{ij}$
+			- Days of operation
+			- Standardized Electrical Output - $\mathcal{N}(0,1)$
+			- Maintenance Logs
+				- Count of repairs
+				- Days since last repair
+				- Count of replacement
+				- Days since last replacement part
+			- Park Level Data
+				- Standardized Avg Temperature
+				- Standardized Humidity
+				- Interaction effect between low avg temp and low humidity
+
+Several complications were added to the data.
+- Random noise on a proportion of data 10%
+- Certain categories were given baseline distributions with different parameters
+- 
+ -->
+
 <!-- ## Simulation Process -->
 
-Data is simulated using inverse transform sampling. This method generates random values from any distribution using only uniform random values as inputs. Generally speaking, this enables the generation of values from any continuous distribution. 
+Data is simulated using inverse transform sampling. This method generates random values from any distribution using only standard uniform random values as inputs. Generally speaking, this enables the generation of values from any continuous distribution. 
 
 Briefly, let $F$ be a continuous cdf. This guarantees that $F^{-1}$ exists as a function from $[0,1]$ to $\mathbb{R}$. If $U$ is defined as a uniform random variable on the unit interval, $[0,1]$ and $T = F^{-1}(U)$, then $T$ is a random variable with the cdf, $F(\cdot)$. As the function of a random variable is also a random variable itself, the inverse of the cdf, $F^{-1}(U)$, known as the quantile function, is also a random variable\cite{Blitzstein2014}. This implies that, $F^{-1}(U) = T$ if and only if $U = F(T)$. Thus, all that is required to generate random values from any given distribution is the quantile function and uniform random variables. 
 
@@ -108,34 +165,7 @@ Maybe include an explicit extension about simulating time-dependent covariates
 
 <!-- ln(-ln(S(t))) => check baseline-->
 
-<!-- 
-- Data Generation Redux - Now with Numbers
-	- N = 500, 5 Parks, uneven number of inverters at parks
-	- Big Table
-		- Define Failure Mode (Failure is requires replacement)
-			- Infant Mortality
-			- Old Age Mortality
-		- Define each category $w_{ij}$
-			- Park - Big $\sigma^2$
-			- Inverter Type - Small $\sigma^2$
-		- Define each covariate, $\textbf{x}_{ij}$
-			- Days of operation
-			- Standardized Electrical Output - $\mathcal{N}(0,1)$
-			- Maintenance Logs
-				- Count of repairs
-				- Days since last repair
-				- Count of replacement
-				- Days since last replacement part
-			- Park Level Data
-				- Standardized Avg Temperature
-				- Standardized Humidity
-				- Interaction effect between low avg temp and low humidity
- -->
 
-Several complications were added to the data.
-- Random noise on a proportion of data 10%
-- Certain categories were given baseline distributions with different parameters
-- 
 
 
 
