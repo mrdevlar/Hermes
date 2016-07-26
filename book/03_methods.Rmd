@@ -288,7 +288,7 @@ In this case rather than defining a single variance parameter, $\theta$, a covar
 
 Any distribution which is positive and whose mean can be set to one can be used as the Frailty distribution, $\mathfrak{g}(\cdot)$. The most commonly used distribution is the Gamma. It is used largely due to is flexibility in modeling positive outcomes and due to the ease with which it allows for the expression of all required formulas\cite{Wienke2010}. The density of the Gamma is given as follows:
 
-$$ f(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{\Gamma(k)} $$
+$$ f(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{\Gamma(k)} \tag{$ k>0, \lambda > 0 $} $$
 
 As stated earlier, there is a need to fix the average Frailty and estimate the variance.
 
