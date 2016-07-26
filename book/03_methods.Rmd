@@ -300,7 +300,7 @@ The restriction of $k = \lambda$ is made to ensure that the average Frailty is e
 
 $$ f(z) = \frac{1}{\Gamma(\frac{1}{\sigma^2})} \left (\frac{1}{\sigma^2}  \right )^{\frac{1}{\sigma^2}} t^{\frac{1}{\sigma^2} - 1} \exp(-\frac{t}{\sigma^2}) $$
 
-This leads to a unconditional survival, density and hazard functions with the variance of the Frailty included:
+That can be transformed into a unconditional survival function and consequently the into the unconditional density and hazard. 
 
 $$ S(t) = (1 + \sigma^2 H_0(t))^{- \frac{1}{\sigma^2}}$$
 
