@@ -253,7 +253,7 @@ Unfortunately, with time-to-event data, k-fold cross-validation becomes difficul
 
 Censoring also creates problems for this technique. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization\cite{Petrone2008}. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Datasets where the majority of observations are non-events are the rule in time-to-event contexts, not the exception. As a result, the balanced comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion. 
 
-In the time-to-event context the Concordance Index (C-Index) can serve as a proper measure of the predictive performance of a model. It is commonly used in prognostic studies in the medical domain\cite{Tripepi2010}. The C-Index is the conditional concordance probability measure of a lifetime and a predictive score variable\cite{Kang2015}. In this case, the predictive score is the hazard, as it estimates the risk a system is in at a given time. The C-Index compares the relationship between the actual lifetime and the hazard of a particular model. Its computation is also relatively straight forward and is capable of being extended to include censorship.
+In the time-to-event context the Concordance Index (C-Index) can serve as a reasonable measure of the predictive performance of a model. It is commonly used in prognostic studies in the medical domain\cite{Tripepi2010}. The C-Index is the conditional concordance probability measure of a lifetime and a predictive score variable\cite{Kang2015}. In this case, the predictive score is the hazard, as it estimates the risk a system is in at a given time. The C-Index compares the relationship between the actual lifetime and the hazard of a particular model. Its computation is also relatively straight forward and is capable of being extended to include censorship.
 
 In the case for non-censored observations the following applies. Let $(t_i, h_i)$ be the observed time and hazard of an individual system, $i$, in a collection of $n$ systems.
 
@@ -265,7 +265,7 @@ Probability of discordance is defined as:
 
 $$\mathbb{P}_d  = \Pr(t_i  < t_j \text{ AND } h_i > h_j \text{ OR } t_i  > t_j \text{ AND } h_i < h_j)  $$
 
-Then, the C-Index is:
+Then, generally the C-Index is:
 
 $$ C_{t, h} = \frac{\mathbb{P}_c}{\mathbb{P}_c + \mathbb{P}_d} $$
 
@@ -288,11 +288,11 @@ The C-Index can have this one-directionality made more explicit in the following
 
 $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{t_i < t_j} I(h_i < h_j) $$
 
-The C-Index is a generalization of the Area Under Curve (AUC) and Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{}. Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
+The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{NEEDED}. Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
 
 <!-- C-Index holdout sample? Leave One Out CV? -->
 
-The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which model is the best model given a set of covariate. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Vehtari2015}. It is also easily to implement in  Stan\cite{Vehtari2014}. Both the C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
+The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which set of covariates produce the best model. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Vehtari2015}. It is also easily to implement in  Stan\cite{Vehtari2014}. The C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
 
 <!-- Information Criteria (IC) provide an good route to determining out-of-sample performance. 
@@ -308,9 +308,11 @@ They only seek to compare the relative performance of any series of models, thus
 
 <!-- Segway needed -->
 
-This section brings all the previous insights together and provides a step-by-step process to fitting time-to-event models. 
+This section brings all the previous insights together and provides a step-by-step process to fitting time-to-event models. It begins with the construction and output of a simple Multiplicative Hazard Model, it then extends to this model to accommodate shared Gamma Frailties and time-dependent covariates. The emphasis in this section is on practical exposition, over theory. As a result, some implementation details may be omitted for the sake of brevity. 
 
-It is important to start simple with model construction. A good first step is to fit a basic multiplicative hazards model, one that does not contain any time-dependent covariates or random effects. 
+It is important to start simple with model construction. A good first step is to fit a basic Multiplicative Hazards Model, one that does not contain any time-dependent covariates or random effects. This can be done in the following way:
+
+<!-- Also critical is that each  failure mode is separately fit, with the censored observations being included divided into each data set.  -->
 
 <!-- FigureXXX -->
 
@@ -342,7 +344,7 @@ functions {
 
 Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a `function{}` block at the beginning of the model code. Figure XXX contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the `H_t()` and `log_h_t()` functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the `surv_dens_log()` function. This last function that will be minimized in sampling steps of the fitting process. 
 
-The process of explicitly writing likelihoods exposes one to the inner operation of a model. This provides greater opportunities for fostering a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
+The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
 It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input `cens_lifetime` that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
@@ -358,6 +360,7 @@ data {
   real          x_err2[N];
   real          x_repair[N];
   real          x_kWh[N];
+  real          park_weather[N];
 }
 ```
 
@@ -373,6 +376,7 @@ parameters {
   real          beta_err2;
   real          beta_repair;
   real          beta_kWh;
+  real          beta_weather;
 }
 ```
 
@@ -381,17 +385,17 @@ The parameters of the model also must be defined. In this case, this includes th
 ```
 model {
   for(i in 1:N){
-    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i]);
+    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 
   alp ~ lognormal(0, 1.5);
   gam ~ lognormal(0, 1.5);
   
-  beta_err1 ~ normal(0, 100);
-  beta_err2 ~ normal(0, 100);
-  beta_repair ~ normal(0, 100);
-  beta_kWh ~ normal(0, 100);
-
+  beta_err1 ~ normal(0, 1);
+  beta_err2 ~ normal(0, 10);
+  beta_repair ~ normal(0, 1);
+  beta_kWh ~ normal(0,10);
+  beta_weather ~ normal(0, 1);
 }
 ```
 
