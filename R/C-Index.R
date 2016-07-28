@@ -1,5 +1,5 @@
-C_Index = function(df, obs_times = "obs_times"){
-  df = df[order(df[obs_times]),]
+C_Index = function(df, lifetime = "lifetime"){
+  df = df[order(df[lifetime]),]
   edges = 0
   
   concordant = 0
@@ -8,7 +8,7 @@ C_Index = function(df, obs_times = "obs_times"){
   
   for(i in 1:nrow(dfe)){
     
-    t_i = dfe[i, obs_times]
+    t_i = dfe[i, lifetime]
     h_i = dfe[i, "h_t"]
     d_i = dfe[i, "d_i"]
     
@@ -16,7 +16,7 @@ C_Index = function(df, obs_times = "obs_times"){
     
     for(j in 1:nrow(df)){
       if(i == j){ next }
-      t_j = df[j, obs_times]
+      t_j = df[j, lifetime]
       h_j = df[j, "h_t"]
       d_j = df[j, "d_i"]
       

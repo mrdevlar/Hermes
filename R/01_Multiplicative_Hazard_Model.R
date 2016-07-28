@@ -12,6 +12,12 @@ set.seed(417674)
 # Scale to vector function
 s = function(x) as.vector(scale(x))
 
+# Weibul Hazard
+h_t = function(lifetime, alp, gam, lin_pred){
+  exp(lin_pred) * (alp/gam) * (lifetime/gam)^(alp-1)
+}
+
+
 #### Model Parameters ####
 
 N = 500
@@ -202,11 +208,35 @@ generated quantities {
 
 "
 
+## Fit Model
 mhazm = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
 
+## Parameter Output
 print(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
+## Get WAIC
 WAIC(mhazm)
 
+## Extract Samples
+samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
+# Posterior Predictive Samples
+s_mean = lapply(samp, mean)
+s_sd   = lapply(samp, sd)
+
+s_alp = rnorm(1e6, mean = s_mean$alp, sd = s_sd$alp)
+s_gam = rnorm(1e6, mean = s_mean$gam, sd = s_sd$gam)
+s_beta_err1 = rnorm(1e6, mean = s_mean$beta_err1, sd = s_sd$beta_err1)
+s_beta_err2 = rnorm(1e6, mean = s_mean$beta_err2, sd = s_sd$beta_err2)
+s_beta_repair = rnorm(1e6, mean = s_mean$beta_repair, sd = s_sd$beta_repair)
+s_beta_kWh = rnorm(1e6, mean = s_mean$beta_kWh, sd = s_sd$beta_kWh)
+s_beta_weather = rnorm(1e6, mean = s_mean$beta_weather, sd = s_sd$beta_weather)
+
+pred_lin_pred = x_err1 * s_beta_err1 + x_err2 * s_beta_err2 + x_repair * s_beta_repair +
+  x_kWh * s_beta_kWh + park_weather * s_beta_weather
+
+## Posterior Prediction data frame
+df = data.frame(lifetime = lifetime,
+                d_i = d_i
+                )
 

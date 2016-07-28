@@ -406,12 +406,13 @@ Below the sampling statement are the priors associated with the parameters. Prio
 ```
 generated quantities {
   vector[N] log_lik;
-  for (n in 1:N){
-  	lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i]);
+  for (i in 1:N){
+  	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
+}
 ```
 
-To generate the WAIC metric, a point-wise log likelihood is required. The `generated quantities{}` block allows for these likelihoods to be extracted upon completion of sampling. 
+To generate the WAIC metric, a point-wise log likelihood is required. The `generated quantities{}` block allows for these likelihoods to be extracted upon completion of sampling. The function `WAIC()` from the `rethinking` package can be used to compute the WAIC value for the model under the assumption that the `log_lik` vector is included in the output. 
 
 
 Once the model is fit, the parameters can be easily printed out or plotted and predictive accuracy assessed. Two actions should be performed before any further activities take place. First, is a check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of a Weibull distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. Second, convergence should be checked. This can be done in several ways. The simplest method is to make use of the `traceplot()` function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the `Rhat` column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
