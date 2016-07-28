@@ -35,37 +35,43 @@ x_kWh    = s(x_kWh)
 id = 1:N
 
 # Park Effect
-parkN     = c(150 , 150 , 100 , 50 , 50)
-park      = rep(1:5, parkN)
-park_eff  = c(1, 0.1, 0.5, 0.8, 0.3)
+park_N     = c(150 , 150 , 100 , 50 , 50)
+park      = rep(1:5, park_N)
+park_var  = c(1, 0.1, 0.5, 0.8, 0.3)
+park_eff  = c(1, 1.1, 1.3, 1.01, 1.2)
 park_Zij  = numeric()
-for(i in seq_along(parkN)){
-    out = rgamma(parkN[i], 1/park_eff[i], 1/park_eff[i])
+for(i in seq_along(park_N)){
+    out = rgamma(park_N[i], 1/park_var[i], 1/park_var[i])
     park_Zij = c(park_Zij, out)
 }
+park_Zij = park_Zij * park_eff
+
 summary(park_Zij)
 
-# park_Zij = 2
-# park_Zij = rgamma(N, 1/0.1, 1/0.1)
 
 
 # Model Type
-type_size = c(125, 25, 0,
-              75 , 50, 25,
-              0  , 75, 25,
-              40 ,  0, 10,
-              0  , 30, 20)
-type_size = type_size * (N / sum(type_size))
-type = rep( rep(1:3,5) , type_size)
-type_eff = rep( rep(c(0.6,0.01,0.3), 5) , type_size)
-type_var = rep( rep(c(0.1,0.0001,0.3), 5) , type_size)
+type_N = c(125, 25, 0,
+            75 , 50, 25,
+            0  , 75, 25,
+            40 ,  0, 10,
+            0  , 30, 20)
+type_N = type_N * (N / sum(type_N))
+type = rep( rep(1:3,5) , type_N)
+type_eff = rep( rep(c(1.6,1.01,1.3), 5) , type_N)
+type_var = rep( rep(c(0.1,0.0001,0.3), 5) , type_N)
 type_Wij = sapply(type_var, function(x){rgamma(1, 1/type_var, 1/type_var)})
-# type_Wij = type_Wij * type_eff
+type_Wij = type_Wij * type_eff
+
+summary(type_Wij)
 
 
-# Park Weather
+# Park Weather - Count of extreme events at park level
+park_weather = c(0, 3, 2, 1, 3)
+park_weather_beta = c(0.2, -0.2, 0.5, 0.1, -0.1)
 
-
+park_weather      = s(rep(park_weather , park_N))
+park_weather_beta = rep(park_weather_beta , park_N)
 
 
 
@@ -81,10 +87,13 @@ type_Wij = sapply(type_var, function(x){rgamma(1, 1/type_var, 1/type_var)})
 
 # (I)
 # Without random effect
-lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + x_kWh * beta_kWh
+lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + 
+  x_kWh * beta_kWh + park_weather * park_weather_beta
 
 # With random effect, note bias
-# lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + x_kWh * beta_kWh + log(park_Zij) + log(type_Wij)
+# lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + 
+#   x_kWh * beta_kWh + park_weather * park_weather_beta +
+#   log(park_Zij) + log(type_Wij)
 
 # (II)
 # No random effect
@@ -106,6 +115,7 @@ stan_data = list(
   N = N,
   id = id,
   park = park,
+  park_weather = park_weather,
   x_err1 = x_err1,
   x_err2 = x_err2,
   x_repair = x_repair,
@@ -150,6 +160,7 @@ data {
   real          x_err2[N];
   real          x_repair[N];
   real          x_kWh[N];
+  real          park_weather[N];
 }
 
 
@@ -160,12 +171,14 @@ parameters {
   real          beta_err2;
   real          beta_repair;
   real          beta_kWh;
+  real          beta_weather;
 }
 
 
 model {
   for(i in 1:N){
-    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i]);
+    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+                  beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 
   alp ~ lognormal(0, 1.5);
@@ -175,6 +188,7 @@ model {
   beta_err2 ~ normal(0, 10);
   beta_repair ~ normal(0, 1);
   beta_kWh ~ normal(0,10);
+  beta_weather ~ normal(0, 1);
 
 }
 
