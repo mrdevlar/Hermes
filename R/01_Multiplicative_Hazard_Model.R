@@ -21,7 +21,7 @@ gam = 3
 # id	type	weather_l30d
 beta_err1   = 0.1 # err_code01_l30d
 beta_err2   = 3  # err_code02_l30d - Severe
-beta_repair = -0.15 # repair_days
+beta_repair = -0.15 # days since repair
 beta_kWh    = -4 #kwh 
 
 x_err1   = s(rpois(N, 5)) # err_code01_l30d
@@ -57,8 +57,15 @@ type_size = c(125, 25, 0,
               0  , 30, 20)
 type_size = type_size * (N / sum(type_size))
 type = rep( rep(1:3,5) , type_size)
-type_eff = rep( rep(c(0.6,0,0.3), 5) , type_size)
-type_var = rep( rep(c(0.1,0,0.3), 5) , type_size)
+type_eff = rep( rep(c(0.6,0.01,0.3), 5) , type_size)
+type_var = rep( rep(c(0.1,0.0001,0.3), 5) , type_size)
+type_Wij = sapply(type_var, function(x){rgamma(1, 1/type_var, 1/type_var)})
+# type_Wij = type_Wij * type_eff
+
+
+# Park Weather
+
+
 
 
 
@@ -77,14 +84,14 @@ type_var = rep( rep(c(0.1,0,0.3), 5) , type_size)
 lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + x_kWh * beta_kWh
 
 # With random effect, note bias
-# lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + x_kWh * beta_kWh + log(park_Zij)
+# lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + x_kWh * beta_kWh + log(park_Zij) + log(type_Wij)
 
 # (II)
 # No random effect
-lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp) 
+lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp)
 
 # With random effect, note bias
-# lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij) )^(1/alp) 
+# lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
@@ -165,9 +172,9 @@ model {
   gam ~ lognormal(0, 1.5);
   
   beta_err1 ~ normal(0, 1);
-  beta_err2 ~ normal(0, 100);
+  beta_err2 ~ normal(0, 10);
   beta_repair ~ normal(0, 1);
-  beta_kWh ~ normal(0, 100);
+  beta_kWh ~ normal(0,10);
 
 }
 
