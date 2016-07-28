@@ -14,11 +14,10 @@ s = function(x) as.vector(scale(x))
 
 N = 500
 alp = 1.5
-gam = 3
+gam = 180
 
 
-
-# id	type	weather_l30d
+# Inverter-Level Covariates
 beta_err1   = 0.1 # err_code01_l30d
 beta_err2   = 3  # err_code02_l30d - Severe
 beta_repair = -0.15 # days since repair
@@ -68,11 +67,10 @@ summary(type_Wij)
 
 # Park Weather - Count of extreme events at park level
 park_weather = c(0, 3, 2, 1, 3)
-park_weather_beta = c(0.2, -0.2, 0.5, 0.1, -0.1)
-
+park_weather_beta = c(0.2, 0.15, 0.5, 0.1, 0.25)
 park_weather      = s(rep(park_weather , park_N))
 park_weather_beta = rep(park_weather_beta , park_N)
-
+park_weather_beta = sapply(park_weather_beta, function(x) rnorm(1, x, 0.05))
 
 
 ## Final Linear Predictor
@@ -87,11 +85,11 @@ park_weather_beta = rep(park_weather_beta , park_N)
 
 # (I)
 # Without random effect
-lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + 
+lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
   x_kWh * beta_kWh + park_weather * park_weather_beta
 
 # With random effect, note bias
-# lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair + 
+# lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 #   x_kWh * beta_kWh + park_weather * park_weather_beta +
 #   log(park_Zij) + log(type_Wij)
 
@@ -107,7 +105,7 @@ lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp)
 cens_time = runif(N, min = 0, max = max(lifetime))
 d_i = as.numeric(lifetime < cens_time)
 lifetime = apply(cbind(lifetime, cens_time), 1, min)
-
+sum(d_i)
 
 
 stan_data = list(
