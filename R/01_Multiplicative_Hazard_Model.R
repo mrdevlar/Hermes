@@ -102,7 +102,7 @@ lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
-cens_time = runif(N, min = 0, max = max(lifetime))
+cens_time = runif(N, min = 0, max = max(0.03 *lifetime) )
 d_i = as.numeric(lifetime < cens_time)
 lifetime = apply(cbind(lifetime, cens_time), 1, min)
 sum(d_i)
