@@ -56,11 +56,14 @@ start_time	end_time	censor	id	park	type	kWh_l30d	weather_l6m	err_code01_l30d	err
 
 The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
 
-It should be noted from the above table that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
+From the above table, it should be clear that that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
 
-The general summary of the simulated data is as follows:
+The general summary of the simulated data is provided in the Figure below. It should be noted that this data is an example of what should arise after the feature engineering process is complete. As stated earlier, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can accurately encapsulate a failure mode of a device.
+
 
 ```
+Figure: Simulated Data Structure
+
 500 Inverters
 
 5 Parks with 150, 150, 100, 50, 50 inverters, respectively.
@@ -83,7 +86,7 @@ kWh: kWh inverter output, detrended and made stationary
 err_code01: Count of errors
 err_code02: Count of critical errors
 
-repair_days: Days since last repair
+repair_days: Days since last repair or replacement
 ```
 
 <!-- 
@@ -291,10 +294,6 @@ The C-Index is a generalization of the Area Under Curve (AUC) and Receiver Opera
 The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which model is the best model given a set of covariate. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Vehtari2015}. It is also easily to implement in  Stan\cite{Vehtari2014}. Both the C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
 
-
-
-
-
 <!-- Information Criteria (IC) provide an good route to determining out-of-sample performance. 
 
 The ICs have one substantial advantage over the C-index in the time-to-event context. Namely, as they use the likelihood function 
@@ -304,16 +303,142 @@ Comparison between the distribution encapsulated within the model and the true d
 They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does. 
 -->
 
+## Model Fitting Process
+
+<!-- Segway needed -->
+
+This section brings all the previous insights together and provides a step-by-step process to fitting time-to-event models. 
+
+It is important to start simple with model construction. A good first step is to fit a basic multiplicative hazards model, one that does not contain any time-dependent covariates or random effects. 
+
+<!-- FigureXXX -->
+
+```
+functions {
+  real log_h_t(real lifetime, real alp, real gam, real lin_pred);
+  real H_t(real lifetime, real alp, real gam, real lin_pred);
+
+  real log_h_t(real lifetime, real alp, real gam, real lin_pred){
+    return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) ) + lin_pred;
+}
+
+  real H_t(real lifetime, real alp, real gam, real lin_pred){
+    return exp(lin_pred) * ( (lifetime / gam) )^alp ;
+}
+
+  real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred){
+    real lifetime;
+    real d_i;
+  
+    lifetime <- cens_lifetime[1];
+    d_i      <- cens_lifetime[2];
+    
+    return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
+  }
+}
+
+```
+
+Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a `function{}` block at the beginning of the model code. Figure XXX contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the `H_t()` and `log_h_t()` functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the `surv_dens_log()` function. This last function that will be minimized in sampling steps of the fitting process. 
+
+The process of explicitly writing likelihoods exposes one to the inner operation of a model. This provides greater opportunities for fostering a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
+
+It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input `cens_lifetime` that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
+
+Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, `real` is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
+
+<!-- Scoping Rules -->
+
+```
+data {
+  int<lower=0>  N;
+  vector[2]     lifetime[N];
+  real          x_err1[N];
+  real          x_err2[N];
+  real          x_repair[N];
+  real          x_kWh[N];
+}
+```
+
+To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named `list()`. The names within the list should correspond to the variable names found in the `data{}` block above. The number of observations, the values of those observations and the values of any covariates should be defined here. Note that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. 
+
+
+
+```
+parameters {
+  real<lower=0> alp;
+  real<lower=0> gam;
+  real          beta_err1;
+  real          beta_err2;
+  real          beta_repair;
+  real          beta_kWh;
+}
+```
+
+The parameters of the model also must be defined. In this case, this includes the parameters for the Weibull distribution, alpha and gamma, as well as the linear coefficients, betas, associated with the model covariates. Notice the `real<lower=0>` in the parameter definitions. These are constraints which are applied to the alpha and gamma parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where this is not the case, it is best practice to apply constraints if one is aware of them.
+
+```
+model {
+  for(i in 1:N){
+    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i]);
+  }
+
+  alp ~ lognormal(0, 1.5);
+  gam ~ lognormal(0, 1.5);
+  
+  beta_err1 ~ normal(0, 100);
+  beta_err2 ~ normal(0, 100);
+  beta_repair ~ normal(0, 100);
+  beta_kWh ~ normal(0, 100);
+
+}
+```
+
+The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The `for()` loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the `function{}` block it is possible to make use of it. Note that the function being called is `surv_dens` not `surv_dens_log` as was defined in the `function{}` block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the `_log` suffix and acts accordingly. 
+
+Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
+
+```
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N){
+  	lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i]);
+  }
+```
+
+To generate the WAIC metric, a point-wise log likelihood is required. The `generated quantities{}` block allows for these likelihoods to be extracted upon completion of sampling. 
+
+
+Once the model is fit, the parameters can be easily printed out or plotted and predictive accuracy assessed. Two actions should be performed before any further activities take place. First, is a check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of a Weibull distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. Second, convergence should be checked. This can be done in several ways. The simplest method is to make use of the `traceplot()` function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the `Rhat` column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
+
+<!-- QQ-Plot and Traceplot Output -->
 
 
 
 
 
 
+This model should be fit iteratively 
 
 
 
 
+
+$$ \frac{\frac{\frac{\alpha}{\gamma}(\frac{t}{\gamma})^{\alpha - 1}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}}  \exp{\beta}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}} \exp(\beta) $$
+
+$$ \frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} $$
+
+$$\frac{\frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} * \exp(X)}{1 + s^2 (\frac{t}{g})^a *\exp(X)} $$
+
+$$ (1 + s^2 (\frac{t}{g})^a *\exp(X)))^{-\frac{1}{s^2}} $$
+
+
+$$(a (t/g)^a)/(t + s^2 t (t/g)^a)$$
+
+$$ (\alpha \exp(\beta^T X) (t/\gamma)^(\alpha-1))/(\gamma (\sigma^2 (t/\gamma)^\alpha+1) (\sigma^2 \exp(\beta^T X) (t/\gamma)^\alpha+1)) $$
+
+
+$$ d (-log(s^2 e^X (g/t)^(-a)+1)-log(s^2 (g/t)^(-a)+1)-a log(g)+a log(t)+log(a)-log(t)+X) $$
 
 
 
