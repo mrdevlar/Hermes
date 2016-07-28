@@ -178,7 +178,8 @@ Maybe include an explicit extension about simulating time-dependent covariates
 
 Stan is the most recent addition to the toolkit for fitting Bayesian models. Like its predecessors BUGS and JAGS, Stan seeks to abstract the task of fitting complex models with a general programmatic process. Stan makes use of Hamiltonian Monte Carlo for the sampling of continuous parameters from a model. The method was described briefly in the previous chapter. 
 
-The reason for the existence of Stan stems from the performance difficulties of its predecessors in dealing with multilevel generalized linear modeling contexts. Requirements such as conjugate priors and a log-concave posterior density make certain models incredibly inefficient when Gibbs sampling is used. In the current context, the introduction of complex shared Frailties can create problems with these existing modeling tools. 
+The existence of Stan stems from the operational difficulties of its predecessors in dealing with multilevel generalized linear modeling contexts. 
+This software had requirements, such as conjugate priors and a log-concave posterior density, for models. This made anything outside of those rigid constraints incredibly inefficient when sampling was performed. In the current context, the introduction of complex shared Frailties can create problems with these existing modeling tools. 
 
 A Stan program defines a statistical model through a conditional probability function, $\Pr(\theta|y,x)$, where $\theta$ is a sequence of unknown modeled values while $y$ is composed of modeled known values and $x$ of unmodeled covariates and constants\cite{StanDevelopmentTeam2016}. 
 
