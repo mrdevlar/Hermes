@@ -189,7 +189,6 @@ model {
   beta_repair ~ normal(0, 1);
   beta_kWh ~ normal(0,10);
   beta_weather ~ normal(0, 1);
-
 }
 
 "
