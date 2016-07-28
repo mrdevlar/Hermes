@@ -192,11 +192,21 @@ model {
   beta_weather ~ normal(0, 1);
 }
 
+generated quantities {
+  vector[N] log_lik;
+  for (i in 1:N){
+  	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+    beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+  }
+}
+
 "
 
 mhazm = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
 
-print(mhazm)
+print(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+
+WAIC(mhazm)
 
 
 
