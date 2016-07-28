@@ -129,65 +129,65 @@ stan_data = list(
 m_code = "
 
 functions {
-real log_h_t(real lifetime, real alp, real gam, real lin_pred);
-real H_t(real lifetime, real alp, real gam, real lin_pred);
-
-real log_h_t(real lifetime, real alp, real gam, real lin_pred){
-return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) ) + lin_pred;
-}
-
-real H_t(real lifetime, real alp, real gam, real lin_pred){
-return exp(lin_pred) * ( (lifetime / gam) )^alp ;
-}
-
-real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred){
-real lifetime;
-real d_i;
-
-lifetime <- cens_lifetime[1];
-d_i      <- cens_lifetime[2];
-
-return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
-}
+  real log_h_t(real lifetime, real alp, real gam, real lin_pred);
+  real H_t(real lifetime, real alp, real gam, real lin_pred);
+  
+  real log_h_t(real lifetime, real alp, real gam, real lin_pred){
+    return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) ) + lin_pred;
+  }
+  
+  real H_t(real lifetime, real alp, real gam, real lin_pred){
+    return exp(lin_pred) * ( (lifetime / gam) )^alp ;
+  }
+  
+  real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred){
+    real lifetime;
+    real d_i;
+  
+    lifetime <- cens_lifetime[1];
+    d_i      <- cens_lifetime[2];
+  
+    return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
+  }
 }
 
 
 data {
-int<lower=0>  N;
-vector[2]     lifetime[N];
-real          x_err1[N];
-real          x_err2[N];
-real          x_repair[N];
-real          x_kWh[N];
-real          park_weather[N];
+  int<lower=0>  N;
+  vector[2]     lifetime[N];
+  real          x_err1[N];
+  real          x_err2[N];
+  real          x_repair[N];
+  real          x_kWh[N];
+  real          park_weather[N];
 }
 
 
 parameters {
-real<lower=0> alp;
-real<lower=0> gam;
-real          beta_err1;
-real          beta_err2;
-real          beta_repair;
-real          beta_kWh;
-real          beta_weather;
+  real<lower=0> alp;
+  real<lower=0> gam;
+  real          beta_err1;
+  real          beta_err2;
+  real          beta_repair;
+  real          beta_kWh;
+  real          beta_weather;
 }
 
 
 model {
-for(i in 1:N){
-lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
-beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
-}
-
-alp ~ lognormal(0, 1.5);
-gam ~ lognormal(0, 1.5);
-
-beta_err1 ~ normal(0, 1);
-beta_err2 ~ normal(0, 10);
-beta_repair ~ normal(0, 1);
-beta_kWh ~ normal(0,10);
-beta_weather ~ normal(0, 1);
+  for(i in 1:N){
+    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+    beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+  }
+  
+  alp ~ lognormal(0, 1.5);
+  gam ~ lognormal(0, 1.5);
+  
+  beta_err1 ~ normal(0, 1);
+  beta_err2 ~ normal(0, 10);
+  beta_repair ~ normal(0, 1);
+  beta_kWh ~ normal(0,10);
+  beta_weather ~ normal(0, 1);
 }
 
 "
