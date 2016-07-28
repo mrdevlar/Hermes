@@ -58,7 +58,7 @@ type_size = c(125, 25, 0,
 type_size = type_size * (N / sum(type_size))
 type = rep( rep(1:3,5) , type_size)
 type_eff = rep( rep(c(0.6,0,0.3), 5) , type_size)
-
+type_var = rep( rep(c(0.1,0,0.3), 5) , type_size)
 
 
 
