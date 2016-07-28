@@ -21,7 +21,7 @@ h_t = function(lifetime, alp, gam, lin_pred){
 #### Model Parameters ####
 
 N = 500
-alp = 1.5
+alp = 3
 gam = 180
 
 
@@ -103,17 +103,17 @@ lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 
 # (II)
 # No random effect
-lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp)
+r_lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp)
 
 # With random effect, note bias
-# lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)
+# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
 cens_tweak = 0.03
-cens_time = runif(N, min = 0, max = max(cens_tweak *lifetime) )
-d_i = as.numeric(lifetime < cens_time)
-lifetime = apply(cbind(lifetime, cens_time), 1, min)
+cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
+d_i = as.numeric(r_lifetime < cens_time)
+lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
 sum(d_i)
 
 
@@ -220,23 +220,52 @@ WAIC(mhazm)
 ## Extract Samples
 samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
+
+
+
+lifetime[1]
+
+(1 - pweibull(lifetime[1], 3.5,196))^exp(lin_pred[1])
+S_t = numeric()
+haz = numeric()
+for(i in seq_along(lifetime)){
+  out = (1 - pweibull(lifetime[i], 3.5,196))^exp(lin_pred[i])
+  S_t = c(S_t, out)
+}
+
+
+
+
+
+
+
 # Posterior Predictive Samples
 s_mean = lapply(samp, mean)
 s_sd   = lapply(samp, sd)
+s_n    = 500
 
-s_alp = rnorm(1e6, mean = s_mean$alp, sd = s_sd$alp)
-s_gam = rnorm(1e6, mean = s_mean$gam, sd = s_sd$gam)
-s_beta_err1 = rnorm(1e6, mean = s_mean$beta_err1, sd = s_sd$beta_err1)
-s_beta_err2 = rnorm(1e6, mean = s_mean$beta_err2, sd = s_sd$beta_err2)
-s_beta_repair = rnorm(1e6, mean = s_mean$beta_repair, sd = s_sd$beta_repair)
-s_beta_kWh = rnorm(1e6, mean = s_mean$beta_kWh, sd = s_sd$beta_kWh)
-s_beta_weather = rnorm(1e6, mean = s_mean$beta_weather, sd = s_sd$beta_weather)
+s_alp           = rnorm(s_n, mean = s_mean$alp,          sd = s_sd$alp)
+s_gam           = rnorm(s_n, mean = s_mean$gam,          sd = s_sd$gam)
+s_beta_err1     = rnorm(s_n, mean = s_mean$beta_err1,    sd = s_sd$beta_err1)
+s_beta_err2     = rnorm(s_n, mean = s_mean$beta_err2,    sd = s_sd$beta_err2)
+s_beta_repair   = rnorm(s_n, mean = s_mean$beta_repair,  sd = s_sd$beta_repair)
+s_beta_kWh      = rnorm(s_n, mean = s_mean$beta_kWh,     sd = s_sd$beta_kWh)
+s_beta_weather  = rnorm(s_n, mean = s_mean$beta_weather, sd = s_sd$beta_weather)
 
 pred_lin_pred = x_err1 * s_beta_err1 + x_err2 * s_beta_err2 + x_repair * s_beta_repair +
   x_kWh * s_beta_kWh + park_weather * s_beta_weather
 
-## Posterior Prediction data frame
-df = data.frame(lifetime = lifetime,
-                d_i = d_i
-                )
+pred_lin_pred = x_err1 * mean(s_beta_err1) + x_err2 * mean(s_beta_err2) + x_repair * mean(s_beta_repair) +
+  x_kWh * mean(s_beta_kWh) + park_weather * mean(s_beta_weather)
 
+s_lifetime = rep(lifetime, s_n / N)
+s_d_i = rep(d_i, s_n / N)
+
+s_h_t = h_t(s_lifetime, mean(s_alp), mean(s_gam), pred_lin_pred)
+
+## Posterior Prediction data frame
+s_df = data.frame(lifetime = s_lifetime, d_i = s_d_i, h_t = s_h_t)
+
+library(ggplot2)
+
+ggplot(s_df, aes(x = s_lifetime, y= s_h_t)) + geom_line()
