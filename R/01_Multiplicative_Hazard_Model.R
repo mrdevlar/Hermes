@@ -1,5 +1,7 @@
 # Multiplicative Hazard Model
 
+source("R/C-Index.R")
+library(rethinking)
 library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -195,4 +197,6 @@ model {
 mhazm = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
 
 print(mhazm)
+
+
 
