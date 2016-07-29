@@ -12,7 +12,7 @@ set.seed(417674)
 # Scale to vector function
 s = function(x) as.vector(scale(x))
 
-# Weibul Hazard
+# Weibull Hazard
 h_t = function(lifetime, alp, gam, lin_pred){
   exp(lin_pred) * (alp/gam) * (lifetime/gam)^(alp-1)
 }
@@ -101,16 +101,18 @@ lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 #   x_kWh * beta_kWh + park_weather * park_weather_beta +
 #   log(park_Zij) + log(type_Wij)
 
+
 # (II)
 # No random effect
-r_lifetime = ((gam^alp) * (-log(runif(N)) / exp(lin_pred)) )^(1/alp)
+r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
 
 # With random effect, note bias
 # r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
-cens_tweak = 0.03
+cens_tweak = 0.1
+# cens_tweak = 1
 cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
 d_i = as.numeric(r_lifetime < cens_time)
 lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
@@ -157,6 +159,7 @@ functions {
   
     return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
   }
+
 }
 
 
@@ -213,33 +216,17 @@ mhazm = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter 
 
 ## Parameter Output
 print(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+plot(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Get WAIC
 WAIC(mhazm)
 
 ## Extract Samples
 samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+# samp_lik = extract(mhazm, pars = c("log_lik") )
 
 
-
-
-lifetime[1]
-
-(1 - pweibull(lifetime[1], 3.5,196))^exp(lin_pred[1])
-S_t = numeric()
-haz = numeric()
-for(i in seq_along(lifetime)){
-  out = (1 - pweibull(lifetime[i], 3.5,196))^exp(lin_pred[i])
-  S_t = c(S_t, out)
-}
-
-
-
-
-
-
-
-# Posterior Predictive Samples
+## Posterior Samples
 s_mean = lapply(samp, mean)
 s_sd   = lapply(samp, sd)
 s_n    = 500
@@ -252,20 +239,21 @@ s_beta_repair   = rnorm(s_n, mean = s_mean$beta_repair,  sd = s_sd$beta_repair)
 s_beta_kWh      = rnorm(s_n, mean = s_mean$beta_kWh,     sd = s_sd$beta_kWh)
 s_beta_weather  = rnorm(s_n, mean = s_mean$beta_weather, sd = s_sd$beta_weather)
 
-pred_lin_pred = x_err1 * s_beta_err1 + x_err2 * s_beta_err2 + x_repair * s_beta_repair +
-  x_kWh * s_beta_kWh + park_weather * s_beta_weather
-
+# Posterior Linear Predictor
 pred_lin_pred = x_err1 * mean(s_beta_err1) + x_err2 * mean(s_beta_err2) + x_repair * mean(s_beta_repair) +
   x_kWh * mean(s_beta_kWh) + park_weather * mean(s_beta_weather)
 
-s_lifetime = rep(lifetime, s_n / N)
-s_d_i = rep(d_i, s_n / N)
+# Posterior Hazard
+hazard = h_t(lifetime, mean(s_alp), mean(s_gam), -pred_lin_pred)
 
-s_h_t = h_t(s_lifetime, mean(s_alp), mean(s_gam), pred_lin_pred)
+# Put it all together
+df = data.frame(h_t = hazard,
+                d_i = d_i,
+                lifetime = lifetime,
+                r_lifetime = r_lifetime,
+                diff_times = r_lifetime - lifetime)
 
-## Posterior Prediction data frame
-s_df = data.frame(lifetime = s_lifetime, d_i = s_d_i, h_t = s_h_t)
-
-library(ggplot2)
-
-ggplot(s_df, aes(x = s_lifetime, y= s_h_t)) + geom_line()
+# In-sample C-Index
+C_Index(df)
+# Out-of-sample C-Index
+C_Index(df, lifetime = "r_lifetime")

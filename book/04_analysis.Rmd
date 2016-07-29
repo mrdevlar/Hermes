@@ -403,6 +403,14 @@ The model block encapsulates the high-level configuration of the model and defin
 
 Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
 
+Once the model is fit, the parameters can be easily printed out or plotted, with the `print()` and `plot()` functions respective. Predictive accuracy can also be assessed using the custom `C_Index()` function. However, before this is done, model assumptions and convergence should be verified. 
+
+<!-- QQ-Plot and Traceplot Output -->
+
+A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
+
+Sampling convergence should be performed. This can be done in several ways. The simplest method is to make use of the `traceplot()` function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the `Rhat` column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
+
 ```
 generated quantities {
   vector[N] log_lik;
@@ -412,12 +420,12 @@ generated quantities {
 }
 ```
 
+Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index respectively. 
+
 To generate the WAIC metric, a point-wise log likelihood is required. The `generated quantities{}` block allows for these likelihoods to be extracted upon completion of sampling. The function `WAIC()` from the `rethinking` package can be used to compute the WAIC value for the model under the assumption that the `log_lik` vector is included in the output. 
 
+To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. 
 
-Once the model is fit, the parameters can be easily printed out or plotted and predictive accuracy assessed. Two actions should be performed before any further activities take place. First, is a check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of a Weibull distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. Second, convergence should be checked. This can be done in several ways. The simplest method is to make use of the `traceplot()` function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the `Rhat` column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
-
-<!-- QQ-Plot and Traceplot Output -->
 
 
 

@@ -23,7 +23,7 @@ C_Index = function(df, lifetime = "lifetime"){
       if(t_j > t_i){
         edges = edges + 1
         
-        if(h_i > h_j){
+        if(h_i < h_j){
           concordant = concordant + 1
         }
         
