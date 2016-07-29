@@ -336,9 +336,7 @@ This is because the ratio of specific population hazards is generally not time-i
 
 There is a significant advantage to using a parametric model for the baseline hazard when extending the model to include Frailties. The most important consequence of such a combination is that it enables the explicit description of the evolution of a Frailty over time.
 
-The values of $Z_i$ are not estimated for each individual system within the population. The reasoning for this is relatively simple. An estimate of a $Z_i$ for each individual system would require $N$ parameters. This would result in more parameters in the model than there are data points, leading to an over-saturated model. Furthermore, the estimation of individual Frailties are often far less important than group Frailties and variances. These provide useful estimates of the degree to which these groupings affect survival times, as well as identify patterns among those groups.
-
-
+In a traditional context, the values of $Z_i$ are not estimated for each individual system within the population. The reasoning for this is relatively simple. An estimate of a $Z_i$ for each individual system, $i$, would require $N$ parameters. This would result in more parameters in the model than there are observations, leading to an over-saturated model. Furthermore, the estimation of individual Frailties are usually less important than group Frailties and variances. These provide useful estimates of the degree to which these groupings affect survival times, as well as identify patterns among those groups. That said, this traditional restriction is loosened in the context of Bayesian estimation where an estimation for $Z_i$ can be sampled.
 
 
 <!-- The problem is that what is observed in a study population is no the conditional hazard but the net result for all individuals with different values of the random variable Z.
@@ -384,7 +382,14 @@ Thus the likelihood with Frailty and non-informative right censoring simply expa
 
 $$ \mathcal {L}(\theta|Y, Z_j, d, \textbf{x}, \vartheta) = \prod^n_i \prod^k_j \left (Z_j \cdot h_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_j \cdot H_0(Y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
-As can be seen from the above, a product is now required to handle the additional, $k$, Frailty terms.
+As can be seen from the above, a product is now required to handle the additional, $k$, Frailty terms. 
+
+If the traditional approach is used then the Frailty parameters, $Z_j$, are integrated out, and the following likelihood remains:
+
+$$ \mathcal {L}(\theta|Y, \sigma^2, d, \textbf{x}, \vartheta) = \prod_{i=1}^n \left (\frac{h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}{1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}  \right )^{d_i} (1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i))^{-\frac{1}{\sigma^2}} $$
+
+
+
 
 <!-- Log likelihood
 
