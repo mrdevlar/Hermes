@@ -292,9 +292,9 @@ $$ f(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{\Gamma(k)} \tag{$ k>0, \lamb
 
 As stated earlier, there is a need to fix the average Frailty and estimate the variance.
 
-$$\mathrm{E}[Z] = \frac{k}{\lambda}$$
+$$\mathrm{E}[Z] = \frac{k}{\lambda} = 1 \tag{$ k = \lambda $}$$
 
-$$\mathrm{V}[Z] = \frac{k}{\lambda^2} $$
+$$\mathrm{V}[Z] = \frac{k}{\lambda^2} = \frac{1}{\sigma^2} \tag{$ k = \lambda $}$$
 
 The restriction of $k = \lambda$ is made to ensure that the average Frailty is equal to one. Through this restriction we note that the variance is now, by definition, $\sigma^2 = \frac{1}{\lambda}$. This leads to the conditional density of the Gamma distributed Frailty:
 
@@ -302,17 +302,20 @@ $$ f(z) = \frac{1}{\Gamma(\frac{1}{\sigma^2})} \left (\frac{1}{\sigma^2}  \right
 
 That can be transformed into a unconditional survival function and consequently the into the unconditional density and hazard. 
 
-$$ S(t) = (1 + \sigma^2 H_0(t))^{- \frac{1}{\sigma^2}}$$
-
 $$ f(t) = \frac{h_0(t)}{(1+ \sigma^2 H_0(t))^{\frac{1}{\sigma^2}+ 1 } }$$
 
+$$ S(t) = (1 + \sigma^2 H_0(t))^{- \frac{1}{\sigma^2}}$$
+
 $$ h(t) = \frac{h_0(t)}{1 + \sigma^2 H_0(t)} $$
+<!-- 
+$$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
 
-The corresponding hazard and cumulative hazard can be replaced with the appropriate lifetime distribution. For example, let $h(t) = \lambda \nu t^{\nu - 1}$ be Weibull distributed baseline hazard with a Frailty following a Gamma distribution $Z \sim \text{Gamma}(\frac{1}{\sigma^2}, \frac{1}{\sigma^2} )$. Thus, the unconditional survival and hazard functions are given by the following expressions:
+ -->
+The corresponding hazard and cumulative hazard can be replaced with the appropriate lifetime distribution. For example, let $h(t) =  \frac{\alpha}{\gamma} \left (\frac{t}{\gamma}  \right )^{\alpha - 1}$ be Weibull distributed baseline hazard with a Frailty following a Gamma distribution $Z \sim \text{Gamma}(\frac{1}{\sigma^2}, \frac{1}{\sigma^2} )$. Thus, the unconditional survival and hazard functions are given by the following expressions:
 
-$$ S(t) = (1 + \sigma^2 \lambda t^\nu)^{-\frac{1}{\sigma^2}} $$
+$$ S(t) = \left (1 + \sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha}  \right )^{-\frac{1}{\sigma^2}} $$
 
-$$ h(t) = \frac{\lambda \nu t^{\nu - 1}}{1 + \sigma^2 \lambda t^\nu} $$
+$$ h(t) = \frac{\frac{\alpha}{\gamma}\left (\frac{t}{\gamma}  \right )^{\alpha - 1}}{1 + \sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} } $$
 
 Where $\sigma^2$ represents the variance of the Gamma distributed Frailty.
 
@@ -388,7 +391,7 @@ If the traditional approach is used then the Frailty parameters, $Z_j$, are inte
 
 $$ \mathcal {L}(\theta|Y, \sigma^2, d, \textbf{x}, \vartheta) = \prod_{i=1}^n \left (\frac{h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}{1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}  \right )^{d_i} (1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i))^{-\frac{1}{\sigma^2}} $$
 
-There are many technical details which are required to properly fit a Frailty model in the traditional context. Most of these are specialized and are far beyond the scope of this text. The reader is directed to the "Extended Reading" section at the end of this chapter for more details on this front.
+There are many technical details which are required to properly fit a Frailty model in the traditional context. Most of these are specialized and are far beyond the scope of this text. The reader is directed to the 'Extended Reading' section at the end of this chapter for more details on this front.
 
 It should be noted, that these are intentionally generic and the parametric forms for both the baseline hazard and the Frailty are required to properly estimate the model.
 
