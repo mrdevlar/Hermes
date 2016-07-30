@@ -35,7 +35,7 @@ While the future may make these ideal circumstances ubiquitous, there is still a
 
 <!-- Make this explicit, you want the reader to know what to expect from the next chapters in the text. -->
 
-This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing, it will attempt to fill the void in the current literature on predictive maintenance in domains where limited access to operational data is the norm. It will attack the problem from the perspective of Bayesian time-to-event analysis, a statistical modeling approach which is used to estimate the remaining lifetime of an object.
+This thesis will address the development of a predictive maintenance system in informationally sparse domains. In so doing, it will attempt to fill the void in the current literature on predictive maintenance in domains where limited access to operational data is the norm. It will attack the problem from the perspective of Bayesian time-to-event analysis, a statistical modeling approach which is used to estimate the remaining lifetime of an object. It will then provide an application using simulated data and Stan, the probabilistic programming language.
 
 The following chapters encompass the development of this strategy. 
 
@@ -43,7 +43,7 @@ The first chapter examines predictive maintenance and introduces an example doma
 
 The second chapter considers methodology, providing the probabilistic and statistical foundations required to understand Bayesian time-to-event models. These foundations are then used to introduce more complex models centered around the Multiplicative Hazard Model with shared Frailties. Finally, estimation procedures for these models using Bayesian Methods are introduced with a brief introduction to Hamiltonian Monte Carlo. 
 
-The third chapter covers the analytical process using simulated photovoltaic inverter data. It restates the goal of the analysis in concrete terms, then examines the steps needed to develop a predictive maintenance process. Feature engineering is examined, including what resources must be made available for such a system to be put into place. Then, data management and the simulation process are discussed. Stan, a recently development in fitting Bayesian models is examined and its implementation method is described. Finally, an exploration of how to assess the predictive performance in the context of time-to-event models is provided.
+The third chapter covers the analytical process using simulated photovoltaic inverter data. It restates the goal of the analysis in concrete terms, then examines the steps needed to develop a predictive maintenance process. Feature engineering is examined, including what resources must be made available for such a system to be put into place. Then, data management and the simulation process are discussed. Stan, a recently development in fitting Bayesian models is examined and its implementation method is described. Then, an exploration of how to assess the predictive performance in the context of time-to-event models is provided. It concludes with a step-by-step construction of the time-to-event models in Stan. 
 
 Finally, we conclude with a summary of the material and provide a general guidelines for time-to-event modeling in a predictive context.
 
