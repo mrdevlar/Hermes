@@ -1,4 +1,4 @@
-C_Index = function(df, lifetime = "lifetime"){
+C_Index = function(df, lifetime = "lifetime", metric = "h_t", forward = TRUE){
   df = df[order(df[lifetime]),]
   edges = 0
   
@@ -9,7 +9,7 @@ C_Index = function(df, lifetime = "lifetime"){
   for(i in 1:nrow(dfe)){
     
     t_i = dfe[i, lifetime]
-    h_i = dfe[i, "h_t"]
+    h_i = dfe[i, metric]
     d_i = dfe[i, "d_i"]
     
     # message(paste("i ==", i, "  ", "d_i == ", d_i))
@@ -17,15 +17,22 @@ C_Index = function(df, lifetime = "lifetime"){
     for(j in 1:nrow(df)){
       if(i == j){ next }
       t_j = df[j, lifetime]
-      h_j = df[j, "h_t"]
+      h_j = df[j, metric]
       d_j = df[j, "d_i"]
       
       if(t_j > t_i){
         edges = edges + 1
         
-        if(h_i < h_j){
-          concordant = concordant + 1
+        if(forward == TRUE) {
+          if(h_i > h_j){
+            concordant = concordant + 1
+          }
+        } else {
+          if(h_i < h_j){
+            concordant = concordant + 1
+          }
         }
+
         
       }
       
