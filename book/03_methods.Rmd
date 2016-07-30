@@ -388,7 +388,9 @@ If the traditional approach is used then the Frailty parameters, $Z_j$, are inte
 
 $$ \mathcal {L}(\theta|Y, \sigma^2, d, \textbf{x}, \vartheta) = \prod_{i=1}^n \left (\frac{h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}{1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}  \right )^{d_i} (1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i))^{-\frac{1}{\sigma^2}} $$
 
+There are many technical details which are required to properly fit a Frailty model in the traditional context. Most of these are specialized and are far beyond the scope of this text. The reader is directed to the "Extended Reading" section at the end of this chapter for more details on this front.
 
+It should be noted, that these are intentionally generic and the parametric forms for both the baseline hazard and the Frailty are required to properly estimate the model.
 
 
 <!-- Log likelihood
@@ -398,7 +400,6 @@ $$ l(\beta_i, h_0, b_i) = \sum^{n_i}_{j=1} \left [ d_{ij} (\ln h_0(t_{ij}) + \be
 See\cite{Romdhane2015}.
 -->
 
-These likelihoods are generic and the parametric forms for both the baseline hazard and the Frailty are required to estimate the model.
 
 <!-- Maybe insert Weibull with Gamma Frailties -->
 
