@@ -1,4 +1,4 @@
-# Multiplicative Hazard Model
+# Shared Frailty Model
 
 source("R/C-Index.R")
 library(rethinking)
@@ -113,23 +113,23 @@ lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 # (II)
 # No random effect
 # r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
-r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(lin_pred)) )^(1/alp)
+# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(lin_pred)) )^(1/alp)
 
 # With random effect, note bias
-# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)
+r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
-cens_tweak = 0.1
-# cens_tweak = 1
-cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
-d_i = as.numeric(r_lifetime < cens_time)
-lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
-sum(d_i)
+# cens_tweak = 0.1
+# # cens_tweak = 1
+# cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
+# d_i = as.numeric(r_lifetime < cens_time)
+# lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
+# sum(d_i)
 
 # Turn off censoring
-# lifetime = r_lifetime
-# d_i = rep(1, length(lifetime))
+lifetime = r_lifetime
+d_i = rep(1, length(lifetime))
 
 
 stan_data = list(
@@ -137,6 +137,7 @@ stan_data = list(
   N = N,
   id = id,
   park = park,
+  park_N = length(park_N),
   park_weather = park_weather,
   x_err1 = x_err1,
   x_err2 = x_err2,
@@ -152,32 +153,36 @@ stan_data = list(
 m_code = "
 
 functions {
-  real log_h_t(real lifetime, real alp, real gam, real lin_pred);
-  real H_t(real lifetime, real alp, real gam, real lin_pred);
+  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred);
+  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred);
   
-  real log_h_t(real lifetime, real alp, real gam, real lin_pred){
-    return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) ) + lin_pred;
+  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred){
+    return log(alp) - log(lifetime * ((sig^2) + (gam/lifetime)^alp)) + lin_pred;
   }
   
-  real H_t(real lifetime, real alp, real gam, real lin_pred){
-    return exp(lin_pred) * ( (lifetime / gam) )^alp ;
+  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred){
+    return exp(lin_pred) * (1 / sig^2) * log((sig^2) * ((lifetime / gam)^alp) + 1);
   }
   
-  real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred){
+  real surv_dens_log(vector cens_lifetime, real alp, real gam, real sig, real lin_pred){
     real lifetime;
     real d_i;
-  
+    real sig2;
+
+    sig_i    <- sig;
     lifetime <- cens_lifetime[1];
     d_i      <- cens_lifetime[2];
   
-    return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
+    return d_i * log_h_t(lifetime, alp, gam, sig_i, lin_pred) - H_t(lifetime, alp, gam, sig_i, lin_pred);
   }
 
 }
 
 
 data {
-  int<lower=0>  N;
+  int<lower=1>  N;
+  int<lower=1>  park[N];
+  int<lower=1>  park_N;
   vector[2]     lifetime[N];
   real          x_err1[N];
   real          x_err2[N];
@@ -190,6 +195,7 @@ data {
 parameters {
   real<lower=0> alp;
   real<lower=0> gam;
+  real<lower=0> sig[park_N];
   real          beta_err1;
   real          beta_err2;
   real          beta_repair;
@@ -200,13 +206,14 @@ parameters {
 
 model {
   for(i in 1:N){
-    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
-    beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+      lifetime[i] ~ surv_dens(alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+                  beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+    
   }
   
   alp ~ lognormal(0, 1.5);
   gam ~ lognormal(0, 1.5);
-  
+  sig ~ lognormal(0, 1.5);
   beta_err1 ~ normal(0, 1);
   beta_err2 ~ normal(0, 10);
   beta_repair ~ normal(0, 1);
@@ -217,29 +224,29 @@ model {
 generated quantities {
   vector[N] log_lik;
   for (i in 1:N){
-  	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
-    beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+    log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+        beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
 
 "
 
 ## Fit Model
-mhazm = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
+mf2m = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
 
 ## Parameter Output
-print(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
-plot(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+print(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+plot(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Check Traceplot
-traceplot(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+traceplot(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Get WAIC
-WAIC(mhazm)
+WAIC(mf2m)
 
 ## Extract Samples
-samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
-# samp_lik = extract(mhazm, pars = c("log_lik") )
+samp = extract(mf2m, pars = c("alp","gam","sig","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+# samp_lik = extract(mf2m, pars = c("log_lik") )
 
 
 ## Posterior Samples
