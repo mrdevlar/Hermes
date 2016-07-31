@@ -217,8 +217,8 @@ This multiplicative construction separates the baseline hazard, $h_0(t)$ from th
 $$ \frac{h(t|x_1)}{h(t|x_2)} = \frac{h_0(t) \exp(\boldsymbol\beta^T x_1)}{h_0(t) \exp(\boldsymbol\beta^T x_2)}  = \exp( \boldsymbol\beta^T(x_1 - x_2) )$$
 
 In the above ratio, it is clear that time, $t$, along with the baseline hazard, $h_0(t)$, are factored out of the final construction. In this form, the hazard is not dependent on time, just on the effect of the covariates. This specific form of the Multiplicative Hazard Model is known as the Proportional Hazards Model.
-
-The feature that allows for time to be factored out of the model is also a limitation. In separating the baseline hazard from the linear model, a hard assumption is made about the nature of the covariates. Specifically, that they must be time-invariant, or remain static through time. This does apply to many types of covariates that can specify the level of risk to which a system is exposed, like its location, manufacturer or whether it is part of a control group. However, for covariates that encode operational conditions, like the previous degree of extreme weather exposure or the amount maintenance performed up to that point, this model is inadequate.
+<!-- 
+The feature that allows for time to be factored out of the model is also a limitation. In separating the baseline hazard from the linear model, a hard assumption is made about the nature of the covariates. Specifically, that they must be time-invariant, or remain static through time. This does apply to many types of covariates that can specify the level of risk to which a system is exposed, like its location, manufacturer or whether it is part of a control group. 
 
 Fortunately, the Multiplicative Hazard Model is relatively easy to extend to address two temporal concerns that of time-dependent effects and time-varying covariates\cite{Dekker2008}. However, in extending the model beyond this simplified form the proportionality of hazards is lost, as the linear model segment becomes dependent on time.
 
@@ -233,7 +233,7 @@ The model can also be generalized to include time-varying covariates. This gener
 $$ h_i(t|\textbf{x(t)}_i) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i)  $$
 
 In this form, model covariates and lifetime no longer so easily separated. This may periodically lead to identifiability problems, as some covariates are highly collinear with time\cite{Rodriguez2007}. In such cases, it is especially important to perform adequate feature engineering to minimize the risk of identifiability problems.
-
+ -->
 <!-- SEGWAY NEEDED -->
 
 ## Frailty
@@ -250,14 +250,14 @@ Yet, much of these similar conditions are unlikely to be fully captured by the c
 
 The form of the frailty determines how correlation structure is modeled. In its simplest form, a Frailty can be introduced into the Multiplicative Hazard Model as follows:
 
-$$ h_i(t|\textbf{x(t)}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i)  $$
+$$ h_i(t|\textbf{x}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i)  $$
 
 <!-- Maybe insert S(t|Z) = S(t)^Z -->
 
 Here, $Z$, is defined as a non-negative random variable, with some distribution, $\mathfrak{g}(\cdot)$, varying across the population\cite{Wienke2010} with $Z_i$ being the realization of the Frailty for each individual system. Generally, the Frailty distribution is standardized, resulting in an average value equal to one, $\mathrm{E}[Z] = 1$, and a variance parameter that is estimated from the data, $\text{Var}(Z) = \theta$.
 
 <!-- State the difference between frailties and random effects
-h_i(t|\textbf{x(t)}_i, Z_{ij}) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i + b_i^t z_ij)
+h_i(t|\textbf{x}_i, Z_{ij}) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i + b_i^t z_ij)
 
 Where Z_{ij} = \exp(b_i^t z_{ij})
  -->
@@ -273,11 +273,15 @@ The estimation of the variance parameter, $\theta$, describes the degree of dive
 
 In the above construction, the Frailty is introduced in such a way that the entire population of systems is covered by a single distribution. In practice, it is more useful to estimate a Frailty for each distinct group within the population, as follows:
 
-$$ h_{ij}(t|\textbf{x(t)}_i, Z_j) = Z_j \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_{ij})  $$
+$$ h_{ij}(t|\textbf{x}_i, Z_j) = Z_j \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ij})  $$
 
-Here, a Frailty of a collection is introduced and each distinct group $j$ is composed of a total of $k$ distinct groups. A random variable, represents the collection, $Z_j = (z_1, \dots, z_k)$. A collection is defined as a set of groups that all share a common characteristics. To be properly defined, a collection should be mutually exclusive and exhaustive given the data. For example, there can only be a finite number of parks within which inverters reside. Each park makes up a distinct group, and all of the parks make up the collection. With this structure, it is possible to estimate the Frailty, and thus the level of heterogeneity for each group. The interpretation of the Frailty and its variance are identical to what has been described previously, except localized to each distinct group. This can be extended further to allow for as many different collections as is required, simply by introducing additional Frailties into the model multiplicatively. For example, with a new collection $W_k$ the model extends as follows:
+Here, a Frailty of a collection is introduced and each distinct group $j$ is composed of a total of $k$ distinct groups. A random variable, represents the collection, $Z_j = (z_1, \dots, z_k)$. A collection is defined as a set of groups that all share a common characteristics. To be properly defined, a collection should be mutually exclusive and exhaustive given the data. For example, there can only be a finite number of parks within which inverters reside. Each park makes up a distinct group, and all of the parks make up the collection. With this structure, it is possible to estimate the Frailty, and thus the level of heterogeneity for each group. The interpretation of the Frailty and its variance are identical to what has been described previously, except localized to each distinct group. This can be extended further to allow for as many different collections as is required, simply by introducing additional Frailties into the model multiplicatively. 
 
-$$ h_{ijk}(t|\textbf{x(t)}_i, Z_j, W_k) = Z_j \cdot W_k \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_{ijk}) $$
+<!-- 
+For example, with a new collection $W_k$ the model extends as follows:
+
+$$ h_{ijk}(t|\textbf{x}_i, Z_j, W_k) = Z_j \cdot W_k \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ijk}) $$
+ -->
 
 This form of extension can be continued to any arbitrary number of collections of groups. It should be noted, that the multiplicative introduction of further Frailties reveals the underlying assumption that there is independence between lifetimes of different collections. In fact, the lifetimes of individual systems are conditionally independent given the vector of Frailties.
 
@@ -364,8 +368,7 @@ Given the identities found at the beginning of this chapter, it is possible to t
 
 $$ \mathcal {L}(\theta|Y, d) = \prod^n_i h(Y_i)^{d_i} \exp(-H(Y_i)) $$
 
-It should be noted that baseline hazard estimation is restricted here to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard. There is a large body of research into non-parametric baseline hazard estimation, including the Kaplan-Meier and Nelson-Aalen estimators. If contrasting the effect of covariates is the predominant purpose of the model, semi-parametric or non-parametric methods are often preferred\cite{NEEDED}. However, the structure of the baseline hazard has substantive implications for the ability to understand the model and predict of future hazard. This is especially the case when Frailties are involved as parametric hazards can aide in understanding the evolution of group over time. Furthermore, non-parametric methods lack the ability to forecast future hazard rates beyond the last failure time, as any value beyond the last time is simply undefined.
-
+It should be noted that baseline hazard estimation is restricted here to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard. There is a large body of research into non-parametric baseline hazard estimation, including the Kaplan-Meier and Nelson-Aalen estimators. If contrasting the effect of covariates is the predominant purpose of the model, semi-parametric or non-parametric methods are often preferred\cite{NEEDED}. However, the structure of the baseline hazard has substantive implications for the ability to understand the model and predict the future hazard. This is especially the case when Frailties are involved as parametric hazards can aide in understanding the evolution of group over time. Furthermore, non-parametric methods lack the ability to forecast future hazard rates beyond the last failure time, as any value beyond the last time is simply undefined.
 
 Simplest form of the Multiplicative Hazards Model, as follows:
 
