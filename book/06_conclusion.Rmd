@@ -4,6 +4,22 @@
 7. Conclusion
  -->
 
+
+The preceding several chapters addressed the development of predictive maintenance in informationally sparse systems. They sought to fill the void in the current literature on predictive maintenance in domains with limited access to operational data. To address this vacuum, they used the lens of Bayesian time-to-event modeling, which is a statistical approach used to estimate the remaining lifetime of an object.
+
+An example domain, which serves as a business case, was presented. The solar industry, with its heavy reliance on dwindling government subsidies and firm requirement to reduce costs serves as fertile ground for predictive maintenance process. A domain where any incremental improvement in profitability can provide a substantial competitive advantage. The photovoltaic inverter, embedded in an industrial-scale solar power plant is an archetype of a sparse information system. A system with limited intelligence, where, at least for the time being, the addition of sensors to facilitate better condition-based monitoring is unlikely. 
+
+Predictive maintenance, its underlying theory, use-cases and requirements were also discussed. The purpose of predictive maintenance is ultimately to provide companies with the ability to adequately plan for servicing and schedule downtime. To empower industry to be in control of their operational process rather than being at the mercy of environmental externalities. However, to achieve such a goal, the ability to implement corrective actions as well as gather and store reliable historical information related to system reliability is essential. Required are detailed maintenance logs, failure history, system attributes and any available conditional monitoring data. Domain subject matter expertise should be exploited to ensure that these records are relevant, timely and complete. 
+
+These theoretical demands were then applied to the solar industry with photovoltaic inverters as the system of interest. 
+
+ This work has provided the practical considerations that are required to 
+
+
+
+In the preceding chapters, an exploration of predictive maintenance in the photovoltaic domain was undertaken. 
+
+<!-- 
 While it is likely that the price of sensors will continue to decline, ...
 As gradual improvments in photovoltaic inverters occur\cite{Fife2012}.
 
@@ -14,7 +30,7 @@ Yet, the size and breadth of conventional generation capacity makes it difficult
 
 
 Lack of trained maintenance workers is a constraint on the industry.
-
+ -->
 <!-- 
 ## Conclusion?
 

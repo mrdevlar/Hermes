@@ -403,6 +403,22 @@ The model block encapsulates the high-level configuration of the model and defin
 
 Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
 
+<!-- FIX ME -->
+
+```
+generated quantities {
+  vector[N] pred_log_h_t;
+  for(i in 1:N){
+    pred_log_h_t[i] <- log_h_t(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+  }
+}
+
+```
+
+Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the `generated quantities{}` block. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. 
+
+Generally, Stan provides an entire class of functions for numerous distributions with the suffix, `_rng` that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom function.
+
 Once the model is fit, the parameters can be easily printed out or plotted, with the `print()` and `plot()` functions respective. Predictive accuracy can also be assessed using the custom `C_Index()` function. However, before this is done, model assumptions and convergence should be verified. 
 
 <!-- QQ-Plot and Traceplot Output -->
@@ -424,7 +440,48 @@ Once it is clear that the model has converged to a stable solution. Fit and pred
 
 To generate the WAIC metric, a point-wise log likelihood is required. The `generated quantities{}` block allows for these likelihoods to be extracted upon completion of sampling. The function `WAIC()` from the `rethinking` package can be used to compute the WAIC value for the model under the assumption that the `log_lik` vector is included in the output. 
 
-To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. 
+To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. As stated earlier, the C-Index should be computed on a hold-out sample to prevent overfitting. The simulated data used for this exploration, provides the added ability to estimate the C-Index on the uncensored lifetimes. 
+
+This completes the analysis. A prediction can now be output from the model for each inverter, which provides a ranking of the expected order of failure. 
+
+<!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
+
+
+This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the `function{}` block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a `sig` parameter is added to the `log_h_t()`, `H()` and `surv_dens_log()` functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
+
+```
+functions {
+  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred);
+  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred);
+  
+  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred){
+    return log(alp) - log(lifetime * ((sig^2) + (gam/lifetime)^alp)) + lin_pred;
+  }
+  
+  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred){
+    return exp(lin_pred) * (1 / sig^2) * log((sig^2) * ((lifetime / gam)^alp) + 1);
+  }
+  
+  real surv_dens_log(vector cens_lifetime, real alp, real gam, real sig, real lin_pred){
+    real lifetime;
+    real d_i;
+    
+    lifetime <- cens_lifetime[1];
+    d_i      <- cens_lifetime[2];
+  
+    return d_i * log_h_t(lifetime, alp, gam, sig, lin_pred) - H_t(lifetime, alp, gam, sig, lin_pred);
+  }
+
+}
+```
+
+If this is the only change that is made, a univariate Gamma Frailty Model results. To implement a shared Gamma Frailty Model an additional construction is needed. Specifically, an iteration over the grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
+
+
+
+
+
+This can be done in Stan through the introduction of a grouping variable. In this example, the park is used. Estimation is done as usual, but a different estimate is provided for each of the five parks in the input data.
 
 
 
@@ -432,7 +489,16 @@ To compute the C-Index, the hazard function, the prognostic measure, must first 
 
 
 
-This model should be fit iteratively 
+
+
+https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/3a8b3fb0/
+
+
+
+
+
+
+
 
 
 
