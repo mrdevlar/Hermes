@@ -5,19 +5,46 @@
  -->
 
 
-The preceding several chapters addressed the development of predictive maintenance in informationally sparse systems. They sought to fill the void in the current literature on predictive maintenance in domains with limited access to operational data. To address this vacuum, they used the lens of Bayesian time-to-event modeling, which is a statistical approach used to estimate the remaining lifetime of an object.
+The preceding several chapters addressed the development of predictive maintenance in informationally sparse systems. They sought to fill the void in the current literature on predictive maintenance in domains with limited access to operational data. To address this vacuum, the lens of Bayesian time-to-event modeling, a statistical approach used to estimate the remaining lifetime of an object, was used. The text was split into three broad sections, the photovoltaic domain, the mathematical construction of time-to-event models and the analytical process. 
 
 An example domain, which serves as a business case, was presented. The solar industry, with its heavy reliance on dwindling government subsidies and firm requirement to reduce costs serves as fertile ground for predictive maintenance process. A domain where any incremental improvement in profitability can provide a substantial competitive advantage. The photovoltaic inverter, embedded in an industrial-scale solar power plant is an archetype of a sparse information system. A system with limited intelligence, where, at least for the time being, the addition of sensors to facilitate better condition-based monitoring is unlikely. 
 
 Predictive maintenance, its underlying theory, use-cases and requirements were also discussed. The purpose of predictive maintenance is ultimately to provide companies with the ability to adequately plan for servicing and schedule downtime. To empower industry to be in control of their operational process rather than being at the mercy of environmental externalities. However, to achieve such a goal, the ability to implement corrective actions as well as gather and store reliable historical information related to system reliability is essential. Required are detailed maintenance logs, failure history, system attributes and any available conditional monitoring data. Domain subject matter expertise should be exploited to ensure that these records are relevant, timely and complete. 
 
-These theoretical demands were then applied to the solar industry with photovoltaic inverters as the system of interest. 
+These demands were then examined within the context of the solar industry. A detailed list of requirements for enabling a predictive maintenance process on this system were given, as well as many of the difficulties and barriers that arise from the domain. This provided an awareness of the state of the industry as well as what pitfalls may be encountered in an effort to develop a predictive maintenance process.
 
- This work has provided the practical considerations that are required to 
+Then, the focus shifted to the details required for the construction of Bayesian time-to-event models. Specifically focusing on the mathematical details that are necessary prerequisites for the models' development. The process was begun from first principles, with the basic functions that define an object's lifetime being presented. Special care was taken to provide intuition into objects unique to this type of models, like hazard, survival and cumulative hazard functions. Additionally, relationships between the functions which allow for transformations between any of the functions that define lifetimes was given.
+
+A list of common lifetime distributions was provided. This began with a description of a constant hazard from which the exponential distribution arises. The exponential was demonstrated to the be the source of the most widely used parametric lifetime distributions, the Weibull, Gompertz and Gamma. For each the mathematical construction of the hazard was provided along with an understanding of how each distribution can be said to aggregate different types of failure events. 
+
+Censoring and truncation was then explored, which are defining elements of time-to-event analysis. Due to the nature of the problem, full lifetimes are rarely observed and some degree of missing data is found in any analysis. The contrast was drawn between known-unknowns, censoring, and unknown-unknown, truncation in terms of their respective effects on time-to-event models. A mathematical construction was then provided for how to define censoring within the model through the use of a dummy variable. 
+
+The introduction of covariates into lifetime models was explored. Covariates serve as the means by which the model integrates environmental conditions with estimates of lifetimes. The Multiplicative Hazards Model was introduced. This model, as the name suggests, creates a multiplicative relationship between the hazard functions and a set of covariates. 
+
+Frailties were then introduced as a method for accounting for unobserved heterogeneity or correlation between observations. The previous models all assumed independent and identically distributed observations and the Frailty allowed for these assumptions to be relaxed. Specifically, the shared Gamma Frailty was introduced into the Multiplicative Hazard's Model. Its construction was provides as well as the restrictions needed to ensure model identifiability. 
+
+Model likelihoods, the functions used to select the appropriate abstraction to the observed data, were discussed. Each model discussed so far had its likelihood presented in detail, as it would be relevant to the implementation process later on.
+
+The Bayesian model estimation process was explored. The usefulness of being able to avoid optimization difficulties associated with traditional fitting processes were discussed. This included previous Bayesian tools for model fitting. Then a brief explanation of Hamiltonian Monte Carlo was provided, that outlined how the process generates samples from the posterior based on an innovative means of selecting proposal distributions.
+
+The last chapter covered the implementation of a predictive maintenance process. It addressed the details that, more often then not, are disregarded in discussions about analytical processes. 
+
+It formally stated the desired outcome for the model construction. Specifically, a score function that effectively ranks the order of inverter failure. This does away with the need for an exact determination of failure time and instead recasts the problem as a rank-order prediction. Such an output provides sufficient information for the scheduling of corrective maintenance activities. 
+
+Feature engineering, the dark art of building model covariates was explored. Its aim is to produce variables that are able to accurately describe a photovoltaic inverter's health at any given moment. A task if done correctly is the difference between an effective and ineffective analytical process. Two types of knowledge were shown to be essential to feature engineering, domain-specific and model-specific subject matter expertise. The domain-specific subject matter expertise encompassed an understanding of the system under observation and the various phenomena that contribute to its failure. Model-specific subject matter expertise refers to the an understanding of the details and limitations of the mathematical construction used to predict lifetimes. Specifically an understanding of what types of covariates will have the greatest amount of traction in which models. Experimentation was also discussed and the role it plays in the iterative construction of models.
+
+Data management and simulation were discussed. The requirement for attribute-value data for the modeling process was given. This requirement was expressed both mathematically and through an example table. Then, the data structure for the simulated data sets was provided with each respective covariate explained. The simulation process used to generate this data was then given. It was developed from first principles to allow for the simulation of data from progressively more complex data structures. 
+
+An overview of the probabilistic programming language, Stan was given. It was distinguished from its predecessors in terms of being able to implement models that created difficulties for other software. The underlying logic of the imperative  language was provided, with an description of programming blocks needed to define a statistical model in Stan. Some caveats and features were also discussed which differ from other statistical software including static typing, constraints and the ability to save iterations to file.
+
+Evaluating predictive performance was then examined. The challenges of underfitting and overfitting were presented as the reasons for the need for adequate performance metrics. The difficulties with using the most common methods for evaluating models was discussed. The sequencing of time-to-event data along with great imbalances caused by censoring were identified as the primary sources of the lack of effect of these traditional methods. The C-Index was presented as a well-defined method for evaluating predictive performance of time-to-event models. It was developed in mathematical detail and extended to include censored observations through the realization of its one-way effect.
+
+The final section brought together all the pieces and built a series of models in Stan. It demonstrated how the modeling process can be performed in an iterative fashion. Building on first principles and directly incorporating functions into Stan. First, with the simplest Multiplicative Hazard Models. This allowed for an exposition of how the various pieces of Stan code can be used to express the mathematical constructions described in the previous chapter. It also allowed for a brief discussion on model validation steps that should be taken after fitting any model. This entire process was then extended to include univariate and shared Frailty models. 
+
+Predictive maintenance is a rapidly evolving field. However, it is one that will undoubtedly continue to progress toward a greater utilization of a wider breadth of data, leaving informationally sparse systems under-represented. These systems will either become informationally rich as the industries mature and data capture becomes easier, or they will continue to make use of statistical methodologies that are able to optimally make use of the limited amount of data they generate.
 
 
 
-In the preceding chapters, an exploration of predictive maintenance in the photovoltaic domain was undertaken. 
 
 <!-- 
 While it is likely that the price of sensors will continue to decline, ...
@@ -35,7 +62,7 @@ Lack of trained maintenance workers is a constraint on the industry.
 ## Conclusion?
 
 IF we know that certain factors contribute to the deterioration of objects in the environment, whether from literature or subject-matter experts in the company, we should make use of them. Simply inputing data from existing systems and expecting perfect prediction is naive and foolish. Regardless of the perpetual drive toward greater automation in model optimization, ultimately, it is people that determine what is input. A mixed model can help provide a degree of flexibility to offset what is not being input. However, it is not magic (even if it may seem that way), and its performance can be easily overcome by a more sensible strategy of inputting variables.  -->
-
+<!-- 
 - Make extensive use domain knowledge
 - Codify everything that can be codified
 - Do not expect sensors to save you
@@ -80,3 +107,11 @@ create a unique circumstances
 	- Competing Risk
 	- Improved Baseline Hazard Estimation
 
+ -->
+
+
+# Code
+
+The code, along with the text of this document can be found at:
+
+https://github.com/mrdevlar/Hermes/tree/master/R
