@@ -53,10 +53,19 @@ The input data then provides a table of the last observed value of each system a
 $$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
 -->
 
-$$ Y_ijk, d_{ijk}, Z_j,  \textbf{x}_{ijk}) $$
+$$ (Y_ijk, d_{ijk}, Z_j,  \textbf{x}_{ijk}) $$
 
 ```
-time	censor	id	park	type	kWh_l30d	weather_l6m	err_code01_l30d	err_code02_l30d	repair_days
+time	
+censor	
+id	
+park	
+type	
+kWh_l30d	
+weather_l6m	
+err_code01_l30d	
+err_code02_l30d	
+repair_days
 ```
 
 The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
@@ -141,7 +150,7 @@ As long as all hazards are defined to be strictly positive, $h(t) > 0$, the cumu
 
 $$ T = H^{-1}(-\ln(U)) $$
 
-Fortunately, for all of the models presented thus far an inverse of the cumulative hazard exists\footenote{except for the Gamma function}. From this starting point it is possible to generate models with considerably more complex features.
+Fortunately, for all of the models presented thus far an inverse of the cumulative hazard exists\footnote{except for the Gamma function}. From this starting point it is possible to generate models with considerably more complex features.
 
 For the Multiplicative Hazards Model with covariates, survival times are generated the following manner\cite{Bender2005}:
 
@@ -346,7 +355,7 @@ functions {
 
 ```
 
-Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a `function{}` block at the beginning of the model code. Figure XXX contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the `H_t()` and `log_h_t()` functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the `surv_dens_log()` function. This last function that will be minimized in sampling steps of the fitting process. 
+Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a `function` block at the beginning of the model code. The above code block contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the `H_t()` and `log_h_t()` functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the `surv_dens_log()` function. This last function that will be minimized in sampling steps of the fitting process. 
 
 The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
@@ -403,7 +412,7 @@ model {
 }
 ```
 
-The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The `for()` loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the `function{}` block it is possible to make use of it. Note that the function being called is `surv_dens` not `surv_dens_log` as was defined in the `function{}` block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the `_log` suffix and acts accordingly. 
+The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The `for()` loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the `function` block it is possible to make use of it. Note that the function being called is `surv_dens` not `surv_dens_log` as was defined in the `function` block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the `_log` suffix and acts accordingly. 
 
 Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
 
@@ -451,7 +460,7 @@ This completes the analysis. A prediction can now be output from the model for e
 <!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
 
 
-This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the `function{}` block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a `sig` parameter is added to the `log_h_t()`, `H()` and `surv_dens_log()` functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
+This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the `function` block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a `sig` parameter is added to the `log_h_t()`, `H()` and `surv_dens_log()` functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
 
 ```
 functions {

@@ -118,7 +118,9 @@ Any continuous distribution defined over the positive numbers can be used as a l
 
 The simplest lifetime distribution can be defined by assuming a constant hazard rate ($\lambda$) over time.
 
-$$ h(t) = \lambda \tag{ $\lambda$ > 0}$$
+\begin{align*}
+h(t) = \lambda \tag{ $\lambda > 0$}
+\end{align*}
 
 As was demonstrated earlier, this can be transformed into a survival function by exponentiating the integral of all values from start until $t$. As the hazard is constant, this will simply be the exponent of the constant multiplied by the number of intervals present.
 
@@ -134,17 +136,23 @@ Most lifetime distributions arise as generalizations of the exponential. They pr
 
 The Gompertz distribution is a generalization of the exponential that introduces an exponential effect in the hazard over time.
 
-$$ h(t) = \lambda \exp(\varphi t) \tag{ $\lambda > 0, \varphi \in (-\infty, \infty) $}$$
+\begin{align*}
+h(t) = \lambda \exp(\varphi t) \tag{ $\lambda > 0, \varphi \in (-\infty, \infty) $}
+\end{align*}
 
 The formula was originally derived to characterize the exponential rise in death rates in humans between sexual maturity and old age\cite{Wienke2010}\footnote{The center of the bathtub curve, a concept that will return in the next chapter}. It introduces a shape parameter $\varphi$ which controls the rate of change of the hazard over time. When $\varphi < 0$ the hazard declines over time. This can be used to model component "burn-in", which is the time shortly after beginning operations where mechanical parts often experience high early failures. Conversely, when $\varphi > 0$ the hazard increases over time. This can be used to model end of life failure. If $\varphi = 0$, the Gompertz reduces to an exponential distribution. When the Gompertz hazard is not constant, it is always increasing or decreasing over time. This makes it particularly attractive when it is clear that operational time is the greatest force of mortality.
 
 The Weibull distribution also introduces an exponential effect in the hazard function over time. Yet, it does so in a more flexible manner.
 
-$$ h(t) = \lambda \nu t^{\nu - 1} \tag{ $\lambda >0, \nu > 0$ }$$
+\begin{align*}
+ h(t) = \lambda \nu t^{\nu - 1} \tag{ $\lambda >0, \nu > 0$ }
+\end{align*}
 
 It introduces a shape parameter $\nu$ that also controls the increase or decrease of the hazard over time. It is more flexible than the Gompertz in that it is capable of modeling hazards that increase initially, but whose rate of increase declines over time when $(0 < \nu < 1)$. The Weibull also has a common alternative parameterization, which is common in many software packages.
 
-$$ h(t) = \frac{\alpha}{\sigma} \left (\frac{t}{\sigma}  \right )^{\alpha - 1} \tag{$\alpha > 0, \sigma > 0$} $$
+\begin{align*}
+h(t) = \frac{\alpha}{\sigma} \left (\frac{t}{\sigma}  \right )^{\alpha - 1} \tag{$\alpha > 0, \sigma > 0$}
+\end{align*}
 
 This parameterization defines a shape $\alpha$ and a scale $\sigma$ parameter and is equivalent to the rate $\lambda$ in the earlier form as being defined inversely, as an interval or scale, $\lambda = \sigma^{-\alpha}$.
 
@@ -153,7 +161,9 @@ The Weibull distribution was originally developed to assess the catastrophic fai
 
 Gamma distribution, like those before it, is also a generalization of the exponential. However, its justification for use as a lifetime distribution is a bit more involved. A system may be exposed to a number of shocks, each of which are exponentially distributed. The system may be resilient to each shock up to a threshold, upon which it fails. The sum of each of those exponentially distributed shocks is gamma distributed\cite{Tso2010}. The hazard function is as follows:
 
-$$ h(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{(1 - I_k(\lambda t)) \Gamma(k)} \tag{$ k>0, \lambda > 0 $}$$
+\begin{align*}
+h(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{(1 - I_k(\lambda t)) \Gamma(k)} \tag{$ k>0, \lambda > 0 $}
+\end{align*}
 
 With $k$ being the number of exponentially distributed shocks that occur prior to system failure. As can be seen the hazard is quite complex, making use of both the gamma function $\Gamma(k)$ and the incomplete gamma integral $I_k(\lambda t)$.
 
@@ -292,13 +302,22 @@ In this case rather than defining a single variance parameter, $\theta$, a covar
 
 Any distribution which is positive and whose mean can be set to one can be used as the Frailty distribution, $\mathfrak{g}(\cdot)$. The most commonly used distribution is the Gamma. It is used largely due to is flexibility in modeling positive outcomes and due to the ease with which it allows for the expression of all required formulas\cite{Wienke2010}. The density of the Gamma is given as follows:
 
-$$ f(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{\Gamma(k)} \tag{$ k>0, \lambda > 0 $} $$
+\begin{align*}
+f(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{\Gamma(k)} \tag{$ k>0, \lambda > 0 $}
+\end{align*}
+
 
 As stated earlier, there is a need to fix the average Frailty and estimate the variance.
 
-$$\mathrm{E}[Z] = \frac{k}{\lambda} = 1 \tag{$ k = \lambda $}$$
+\begin{align*}
+\mathrm{E}[Z] = \frac{k}{\lambda} = 1 \tag{$ k = \lambda $}
+\end{align*}
 
-$$\mathrm{V}[Z] = \frac{k}{\lambda^2} = \frac{1}{\sigma^2} \tag{$ k = \lambda $}$$
+
+\begin{align*}
+\mathrm{V}[Z] = \frac{k}{\lambda^2} = \frac{1}{\sigma^2} \tag{$ k = \lambda $}
+\end{align*}
+
 
 The restriction of $k = \lambda$ is made to ensure that the average Frailty is equal to one. Through this restriction we note that the variance is now, by definition, $\sigma^2 = \frac{1}{\lambda}$. This leads to the conditional density of the Gamma distributed Frailty:
 
