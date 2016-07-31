@@ -8,7 +8,6 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 options(scipen = 9999)
 
-set.seed(417674)
 
 # Scale to vector function
 s = function(x) as.vector(scale(x))

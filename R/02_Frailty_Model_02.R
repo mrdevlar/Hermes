@@ -8,7 +8,6 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 options(scipen = 9999)
 
-set.seed(417674)
 
 # Scale to vector function
 s = function(x) as.vector(scale(x))
@@ -155,7 +154,7 @@ m_code = "
 functions {
   real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred);
   real H_t(real lifetime, real alp, real gam, real sig, real lin_pred);
-  
+
   real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred){
     return log(alp) - log(lifetime * ((sig^2) + (gam/lifetime)^alp)) + lin_pred;
   }
@@ -167,7 +166,7 @@ functions {
   real surv_dens_log(vector cens_lifetime, real alp, real gam, real sig, real lin_pred){
     real lifetime;
     real d_i;
-    real sig2;
+    real sig_i;
 
     sig_i    <- sig;
     lifetime <- cens_lifetime[1];
@@ -208,12 +207,15 @@ model {
   for(i in 1:N){
       lifetime[i] ~ surv_dens(alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
                   beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
-    
   }
   
   alp ~ lognormal(0, 1.5);
   gam ~ lognormal(0, 1.5);
-  sig ~ lognormal(0, 1.5);
+
+  for(j in 1:park_N){
+    sig[j] ~ lognormal(0, 1.5);
+  }
+
   beta_err1 ~ normal(0, 1);
   beta_err2 ~ normal(0, 10);
   beta_repair ~ normal(0, 1);
@@ -227,6 +229,7 @@ generated quantities {
     log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
         beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
+
 }
 
 "
@@ -246,7 +249,9 @@ WAIC(mf2m)
 
 ## Extract Samples
 samp = extract(mf2m, pars = c("alp","gam","sig","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
-# samp_lik = extract(mf2m, pars = c("log_lik") )
+samp_lik = extract(mf2m, pars = c("log_lik") )
+
+
 
 
 ## Posterior Samples
@@ -256,6 +261,7 @@ s_n    = 500
 
 s_alp           = rnorm(s_n, mean = s_mean$alp,          sd = s_sd$alp)
 s_gam           = rnorm(s_n, mean = s_mean$gam,          sd = s_sd$gam)
+s_sig           = rnorm(s_n, mean = s_mean$sig,          sd = s_sd$sig)
 s_beta_err1     = rnorm(s_n, mean = s_mean$beta_err1,    sd = s_sd$beta_err1)
 s_beta_err2     = rnorm(s_n, mean = s_mean$beta_err2,    sd = s_sd$beta_err2)
 s_beta_repair   = rnorm(s_n, mean = s_mean$beta_repair,  sd = s_sd$beta_repair)
@@ -270,8 +276,10 @@ pred_lin_pred = x_err1 * mean(s_beta_err1) + x_err2 * mean(s_beta_err2) + x_repa
 hazard = h_t(lifetime, mean(s_alp), mean(s_gam), pred_lin_pred)
 
 
+
 # Put it all together
 df = data.frame(h_t = hazard,
+                s_lik = colMeans(samp_lik$log_lik),
                 H_t = -pweibull(lifetime, mean(s_alp), mean(s_gam), lower = FALSE, log = TRUE),
                 S_t =  pweibull(lifetime, mean(s_alp), mean(s_gam), lower = FALSE),
                 d_i = d_i,

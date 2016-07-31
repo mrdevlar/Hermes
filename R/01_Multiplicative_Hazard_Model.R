@@ -8,7 +8,6 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 options(scipen = 9999)
 
-set.seed(417674)
 
 # Scale to vector function
 s = function(x) as.vector(scale(x))
@@ -24,7 +23,7 @@ h_t = function(lifetime, alp, gam, lin_pred){
 
 N = 500
 alp = 3
-gam = 5
+gam = 180
 
 
 # Inverter-Level Covariates
@@ -120,9 +119,9 @@ r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(lin_pred)) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
-cens_tweak = 0.1
+cens_tweak = summary(r_lifetime)["3rd Qu."]* 1.7
 # cens_tweak = 1
-cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
+cens_time = runif(N, min = 0, max = max(cens_tweak) )
 d_i = as.numeric(r_lifetime < cens_time)
 lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
 sum(d_i)
@@ -239,7 +238,7 @@ WAIC(mhazm)
 
 ## Extract Samples
 samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
-# samp_lik = extract(mhazm, pars = c("log_lik") )
+samp_lik = extract(mhazm, pars = c("log_lik") )
 
 
 ## Posterior Samples
@@ -261,10 +260,11 @@ pred_lin_pred = x_err1 * mean(s_beta_err1) + x_err2 * mean(s_beta_err2) + x_repa
 
 # Posterior Hazard
 hazard = h_t(lifetime, mean(s_alp), mean(s_gam), pred_lin_pred)
-
+s_lik = colMeans(samp_lik$log_lik)
 
 # Put it all together
 df = data.frame(h_t = hazard,
+                s_lik = s_lik,
                 H_t = -pweibull(lifetime, mean(s_alp), mean(s_gam), lower = FALSE, log = TRUE),
                 S_t =  pweibull(lifetime, mean(s_alp), mean(s_gam), lower = FALSE),
                 d_i = d_i,
@@ -280,8 +280,9 @@ C_Index(df, lifetime = "diff_times")
 
 
 
+df %>% ggplot(aes(y = h_t, x= lifetime)) + geom_point()
+df %>% ggplot(aes(y = s_lik, x= lifetime)) + geom_point()
 df %>% ggplot(aes(y = H_t, x= lifetime)) + geom_point()
 df %>% ggplot(aes(y = S_t, x= lifetime)) + geom_point()
-df %>% ggplot(aes(y = h_t, x= lifetime)) + geom_point()
 
 
