@@ -1,9 +1,0 @@
-# JAGS Estimation
-```
-1. Describe Metropolis Hastings
-2. Describe Gibbs Sampling
-```
-
-
-## JAGS Notes
- - [Brad Carlin's Software Page, contains JAGS and BUGS code for several important papers used in the text.](http://www.biostat.umn.edu/~brad/software.html)
