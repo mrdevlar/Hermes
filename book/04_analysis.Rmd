@@ -1,4 +1,4 @@
-# Analysis
+# Analysis and Application
 
 <!-- Needs two or three opening sentences -->
 
@@ -8,11 +8,11 @@ This section outlines the course for building a predictive maintenance process. 
 
 <!-- Possibly rewrite this to make it easier -->
 
-The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by hazard at a given time. Such that:
+The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by a score function, $V$, at a given time. Such that:
 
-$$ h_{(1)}(t) > h_{(2)}(t) > \dots h_{(n)}(t) $$
+$$ V_{(1)}(t) > V_{(2)}(t) > \dots V_{(n)}(t) $$
 
-Where the time point, $t$ is fixed at the current moment for prediction. As a hazard defines an instantaneous failure rate it is the logical choice for the central unit of modeling. It should be noted, the absolute value of the hazard is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest hazard is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk are secondary to the action they prompt. This recasts the time-to-event analysis as a rank-order prediction, where the order of failures, and thus maintenance tasks is the central goal. 
+Where the time point, $t$ is fixed at the current moment for prediction. It should be noted, the absolute value of the score is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest score is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk are secondary to the action they prompt. This recasts the time-to-event analysis as a rank-order prediction, where the order of failures, and thus maintenance tasks is the central goal. 
 
 
 
@@ -27,7 +27,6 @@ An understanding and awareness of the details and limitations of the model is pa
 Domain-specific subject matter expertise is an inescapable necessity for effective feature engineering. While there continues to be a drive toward greater automation in determining the relevance of covariates, human decision still remains paramount. In this area, domain-specific subject matter refers to an understanding of the contributing events that lead to failure in photovoltaic inverters. This includes knowledge about the various failure modes of an inverter and their origins, such as high voltage, extreme temperatures, water condensation, the lack of robust software by certain manufacturers and others factors. It also includes knowledge about the hardware itself and which components are under stress and contribute to failure, such as capacitors, semiconductor switches and housing materials\cite{Flicker2014}.
 
 Experimentation is the last source of feature engineering and is meant to complement rather than substitute subject matter expertise. As its name suggests, this is where features are created and then tested to see whether or not they improve model performance. This includes experimenting with feature encodings, such as making use of power transformations as well as variable discretization, standardization and normalization. All of these changes can potentially improve model performance. It may also include generating new features based on suspicions of effects. For example, encoding days where with both very low temperature and humidity which can cause printed circuit boards to crack. Thus, suspicions about the nature of the system can be codified and tested to determine if they improve model performance. 
-
 
 Feature engineering is more an art-form than a science. Despite the lack of a clear heuristic, there are some guidelines for working with time-to-event models. 
 
@@ -44,19 +43,25 @@ Raw data can rarely be input into a model as-is. The first chapter broadly exami
 
 <!-- Reason for using simulated data -->
 
-Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required. 
+Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. 
 
-$$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$
+The input data then provides a table of the last observed value of each system and their respective covariates. These values can then be transformed into a table which can be fed into Stan. 
 
-These values can then be transformed into a table which can be fed into Stan. Given a set of features, it can appear as follows:
+<!-- Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required.  -->
+
+<!-- 
+$$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
+-->
+
+$$ Y_ijk, d_{ijk}, Z_j,  \textbf{x}_{ijk}) $$
 
 ```
-start_time	end_time	censor	id	park	type	kWh_l30d	weather_l6m	err_code01_l30d	err_code02_l30d	repair_days
+time	censor	id	park	type	kWh_l30d	weather_l6m	err_code01_l30d	err_code02_l30d	repair_days
 ```
 
 The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
 
-From the above table, it should be clear that that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days.
+<!-- From the above table, it should be clear that that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days. -->
 
 The general summary of the simulated data is provided in the Figure below. It should be noted that this data is an example of what should arise after the feature engineering process is complete. As stated earlier, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can accurately encapsulate a failure mode of a device.
 
@@ -81,7 +86,7 @@ Park Level Covariates
 weather_l6m: Number of Extreme Weather Events in last 6 months
 
 Covariates
-kWh: kWh inverter output, detrended and made stationary
+kWh: kWh inverter output on the current day
 
 err_code01: Count of errors
 err_code02: Count of critical errors
@@ -148,19 +153,19 @@ This simulation can be extended further to include the a Frailty term, $Z_j$, it
 
 $$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{j} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
 
-Or a time-dependent covariate:
+<!-- Or a time-dependent covariate:
 
 $$ T = \left [\frac{1}{k} \ln\left ( \frac{(1 + \nu)(-\ln(U))}{\beta_t \lambda \nu \exp(\boldsymbol\beta^T \textbf{x}) } \right )  \right ]^{\frac{1}{(1+\nu)}} $$
 
-Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}. 
+Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}.  -->
 
 Of course, the precise model depends on the parameterization of the baseline cumulative hazard. As stated in the previous chapter, numerous different distributions can be used for modeling lifetimes and can therefore be used for this baseline cumulative hazard. 
 
 For the simulated data, a Weibull baseline hazard is employed. The resulting model with shared Frailties can therefore be simulated as follows:
 
-$$T = \left [\frac{- \ln(U) }{Z_{j} \lambda \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\nu} $$
+$$T = \left [\frac{- \ln(U) }{Z_{j} \gamma^{-\alpha}  \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\alpha} $$
 
-Where $u$ is the realization of a uniformly distributed random variable, $U \sim \text{Unif}[0,1]$ and $\nu$ and $\lambda$ are, respectively, the shape and scale parameters of Weibull distribution.
+Where $u$ is the realization of a uniformly distributed random variable, $U \sim \text{Unif}[0,1]$ and $\alpha$ and $\sigma$ are the shape and scale parameters of Weibull distribution, respectively.
 
 <!-- 
 Maybe include an explicit extension about simulating time-dependent covariates 
@@ -178,8 +183,7 @@ Maybe include an explicit extension about simulating time-dependent covariates
 
 Stan is the most recent addition to the toolkit for fitting Bayesian models. Like its predecessors BUGS and JAGS, Stan seeks to abstract the task of fitting complex models with a general programmatic process. Stan makes use of Hamiltonian Monte Carlo for the sampling of continuous parameters from a model. The method was described briefly in the previous chapter. 
 
-The existence of Stan stems from the operational difficulties of its predecessors in dealing with multilevel generalized linear modeling contexts. 
-This software had requirements, such as conjugate priors and a log-concave posterior density, for models. This made anything outside of those rigid constraints incredibly inefficient when sampling was performed. In the current context, the introduction of complex shared Frailties can create problems with these existing modeling tools. 
+The existence of Stan stems from the operational difficulties of its predecessors in dealing with multilevel generalized linear modeling contexts. This software had requirements, such as conjugate priors and a log-concave posterior density, for models. This made anything outside of those rigid constraints incredibly inefficient when sampling was performed. In the current context, the introduction of complex shared Frailties can create problems with these existing modeling tools. 
 
 A Stan program defines a statistical model through a conditional probability function, $\Pr(\theta|y,x)$, where $\theta$ is a sequence of unknown modeled values while $y$ is composed of modeled known values and $x$ of unmodeled covariates and constants\cite{StanDevelopmentTeam2016}. 
 
@@ -288,7 +292,7 @@ The C-Index can have this one-directionality made more explicit in the following
 
 $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{t_i < t_j} I(h_i < h_j) $$
 
-The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{NEEDED}. Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
+The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers<!-- \cite{NEEDED} -->. Clearly in this context, the goal is not binary classification, rather concordance. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, is $0.5$ which indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
 
 <!-- C-Index holdout sample? Leave One Out CV? -->
 
@@ -304,7 +308,7 @@ Comparison between the distribution encapsulated within the model and the true d
 They only seek to compare the relative performance of any series of models, thus they cannot express model performance in absolute terms, like the C-index does. 
 -->
 
-## Model Fitting Process
+## Building The Model
 
 <!-- Segway needed -->
 
@@ -409,7 +413,7 @@ Below the sampling statement are the priors associated with the parameters. Prio
 generated quantities {
   vector[N] pred_log_h_t;
   for(i in 1:N){
-    pred_log_h_t[i] <- log_h_t(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+    pred_log_h_t[i] <- log_h_t(lifetime[i,2], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
 
@@ -473,34 +477,48 @@ functions {
   }
 
 }
+
 ```
 
-If this is the only change that is made, a univariate Gamma Frailty Model results. To implement a shared Gamma Frailty Model an additional construction is needed. Specifically, an iteration over the grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
+If this is the only change that is made, a univariate Gamma Frailty Model results. To implement a shared Gamma Frailty Model an additional construction is needed. Specifically, an iteration over the grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. In this example, the each park is given its own estimate of the Frailty variance. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
+
+To do this in Stan must be made aware that the parameter `sig` will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of `sig` sampling is being done. Thus, the following additions are required to the Stan program:
+
+```
+data {
+  int<lower=1>  park[N];
+  int<lower=1>  park_N;
+}
+
+parameters {
+  real<lower=0> sig[park_N];
+}
+
+model {
+  for(i in 1:N){
+      lifetime[i] ~ surv_dens(alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+  }
+  for(j in 1:park_N){
+    sig[j] ~ lognormal(0, 1.5);
+  }
+
+}
+```
+
+The `data{}` block introduces a grouping variable, `park` which is the length of the number of observations, `N`. It identifies  park membership of any single observation with an integer value. The `park_N` variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the `parameters{}` block for defining the dimensions of the `sig` vector that stores the variances of the Frailty parameter. Finally, in the `model{}` block, 
+
+This completes the shared Frailty extension. Again, upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described above. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. 
+
+One of the joys of working with Stan is its ability to be extended indefinitely. Additional flexibility can be added to the model a similar manner as was done with the park. For example, Frailty parameters can be included that account for the variation on inverter model or if there is reason to believe the baseline hazard is different per grouping. A stratified baseline hazard can be introduced that provides a different $\alpha$ and $\gamma$ parameter per group. Even, a correlation structure can be given to the Frailty parameters. The extension potential is limitless. 
 
 
 
 
 
-This can be done in Stan through the introduction of a grouping variable. In this example, the park is used. Estimation is done as usual, but a different estimate is provided for each of the five parks in the input data.
 
 
 
-
-
-
-
-
-
-https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/3a8b3fb0/
-
-
-
-
-
-
-
-
-
+<!-- 
 
 
 
@@ -522,8 +540,8 @@ $$ d (-log(s^2 e^X (g/t)^(-a)+1)-log(s^2 (g/t)^(-a)+1)-a log(g)+a log(t)+log(a)-
 
 
 
-
+ -->
 
 ## Extended Reading
 
-For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. For more information about WAIC, Vehtari, Gelman and Garby cover the derivation and properties\cite{Vehtari2015}.
+For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. For more information about WAIC, Vehtari, Gelman and Garby cover the derivation and properties\cite{Vehtari2015}. For an overview of how to implement models in Stan, the massive Stan Reference Manual is likely without equal\cite{StanDevelopmentTeam2016}. For slightly less overwhelming information about Stan, the documentation page on the project website contains a wide assortment of tutorials, videos and softer introductions to the software\cite{StanDevelopmentTeam2016a}.
