@@ -124,3 +124,5 @@ There are numerous available techniques for generating predictions of remaining 
 ## Extended Reading
 
 For an understanding of international energy policy and the role that solar power plays, the OECD's World Energy Outlook is a good place to start\cite{EIAOutlook2016}. For an in-depth, but dated, introduction to predictive maintenance, the reader is directed to Mobley\cite{Mobley2002}. For a general view of constructing predictive maintenance solutions in informationally rich domains, Microsoft has assembled an excellent step-by-step guide\cite{Uz2016}. For an overview of the reliability issues specifically related to photovoltaic systems, the reader is directed to Golnas\cite{Golnas2013} and Petrone\cite{Petrone2008}. 
+
+
