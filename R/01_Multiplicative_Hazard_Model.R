@@ -236,6 +236,8 @@ traceplot(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","bet
 ## Get WAIC
 WAIC(mhazm)
 
+##
+
 ## Extract Samples
 samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 samp_lik = extract(mhazm, pars = c("log_lik") )

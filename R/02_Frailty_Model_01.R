@@ -237,6 +237,8 @@ traceplot(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair
 
 ## Get WAIC
 WAIC(mf2m)
+LOO(mf2m)
+
 
 ## Extract Samples
 samp = extract(mf2m, pars = c("alp","gam","sig","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
