@@ -1,12 +1,12 @@
-# Analysis and Application
+\chapter*{Analysis and Application}
 
-<!-- Needs two or three opening sentences -->
+% <!-- Needs two or three opening sentences -->
 
 This section outlines the course for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event model described in the previous chapter. Finally, the model fit, evaluation and performance are presented.
 
-## The Goal
+\section*{The Goal}
 
-<!-- Possibly rewrite this to make it easier -->
+% <!-- Possibly rewrite this to make it easier -->
 
 The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by a score function, $V$, at a given time. Such that:
 
@@ -14,9 +14,7 @@ $$ V_{(1)}(t) > V_{(2)}(t) > \dots V_{(n)}(t) $$
 
 Where the time point, $t$ is fixed at the current moment for prediction. It should be noted, the absolute value of the score is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest score is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk are secondary to the action they prompt. This recasts the time-to-event analysis as a rank-order prediction, where the order of failures, and thus maintenance tasks is the central goal. 
 
-
-
-## Feature Engineering
+\section*{Feature Engineering}
 
 Feature engineering is sometimes considered the dark art of the statistical modeling process. Its informal nature makes it difficult to find a general consensus as to what the concept actually means within academic literature\cite{Zabokrtsky2015}. Loosely speaking, feature engineering is the art of creating covariates that conceptually embody aspects of a phenomena or object of observation. In this case, it refers to the task of finding and encoding historical information that can describe a photovoltaic inverter's health at any given moment. 
 
@@ -30,32 +28,32 @@ Experimentation is the last source of feature engineering and is meant to comple
 
 Feature engineering is more an art-form than a science. Despite the lack of a clear heuristic, there are some guidelines for working with time-to-event models. 
 
-Time-to-event models have difficulty in dealing with noisy variables across small intervals. The purpose of these models is to determine the contribution of covariates to the rate of failure. However, the introduction of stochastic variables, such as daily temperature, may not have that desired effect. This is because the effect of temperature on an inverter is only relevant in certain extreme cases over time and not in any one case. The effect of a single day of extreme temperature is unlikely to result in a failure on that day. In effect, this violates the association that the model demands between covariate value and inverter status. This can be partially offset by the use of rolling aggregates, like average temperature over five days, that provide an average temperature over a specific interval. However, by definition, these extreme events are rare, and will likely be smoothed out in these rolling aggregates. Furthermore, this does not account for compounding effects. A better solution is the use of monotonically increasing variables like a count of extreme temperatures across a specific interval. Of course, such a feature requires a definition for 'extreme', one which should be subject to experimentation on a validation set. Thus, it is important to realize that time-dependent variables require trajectories to be utilized effectively for predictive purposes. 
-
-<!-- Signal Processing? -->
+Time-to-event models have difficulty in dealing with noisy variables across small intervals. The purpose of these models is to determine the contribution of covariates to the rate of failure. However, the introduction of stochastic variables, such as daily temperature, may not have that desired effect. This is because the effect of temperature on an inverter is only relevant in certain extreme cases over time and not in any one case. The effect of a single day of extreme temperature is unlikely to result in a failure on that day. In effect, this violates the association that the model demands between covariate value and inverter status. This can be partially offset by the use of rolling aggregates, like average temperature over five days, that provide an average temperature over a specific interval. However, by definition, these extreme events are rare, and will likely be smoothed out in these rolling aggregates. Furthermore, this does not account for compounding effects. A better solution is the use of monotonically increasing variables like a count of extreme temperatures across a specific interval. Of course, such a feature requires a definition for "extreme", one which should be subject to experimentation on a validation set. Thus, it is important to realize that time-dependent variables require trajectories to be utilized effectively for predictive purposes. 
 
 
 
 
-## Data Management and Simulation
+
+\section*{Data Management and Simulation}
 
 Raw data can rarely be input into a model as-is. The first chapter broadly examined the standard data sources for a predictive maintenance process as well as provided a general outline of the simulated data. This section returns to these topics and examines the structure of the input data. It then turns its attention to the process of data simulation, introducing the quantile function and the inverse cumulative hazard. Finally, it presents the data used in the subsequent analysis.
 
-<!-- Reason for using simulated data -->
+% <!-- Reason for using simulated data -->
 
 Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. 
 
 The input data then provides a table of the last observed value of each system and their respective covariates. These values can then be transformed into a table which can be fed into Stan. 
 
-<!-- Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required.  -->
+% <!-- Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required.  -->
 
-<!-- 
-$$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
--->
+% <!-- 
+% $$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
+% -->
 
 $$ (Y_ijk, d_{ijk}, Z_j,  \textbf{x}_{ijk}) $$
 
-```
+
+\begin{lstlisting}
 time	
 censor	
 id	
@@ -66,7 +64,7 @@ weather_l6m
 err_code01_l30d	
 err_code02_l30d	
 repair_days
-```
+\end{lstlisting}
 
 The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
 
@@ -75,7 +73,8 @@ The above table gives an illustration of how data should be structured on input 
 The general summary of the simulated data is provided in the Figure below. It should be noted that this data is an example of what should arise after the feature engineering process is complete. As stated earlier, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can accurately encapsulate a failure mode of a device.
 
 
-```
+
+\begin{lstlisting}
 Figure: Simulated Data Structure
 
 500 Inverters
@@ -101,38 +100,39 @@ err_code01: Count of errors
 err_code02: Count of critical errors
 
 repair_days: Days since last repair or replacement
-```
+\end{lstlisting}
 
-<!-- 
-- Data Generation Redux - Now with Numbers
-	- N = 500, 5 Parks, uneven number of inverters at parks
-	- Big Table
-		- Define Failure Mode (Failure is requires replacement)
-			- Infant Mortality
-			- Old Age Mortality
-		- Define each category $w_{ij}$
-			- Park - Big $\sigma^2$
-			- Inverter Type - Small $\sigma^2$
-		- Define each covariate, $\textbf{x}_{ij}$
-			- Days of operation
-			- Standardized Electrical Output - $\mathcal{N}(0,1)$
-			- Maintenance Logs
-				- Count of repairs
-				- Days since last repair
-				- Count of replacement
-				- Days since last replacement part
-			- Park Level Data
-				- Standardized Avg Temperature
-				- Standardized Humidity
-				- Interaction effect between low avg temp and low humidity
 
-Several complications were added to the data.
-- Random noise on a proportion of data 10%
-- Certain categories were given baseline distributions with different parameters
-- 
- -->
+% <!-- 
+% - Data Generation Redux - Now with Numbers
+% 	- N = 500, 5 Parks, uneven number of inverters at parks
+% 	- Big Table
+% 		- Define Failure Mode (Failure is requires replacement)
+% 			- Infant Mortality
+% 			- Old Age Mortality
+% 		- Define each category $w_{ij}$
+% 			- Park - Big $\sigma^2$
+% 			- Inverter Type - Small $\sigma^2$
+% 		- Define each covariate, $\textbf{x}_{ij}$
+% 			- Days of operation
+% 			- Standardized Electrical Output - $\mathcal{N}(0,1)$
+% 			- Maintenance Logs
+% 				- Count of repairs
+% 				- Days since last repair
+% 				- Count of replacement
+% 				- Days since last replacement part
+% 			- Park Level Data
+% 				- Standardized Avg Temperature
+% 				- Standardized Humidity
+% 				- Interaction effect between low avg temp and low humidity
 
-<!-- ## Simulation Process -->
+% Several complications were added to the data.
+% - Random noise on a proportion of data 10%
+% - Certain categories were given baseline distributions with different parameters
+% - 
+%  -->
+
+% <!-- ## Simulation Process -->
 
 Data is simulated using inverse transform sampling. This method generates random values from any distribution using only standard uniform random values as inputs. Generally speaking, this enables the generation of values from any continuous distribution. 
 
@@ -162,11 +162,11 @@ This simulation can be extended further to include the a Frailty term, $Z_j$, it
 
 $$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{j} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
 
-<!-- Or a time-dependent covariate:
+% <!-- Or a time-dependent covariate:
 
-$$ T = \left [\frac{1}{k} \ln\left ( \frac{(1 + \nu)(-\ln(U))}{\beta_t \lambda \nu \exp(\boldsymbol\beta^T \textbf{x}) } \right )  \right ]^{\frac{1}{(1+\nu)}} $$
+% $$ T = \left [\frac{1}{k} \ln\left ( \frac{(1 + \nu)(-\ln(U))}{\beta_t \lambda \nu \exp(\boldsymbol\beta^T \textbf{x}) } \right )  \right ]^{\frac{1}{(1+\nu)}} $$
 
-Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}.  -->
+% Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}.  -->
 
 Of course, the precise model depends on the parameterization of the baseline cumulative hazard. As stated in the previous chapter, numerous different distributions can be used for modeling lifetimes and can therefore be used for this baseline cumulative hazard. 
 
@@ -176,19 +176,17 @@ $$T = \left [\frac{- \ln(U) }{Z_{j} \gamma^{-\alpha}  \exp(\boldsymbol\beta^T \t
 
 Where $u$ is the realization of a uniformly distributed random variable, $U \sim \text{Unif}[0,1]$ and $\alpha$ and $\sigma$ are the shape and scale parameters of Weibull distribution, respectively.
 
-<!-- 
-Maybe include an explicit extension about simulating time-dependent covariates 
--->
+% <!-- 
+% Maybe include an explicit extension about simulating time-dependent covariates 
+% -->
 
-<!-- ln(-ln(S(t))) => check baseline-->
-
-
+% <!-- ln(-ln(S(t))) => check baseline-->
 
 
 
-## Stan
 
-<!-- \footnote{The technical details of the fitting process that Stan uses were discussed in the previous chapter.} -->
+
+\section*{Stan}
 
 Stan is the most recent addition to the toolkit for fitting Bayesian models. Like its predecessors BUGS and JAGS, Stan seeks to abstract the task of fitting complex models with a general programmatic process. Stan makes use of Hamiltonian Monte Carlo for the sampling of continuous parameters from a model. The method was described briefly in the previous chapter. 
 
@@ -198,7 +196,8 @@ A Stan program defines a statistical model through a conditional probability fun
 
 Stan is an imperative probabilistic programming language. This implies that the language requires the user to tell it how to do something more than just declare that it should be done. Precise instructions have to be written verbatim to achieve the desired modeling outcome. Yet, as the previous chapter demonstrated, models are constructed by combining relatively simple building blocks. This permits models of any complexity to be defined and built upon.
 
-```
+
+\begin{lstlisting}
 functions {
 	// ... function declarations and definitions ...
 }
@@ -220,8 +219,9 @@ model {
 generated quantities {
 	// ... declarations ... statements ...
 }
-```
-<!-- Figure, programming blocks of Stan program -->
+\end{lstlisting}
+
+% <!-- Figure, programming blocks of Stan program -->
 
 A Stan program consists of variable declarations and statements, divided into a series of blocks written in a C-like syntax. This compartmentalizes operations, as variables can be declared in the block within which they are used. Generally, three blocks are used to define a statistical model. These are the data, parameters and model blocks. Figure XX demonstrates all the available blocks and their required order.
 
@@ -233,20 +233,20 @@ To facilitate processing two transformation blocks and generated quantities bloc
 
 Once a Stan program is defined, it is compiled into C++ code before being executed. The program begins by validating the known values of $y$ and $x$ and checking their types and constraints. It then generates a sequence of non-independent identically distributed parameter values, which have a marginal distribution of $\Pr(\theta|y,x)$. This translation into C++ code greatly improves the speed and portability of Stan-built models. However, it also results in requirements that do not arise in earlier Bayesian samplers. Notably, Stan is statically typed and requires that all variables have their constraints explicitly defined, if they exist. This is partially to enforce explicitness among model designers, but it is also to prevent modeling errors from creating problematic outputs. For example, a Weibull baseline hazard requires that both the shape and scale parameters be strictly positive otherwise the function is not defined. There is no reason for any sampler to make use of negative parameter values when sampling from these distributions. Strict type setting with constraints ensures that these types of errors are caught as soon as they occur rather than potentially disturbing final results. 
 
-Once the sampler runs until convergence, Stan writes the output values of each parameter to disk in a `csv` file. This permits sampling to be done multiple times with the values of each iteration updating the output. This is particularly useful for large models that may require a greater amount of computer time for each iteration.
+Once the sampler runs until convergence, Stan writes the output values of each parameter to disk in a /listinline{csv} file. This permits sampling to be done multiple times with the values of each iteration updating the output. This is particularly useful for large models that may require a greater amount of computer time for each iteration.
 
 Stan comes with a great many of built-in operations and functions. The basic operations are the same as one expects from any programming language, logical and arithmetic operations, matrix and array manipulation, type conversions as well as built in functions for handling mathematical operations like solving ordinary differential equations. The language also includes functions that encode most statistical distributions including those that are found in the previous chapter. Furthermore, sampling statements are used that vectorize the sampling from known distributions improving the speed of execution. 
 
 While these built-ins are useful for the vast majority of tasks, time-to-event models pose a problem for vanilla Stan. Much of the difficulty in building time-to-event models in Stan stems from the presence of censoring and truncation in the data. While Stan does have some support for dealing with censoring and truncation, the nature of this support is fairly inflexible, especially when dealing with more complex models, such as those with time-dependent variables or Frailties. The recent introduction a function block in the language has largely enabled the fitting of time-to-event models in Stan. As the name suggests, the function block allows for any arbitrary function to be declared. This includes the ability to explicitly define a likelihood function.
 
-<!-- Any parameters in the model must have a non-zero posterior probability or else the sampler will halt.  -->
+% <!-- Any parameters in the model must have a non-zero posterior probability or else the sampler will halt.  -->
 
 
-<!-- Due to contractual obligations, the exact lifetimes of the data were obsficated as to not potentially disclose any source material. -->
+% <!-- Due to contractual obligations, the exact lifetimes of the data were obsficated as to not potentially disclose any source material. -->
 
-## Evaluating Model Performance
+\section*{Evaluating Model Performance}
 
-Time-to-event models focusing on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the hazard and observed remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the 'real lifetime' difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
+Time-to-event models focusing on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the hazard and observed remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the "real lifetime" difficult to observe in many cases. The order in which failure occurs is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
 This section provides the basis for evaluating performance of time-to-event models for predictive outcomes. It begins by discussing the goal of model performance and addresses the difficulties that arise from applying traditional model evaluation techniques in the time-to-event context. It then introduces the Concordance-Index (C-Index) which is used for model discrimination and calibration. Finally, a general heuristic is provided for evaluating model performance in this class of models.
 
@@ -254,15 +254,15 @@ Ideally, a well-performing time-to-event model should behave in a manner that ge
 
 Underfitting refers to when a model is unable to capture the complexity of the underlying phenomena. This is caused by the sin of omission. Such as when important structural features or relevant covariates are not included in the model. As a result, the model is inflexible and will systematically bias results both in and out-of-sample. This is because underfitting results in an insensitivity to the structure of any sample. Overfitting refers to when random variation is treated as structure by a model. In an extreme case, overfitting can be thought of as data memorization. Thus the model memorizes the sample used to fit it. This makes it incredibly accurate in-sample. However, since new data is unlikely to have the exact same configuration as any single sample, it would result in poor out-of-sample, or generalized, performance. As may be visible from the above, the difference between underfitting and overfitting rests in the complexity of the model as well as the sensitivity of that model to the exact composition of the sample used to fit it\cite{McElreath2016}. 
 
-<!-- - Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
-- In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
-- The use of regularizing priors -->
+% <!-- - Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
+% - In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
+% - The use of regularizing priors -->
 
 As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared-error (MSE) or mean-absolute-error (MAE), both of which measure the distance of predicted values to the observed values in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as a replacement for out-of-sample data. An average of the MSE or MAE can then be taken to provide the general performance of any model. 
 
 Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes is of importance. As such, this method would result in historical information about a lifetime being randomly excluded from model fitting. The result would be a systematically underfitting of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
 
-<!-- Maybe include statement about this being the result of time-to-event data coming from skewed distributions -->
+% <!-- Maybe include statement about this being the result of time-to-event data coming from skewed distributions -->
 
 Censoring also creates problems for this technique. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization\cite{Petrone2008}. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Datasets where the majority of observations are non-events are the rule in time-to-event contexts, not the exception. As a result, the balanced comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion. 
 
@@ -287,7 +287,7 @@ As can be seen from the above, the C-Index is simply the fraction of concordant 
 
 To introduce the effect of censored observations, it is easier to think of time-to-event data as an ordered graph, $\mathcal{G} = (\mathcal{V}, \mathcal{E})$\cite{Steck2008}. Each observation is a triple, $(t_i, h_i, d_i)$, with the observed time, hazard and censoring indicator for any individual system. The set of vertices $\mathcal{V}$ represent all individual triples in the data set. Each vertex, $\mathcal{V_i}$, is indicated to be either an event or censored using the censoring indicator, $d_i$. Edges, $\mathcal{E}_{ij}$ between the vertices of the graph are only drawn such that $t_i < t_j$ and no edges can come from a censored observation.
 
-<!-- Insert Picture from Steck 2008 -->
+% <!-- Insert Picture from Steck 2008 -->
 
 In such a context, the C-Index is:
 
@@ -303,7 +303,7 @@ $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{
 
 The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers<!-- \cite{NEEDED} -->. Clearly in this context, the goal is not binary classification, rather the correct ordering of events. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, $0.5$, indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
 
-<!-- C-Index holdout sample? Leave One Out CV? -->
+% <!-- C-Index holdout sample? Leave One Out CV? -->
 
 The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which set of covariates produce the best model. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection somewhat more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. 
 
@@ -329,26 +329,25 @@ $$ \hat{p} = \sum^n_{i=1} \text{VAR}[\ln p(y_i|\theta^s)] $$
 
 Where $Var[\cdot]$ is the sample variance.
 
-This entire process is easily implemented in Stan as it can be directly computed in the `generated quantities` block\cite{Vehtari2014}. As with all information criterion metrics, the lower the value the less deviation there is from the 'true' data generating distribution. 
+This entire process is easily implemented in Stan as it can be directly computed in the /listinline{generated quantities} block\cite{Vehtari2014}. As with all information criterion metrics, the lower the value the less deviation there is from the true data generating distribution. 
 
 The C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
 
 
 
-## Building The Model
-
-<!-- Segway needed -->
+\section*{Building The Model}
 
 This section brings all the previous insights together and provides a step-by-step process to fitting time-to-event models. It begins with the construction and output of a simple Multiplicative Hazard Model, it then extends to this model to accommodate shared Gamma Frailties and time-dependent covariates. The emphasis in this section is on practical exposition, over theory. As a result, some implementation details may be omitted for the sake of brevity. 
 
 It is important to start simple with model construction. A good first step is to fit a basic Multiplicative Hazards Model, one that does not contain any time-dependent covariates or random effects. This can be done in the following way:
 
-<!-- Also critical is that each  failure mode is separately fit, with the censored observations being included divided into each data set.  -->
+% <!-- Also critical is that each  failure mode is separately fit, with the censored observations being included divided into each data set.  -->
 
-<!-- FigureXXX -->
+% <!-- FigureXXX -->
 
-```
+
+\begin{lstlisting}
 functions {
   real log_h_t(real lifetime, real alp, real gam, real lin_pred);
   real H_t(real lifetime, real alp, real gam, real lin_pred);
@@ -371,20 +370,19 @@ functions {
     return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
   }
 }
+\end{lstlisting}
 
-```
 
-Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a `function` block at the beginning of the model code. The above code block contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the `H_t()` and `log_h_t()` functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the `surv_dens_log()` function. This last function that will be minimized in sampling steps of the fitting process. 
+Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a /listinline{function} block at the beginning of the model code. The above code block contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the /listinline{H_t()} and /listinline{log_h_t()} functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the /listinline{surv_dens_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
 
 The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
-It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input `cens_lifetime` that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
+It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input /listinline{cens_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
-Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, `real` is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
+Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, /listinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
 
-<!-- Scoping Rules -->
 
-```
+\begin{lstlisting}
 data {
   int<lower=0>  N;
   vector[2]     lifetime[N];
@@ -394,13 +392,14 @@ data {
   real          x_kWh[N];
   real          park_weather[N];
 }
-```
-
-To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named `list()`. The names within the list should correspond to the variable names found in the `data{}` block above. The number of observations, the values of those observations and the values of any covariates should be defined here. Note that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. 
+\end{lstlisting}
 
 
+To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named /listinline{list()} The names within the list should correspond to the variable names found in the /listinline{data{}} block above. The number of observations, the values of those observations and the values of any covariates should be defined here. Note that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. 
 
-```
+
+
+\begin{lstlisting}
 parameters {
   real<lower=0> alp;
   real<lower=0> gam;
@@ -410,11 +409,13 @@ parameters {
   real          beta_kWh;
   real          beta_weather;
 }
-```
+\end{lstlisting}
 
-The parameters of the model also must be defined. In this case, this includes the parameters for the Weibull distribution, alpha and gamma, as well as the linear coefficients, betas, associated with the model covariates. Notice the `real<lower=0>` in the parameter definitions. These are constraints which are applied to the alpha and gamma parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where this is not the case, it is best practice to apply constraints if one is aware of them.
 
-```
+The parameters of the model also must be defined. In this case, this includes the parameters for the Weibull distribution, alpha and gamma, as well as the linear coefficients, betas, associated with the model covariates. Notice the /listinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the alpha and gamma parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where this is not the case, it is best practice to apply constraints if one is aware of them.
+
+
+\begin{lstlisting}
 model {
   for(i in 1:N){
     lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
@@ -429,59 +430,59 @@ model {
   beta_kWh ~ normal(0,10);
   beta_weather ~ normal(0, 1);
 }
-```
+\end{lstlisting}
 
-The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The `for()` loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the `function` block it is possible to make use of it. Note that the function being called is `surv_dens` not `surv_dens_log` as was defined in the `function` block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the `_log` suffix and acts accordingly. 
+
+The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The /listinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the /listinline{function} block it is possible to make use of it. Note that the function being called is /listinline{surv_dens} not /listinline{surv_dens_log} as was defined in the /listinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the /listinline{_log} suffix and acts accordingly. 
 
 Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
 
-<!-- FIX ME -->
 
-```
+
+\begin{lstlisting}
 generated quantities {
   vector[N] pred_log_h_t;
   for(i in 1:N){
     pred_log_h_t[i] <- log_h_t(lifetime[i,2], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
+\end{lstlisting}
 
-```
+Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the /listinline{generated quantities{}} block. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. 
 
-Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the `generated quantities{}` block. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. 
+Generally, Stan provides an entire class of functions for numerous distributions with the suffix, /listinline{_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom function.
 
-Generally, Stan provides an entire class of functions for numerous distributions with the suffix, `_rng` that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom function.
+Once the model is fit, the parameters can be easily printed out or plotted, with the /listinline{print()} and /listinline{plot()} functions respective. Predictive accuracy can also be assessed using the custom /listinline{C_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
 
-Once the model is fit, the parameters can be easily printed out or plotted, with the `print()` and `plot()` functions respective. Predictive accuracy can also be assessed using the custom `C_Index()` function. However, before this is done, model assumptions and convergence should be verified. 
-
-<!-- QQ-Plot and Traceplot Output -->
+% <!-- QQ-Plot and Traceplot Output -->
 
 A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
 
-Sampling convergence should be performed. This can be done in several ways. The simplest method is to make use of the `traceplot()` function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the `Rhat` column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
+Sampling convergence should be performed. This can be done in several ways. The simplest method is to make use of the /listinline{traceplot()} function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the /listinline{Rhat} column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
 
-```
+\begin{lstlisting}
 generated quantities {
   vector[N] log_lik;
   for (i in 1:N){
   	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
-```
+\end{lstlisting}
 
 Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index respectively. 
 
-To generate the WAIC or LOO metrics, a point-wise log likelihood, `log_lik`, is required. The `generated quantities{}` block allows for these likelihoods to be extracted upon completion of sampling. The functions `WAIC()` and `LOO()` from the `rethinking` package can be used to compute the WAIC and LOO value for the model under the assumption that the `log_lik` vector is included in the output. 
+To generate the WAIC or LOO metrics, a point-wise log likelihood, /listinline{log_lik}, is required. The /listinline{generated quantities{}} block allows for these likelihoods to be extracted upon completion of sampling. The functions /listinline{WAIC()} and /listinline{LOO()} from the /listinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the /listinline{log_lik} vector is included in the output. 
 
 To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. As stated earlier, the C-Index should be computed on a hold-out sample to prevent overfitting. The simulated data used for this exploration, provides the added ability to estimate the C-Index on the uncensored lifetimes. 
 
 This completes the analysis. A prediction can now be output from the model for each inverter, which provides a ranking of the expected order of failure. 
 
-<!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
+% <!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
 
 
-This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the `function` block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a `sig` parameter is added to the `log_h_t()`, `H()` and `surv_dens_log()` functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
+This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the /listinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a /listinline{sig} parameter is added to the /listinline{log_h_t()}, /listinline{H()} and /listinline{surv_dens_log()} functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
 
-```
+\begin{lstlisting}
 functions {
   real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred);
   real H_t(real lifetime, real alp, real gam, real sig, real lin_pred);
@@ -505,14 +506,15 @@ functions {
   }
 
 }
+\end{lstlisting}
 
-```
 
 If this is the only change that is made, a univariate Gamma Frailty Model results. To implement a shared Gamma Frailty Model an additional construction is needed. Specifically, an iteration over the grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. In this example, the each park is given its own estimate of the Frailty variance. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
 
-To do this in Stan must be made aware that the parameter `sig` will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of `sig` sampling is being done. Thus, the following additions are required to the Stan program:
+To do this in Stan must be made aware that the parameter /listinline{sig} will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of /listinline{sig} sampling is being done. Thus, the following additions are required to the Stan program:
 
-```
+
+\begin{lstlisting}
 data {
   int<lower=1>  park[N];
   int<lower=1>  park_N;
@@ -531,9 +533,10 @@ model {
   }
 
 }
-```
+\end{lstlisting}
 
-The `data{}` block introduces a grouping variable, `park` which is the length of the number of observations, `N`. It identifies  park membership of any single observation with an integer value. The `park_N` variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the `parameters{}` block for defining the dimensions of the `sig` vector that stores the variances of the Frailty parameter. Finally, in the `model{}` block, 
+
+The /listinline{data{}} block introduces a grouping variable, /listinline{park} which is the length of the number of observations, /listinline{N} It identifies  park membership of any single observation with an integer value. The /listinline{park_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the /listinline{parameters{}} block for defining the dimensions of the /listinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the /listinline{model{}} block, 
 
 This completes the shared Frailty extension. Again, upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described above. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. 
 
@@ -546,31 +549,31 @@ One of the joys of working with Stan is its ability to be extended indefinitely.
 
 
 
-<!-- 
+% <!-- 
 
 
 
-$$ \frac{\frac{\frac{\alpha}{\gamma}(\frac{t}{\gamma})^{\alpha - 1}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}}  \exp{\beta}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}} \exp(\beta) $$
+% $$ \frac{\frac{\frac{\alpha}{\gamma}(\frac{t}{\gamma})^{\alpha - 1}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}}  \exp{\beta}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}} \exp(\beta) $$
 
-$$ \frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} $$
+% $$ \frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} $$
 
-$$\frac{\frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} * \exp(X)}{1 + s^2 (\frac{t}{g})^a *\exp(X)} $$
+% $$\frac{\frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} * \exp(X)}{1 + s^2 (\frac{t}{g})^a *\exp(X)} $$
 
-$$ (1 + s^2 (\frac{t}{g})^a *\exp(X)))^{-\frac{1}{s^2}} $$
-
-
-$$(a (t/g)^a)/(t + s^2 t (t/g)^a)$$
-
-$$ (\alpha \exp(\beta^T X) (t/\gamma)^(\alpha-1))/(\gamma (\sigma^2 (t/\gamma)^\alpha+1) (\sigma^2 \exp(\beta^T X) (t/\gamma)^\alpha+1)) $$
+% $$ (1 + s^2 (\frac{t}{g})^a *\exp(X)))^{-\frac{1}{s^2}} $$
 
 
-$$ d (-log(s^2 e^X (g/t)^(-a)+1)-log(s^2 (g/t)^(-a)+1)-a log(g)+a log(t)+log(a)-log(t)+X) $$
+% $$(a (t/g)^a)/(t + s^2 t (t/g)^a)$$
+
+% $$ (\alpha \exp(\beta^T X) (t/\gamma)^(\alpha-1))/(\gamma (\sigma^2 (t/\gamma)^\alpha+1) (\sigma^2 \exp(\beta^T X) (t/\gamma)^\alpha+1)) $$
+
+
+% $$ d (-log(s^2 e^X (g/t)^(-a)+1)-log(s^2 (g/t)^(-a)+1)-a log(g)+a log(t)+log(a)-log(t)+X) $$
 
 
 
- -->
+%  -->
 
-## Extended Reading
+\section*{Extended Reading}
 
 For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. For more information about WAIC, Vehtari, Gelman and Garby cover the derivation and properties\cite{Vehtari2015}. For an overview of how to implement models in Stan, the massive Stan Reference Manual is likely without equal\cite{StanDevelopmentTeam2016}. For slightly less overwhelming information about Stan, the documentation page on the project website contains a wide assortment of tutorials, videos and softer introductions to the software\cite{StanDevelopmentTeam2016a}.
 
