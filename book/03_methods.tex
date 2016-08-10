@@ -259,12 +259,14 @@ $$ h_i(t|\textbf{x}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x
 
 Here, $Z$, is defined as a non-negative random variable, with some distribution, $\mathfrak{g}(\cdot)$, varying across the population\cite{Wienke2010} with $Z_i$ being the realization of the Frailty for each individual system. Generally, the Frailty distribution is standardized, resulting in an average value equal to one, $\mathrm{E}[Z] = 1$, and a variance parameter that is estimated from the data, $\text{Var}(Z) = \theta$.
 
-% <!-- State the difference between frailties and random effects
-% h_i(t|\textbf{x}_i, Z_{ij}) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i + b_i^t z_ij)
+It is important to distinguish between the frailty and the random effect, $b_i^t$:  
 
-% Where Z_{ij} = \exp(b_i^t z_{ij})
-%  -->
-% }
+\begin{align*}
+h_i(t|\textbf{x}_i, Z_{i}) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i + b_i^t z_i)
+\end{align*}
+
+Where $Z_{i} = \exp(b_i^t z_{i})$ and clearly when $b_i = 0$ then $Z_i = 1$.
+
 
 As the average value of the Frailty is set to one, divergences from the average characterize the effect on the hazard. Individual systems with Frailties greater than one will have a higher than average hazard, implying they are more frail. Meanwhile, individual systems with Frailties less than one will have lower than average hazard implying they are less frail. Those that are more frail will die earlier than those that are less frail.
 
