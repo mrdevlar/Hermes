@@ -349,25 +349,25 @@ It is important to start simple with model construction. A good first step is to
 
 \begin{lstlisting}
 functions {
-  real log\_h\_t(real lifetime, real alp, real gam, real lin_pred);
-  real H\_t(real lifetime, real alp, real gam, real lin_pred);
+  real log_h_t(real lifetime, real alp, real gam, real lin_pred);
+  real H_t(real lifetime, real alp, real gam, real lin_pred);
 
-  real log\_h\_t(real lifetime, real alp, real gam, real lin_pred){
+  real log_h_t(real lifetime, real alp, real gam, real lin_pred){
     return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) ) + lin_pred;
 }
 
-  real H\_t(real lifetime, real alp, real gam, real lin_pred){
+  real H_t(real lifetime, real alp, real gam, real lin_pred){
     return exp(lin_pred) * ( (lifetime / gam) )^alp ;
 }
 
-  real surv\_dens\_log(vector cens_lifetime, real alp, real gam, real lin_pred){
+  real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred){
     real lifetime;
     real d_i;
   
     lifetime <- cens_lifetime[1];
     d_i      <- cens_lifetime[2];
     
-    return d_i * log\_h\_t(lifetime, alp, gam, lin_pred) - H\_t(lifetime, alp, gam, lin_pred);
+    return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
   }
 }
 \end{lstlisting}
@@ -377,7 +377,7 @@ Stan permits the inclusion of arbitrary functions. These functions can be used i
 
 The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
-It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input /listinline{cens_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
+It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input /listinline{cens\_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
 Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, /listinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
 
@@ -441,9 +441,9 @@ Below the sampling statement are the priors associated with the parameters. Prio
 
 \begin{lstlisting}
 generated quantities {
-  vector[N] pred_log\_h\_t;
+  vector[N] pred_log_h_t;
   for(i in 1:N){
-    pred_log\_h\_t[i] <- log\_h\_t(lifetime[i,2], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+    pred_log_h_t[i] <- log_h_t(lifetime[i,2], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
 \end{lstlisting}
@@ -464,14 +464,14 @@ Sampling convergence should be performed. This can be done in several ways. The 
 generated quantities {
   vector[N] log_lik;
   for (i in 1:N){
-  	log_lik[i] <- surv\_dens\_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+  	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
 \end{lstlisting}
 
 Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index respectively. 
 
-To generate the WAIC or LOO metrics, a point-wise log likelihood, /listinline{log_lik}, is required. The /listinline{generated quantities{}} block allows for these likelihoods to be extracted upon completion of sampling. The functions /listinline{WAIC()} and /listinline{LOO()} from the /listinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the /listinline{log_lik} vector is included in the output. 
+To generate the WAIC or LOO metrics, a point-wise log likelihood, /listinline{log\_lik}, is required. The /listinline{generated quantities{}} block allows for these likelihoods to be extracted upon completion of sampling. The functions /listinline{WAIC()} and /listinline{LOO()} from the /listinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the /listinline{log\_lik} vector is included in the output. 
 
 To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. As stated earlier, the C-Index should be computed on a hold-out sample to prevent overfitting. The simulated data used for this exploration, provides the added ability to estimate the C-Index on the uncensored lifetimes. 
 
@@ -495,12 +495,12 @@ functions {
     return exp(lin_pred) * (1 / sig^2) * log((sig^2) * ((lifetime / gam)^alp) + 1);
   }
   
-  real surv\_dens\_log(vector cens_lifetime, real alp, real gam, real sig, real lin_pred){
+  real surv\_dens\_log(vector cens\_lifetime, real alp, real gam, real sig, real lin_pred){
     real lifetime;
     real d_i;
     
-    lifetime <- cens_lifetime[1];
-    d_i      <- cens_lifetime[2];
+    lifetime <- cens\_lifetime[1];
+    d_i      <- cens\_lifetime[2];
   
     return d_i * log\_h\_t(lifetime, alp, gam, sig, lin_pred) - H\_t(lifetime, alp, gam, sig, lin_pred);
   }
