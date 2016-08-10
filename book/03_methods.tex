@@ -2,30 +2,30 @@
 
 Time-to-event analysis/footnote{also known as survival analysis, reliability analysis and event history analysis} concerns itself with the modeling of the expected duration of time until an object experiences a well-defined event. This event is a transition between a finite number of possible states, such as from operational to non-operational or from alive to dead\cite{Andersen1992}. In this particular context, these states define the transition of a photovoltaic inverter from functional to failed.
 
-To be able to model the time until these transitions, precision in describing the phenomenon is needed, and for that, mathematics is required. The following section describes the mathematical narrative that underlies the construction, manipulation and estimation of Bayesian time-to-event models. It begins with the basic functions required to understand this class of models and their relationship and role in defining a time-to-event distribution. Then, censoring and truncation which are common characteristics of time-to-event data are examined. From these basics units, the Multiplicative Hazard Model, a linear model for time-to-event analysis is formulated. Following this, hierarchical model which describes shared risk, or Frailty is introduced. Finally, the likelihood and model estimation with Markov Chain Monte Carlo is described.
+To be able to model the time until these transitions, precision in describing phenomenon is needed, and for that, mathematics is required. The following section describes the mathematical narrative that underlies the construction, manipulation and estimation of Bayesian time-to-event models. It begins with the basic functions required to understand this class of models, their relationship, and role in defining time-to-event distributions. Then, censoring and truncation which are common characteristics of time-to-event data are examined. From these basics units, the Multiplicative Hazard Model for time-to-event analysis is formulated. Following this, a hierarchical model which describes shared risk, or Frailty is introduced. Finally, a description of the likelihood and model estimation with Hamiltonian Monte Carlo is given.
 
 
 
 \section*{Time-to-Event Functions}
 
-The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}\cite{Rodriguez2007}.
+The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a diverse number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}\cite{Rodriguez2007}.
 
-Begin by defining $T$, a continuous non-negative random variable with an unknown distribution representing the time until a well-defined event. As it is a time, its support is constrained to all positive real numbers, ($T \ge 0, T \in \mathbb{R}$). Further, define $t$ to be the realization of this random variable at a specific point in time.
+Begin, by defining $T$, a continuous non-negative random variable with an unknown distribution representing the time until a well-defined event. As it is a time, its support is constrained to all positive real numbers, ($T \ge 0, T \in \mathbb{R}$). Further, define $t$, to be the realization of this random variable at a specific point in time.
 
 A familiar way of describing a probability distribution is to use probability density function (pdf) and cumulative distribution function (cdf). The pdf is the relative likelihood of a random variable taking a particular realization.
 
 $$f(t) = \Pr(T = t)$$
 
-The cdf defines the probability that a random variable will take on a value less than or equal to some realization. Thus, it defines a range of outcomes across a random variable.  
+The cdf defines the probability that a random variable will take on a value less than or equal to some realization. Thus, it defines a range of outcomes across the random variable.  
 
 $$F(t) = \Pr(T \le t) = \int^t_0 f(x) dx $$
 
-In the time-to-event context, the cdf of $T$ may not be particularly useful as the variables of interest that take on values greater than some realization. This is because in most cases, $T$ will be greater than the value observed, $t$. Fortunately, by definition, a random variable must sum to one and the complement of the cdf can be established through subtraction.
+In the time-to-event context, the cdf of $T$ may not be particularly useful as the variables of interest usually take on values greater than some realization. This is because in most cases, $T$ will be greater than the value observed, $t$. Fortunately, by definition, a random variable must sum to one and the complement of the cdf can be established through subtraction.
 
 $$S(t) = P(T \ge t) = 1 - F(t) = \int^{\infty}_t f(x) dx$$
 
 This returns the survival function\footnote{also denoted as the reliability function $R(t)$} which is the probability
-that the well-defined event occurs after a specific point in time. It is considered the survival function because it provides the probability of surviving beyond an observed time $t$. Clearly, if the event occurs after a specific time, then the event has not yet occurred. As the event is death or failure, it is implied that the object of interest has survived up to that point.
+that the well-defined event occurs after a specific point in time. It is considered the survival function because it provides the probability of surviving beyond an observed time, $t$. Clearly, if the event occurs after a specific time, then the event has not yet occurred. As the event is death or failure, it is implied that the object of interest has survived up to that point.
 
 As the survival function is the complement of the cdf, it inherits its properties. It is monotonically decreasing, with $S(0) = 1$ and $S(\infty) = \lim_{t\rightarrow \infty}S(t) = 0$. This formalizes the notion that when the event in question is failure, in the beginning all systems are operational, but given a long enough time frame all systems will eventually fail.
 
@@ -33,9 +33,9 @@ While the survival function focuses on the event not occurring, the hazard funct
 
 $$ h(t) = \lim_{\Delta t \rightarrow 0^+} \frac{P(t \le T < t + \Delta t | T \ge t)}{\Delta t} = \frac{f(t)}{S(t)} $$
 
-It provides the potential of the event occurring within the next (limiting) time interval, assuming it has not taken place until now. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ). It must be non-negative, such that $h(t) \ge 0$, and can take on values greater than one $[0, \infty)$.
+It provides the potential of the event occurring within the next limiting time interval, assuming it has not taken place until now. It should be stressed, that this function does not return a probability, rather a rate ( $\frac{P}{\Delta t}$ ). It must be non-negative, such that $h(t) \ge 0$, and can take on values greater than one $[0, \infty)$.
 
-The hazard is far more useful from a practical perspective than the other constructions. The conditional formulation is especially important, as the hazard defines the risk only after excluding the prior occurrence of the event. This makes it a more natural expression of what is generally expressed as the risk of an event in time, which implicitly presupposes that the event has not yet occurred.
+The hazard is far more useful from a practical perspective than the other constructions. The conditional formulation is especially important, as the hazard defines the risk only after excluding the prior occurrence of the event. This makes it a more natural expression of what is generally asserted as the risk of an event in time, which implicitly presupposes that the event has not yet occurred.
 
 Numerically, the hazard is clearly linked to the future occurrence of the event. When the hazard is zero, the risk of the event occurring in the next moment is also zero. Conversely, when the hazard is infinite, the risk of the event occurring the next instance is near certain.
 
@@ -45,9 +45,9 @@ $$ H(t) = \int^t_0 h(u) du $$
 
 This is the cumulative hazard function. It measures the total amount of risk that has been accumulated up to time $t$. The cumulative hazard can be understood as the number of times we would expect to observe the event in a given period of time, assuming the event were repeatable.
 
-The relationship between the hazard and cumulative hazard is especially important in providing intuition. The hazard is a rate is defined in $\frac{1}{t}$ units. Whereas the cumulative hazard sums across those $\frac{1}{t}$ units. For example, if a rate of a particular event were ten and five units of time passed, then fifty events would be expected within those five units. It is important to note, that this logic is one-directional and is based on an assumption of a constant hazard rate over the five units of time. There is nothing that makes this generally true. Thus, when starting with a cumulative hazard of fifty, it is possible that the hazard rate is fifteen, five, ten, five, and fifteen, respectively, for each of the five units of time.
+The relationship between the hazard and cumulative hazard is especially important in providing intuition. The hazard is a rate is defined in $\frac{1}{t}$ units. Whereas the cumulative hazard sums across those $\frac{1}{t}$ units. For example, if a rate of a particular event was ten, and five units of time passed, then fifty events would be expected within those five units. It is important to note, that this logic is one-directional and is based on an assumption of a constant hazard rate over the five units of time. There is nothing that makes this generally true. Thus, when starting with a cumulative hazard of fifty, it is possible that the hazard rate is fifteen, five, ten, five, and fifteen, respectively, for each of the five units of time. 
 
-The pdf, cdf, survival, hazard and cumulative hazard functions all uniquely define the process generating the time-to-event data. As a result, it is possible to transform any of these functions into any other. This is useful because it provides insight into the relationships among the functions but also because it allows for the use of the easiest constructions in modeling.
+The pdf, cdf, survival, hazard and cumulative hazard functions all uniquely define the process generating time-to-event data. As a result, it is possible to transform any of these functions into any other. This is useful because it provides insight into the relationships among the functions but also because it allows for the use of the easiest constructions in modeling.
 
 It is generally true that any pdf can be expressed as a derivative of its cdf. As a result, the survival function also provides a route back to the pdf. The negative derivative of the survival function returns the pdf. Such that the pdf can be redefined as follows:
 
@@ -57,7 +57,7 @@ The hazard function and survival function are also intimately related to one ano
 
 $$ h(t) = \frac{f(t)}{S(t)} = - \frac{d S(t) / dt }{S(t)} = - \frac{d \ln \left( S(t) \right) }{dt} = - \frac{d}{dt} \ln S(t)$$
 
-The above identity can also be used to express the cumulative hazard. Integrating from the starting time until a specific time, we find that the cumulative hazard can be defined as the negative logarithm of the survival function.
+The above identity can also be used to express the cumulative hazard. Integrating from a starting time until a specific time, demonstrates that the cumulative hazard can be defined as the negative logarithm of the survival function.
 
 $$ H(t) = \int^t_0 \frac{f(u)}{S(u)}du = - \int^t_0 \frac{1}{S(u)} \left( \frac{d}{du} S(u)\right) du = -\ln S(t) $$
 
@@ -65,7 +65,7 @@ Whatever transformation is expressed in terms of logarithms, can be reversed thr
 
 $$ S(t) = \exp \left (- \int_0^t h(u) du  \right ) = \exp(-H(t)) $$
 
-This allows for the conversion of a cumulative hazard back into a probability. Given the earlier example of a cumulative hazard of 50, $S(t) = \exp(-50) = 0.19 \cdot 10^{-22}$ which is a near zero probability of survival.
+This allows for the conversion of a cumulative hazard back into a probability. Given the earlier example of a cumulative hazard of fifty the survival probability can be determined: $S(t) = \exp(-50) = 0.19 \cdot 10^{-22}$ which is a near zero probability of survival.
 
 The pdf can also be expressed in terms of the exponent of the negative integral of the hazard function, or the cumulative hazard.
 
@@ -73,7 +73,7 @@ $$ f(t) = h(t) \exp \left (- \int_0^t h(u) du  \right ) = h(t) \exp(-H(t)) $$
 
 As can be seen, regardless which of the functions are available, it is possible to produce a transformation which will return all the others. This is useful because generally, the hazard or survival time rather than the density are the objects of interest.
 
-All of these functions can be conditioned to only extend to events that occur after a particular point in time. This is useful when dealing with lifetimes where the system has not been observed from the time it became operational ($t = 0$). It is also useful when constructing expressions about particular intervals of time\cite{Cleves2008}.
+All of these functions can be conditioned to only extend to events that occur after a particular point in time. This is useful when dealing with lifetimes where the system has not been observed from the time it became operational. It is also useful when constructing expressions about particular intervals of time\cite{Cleves2008}.
 
 $$ h(t|T > t_0) = h(t) $$
 
@@ -91,12 +91,12 @@ $$ E(t|T > t_0) = \int^\infty_{t_0} S(t) dt \cdot \frac{1}{S(t_0)} $$
 
 
 
+
 % <!-- Maybe insert the picture of what you're measuring
 % Survival Function, color in the right hand side of that function
 %  -->
 
 
-% -->
 
 \section*{Common Lifetime Distributions}
 
