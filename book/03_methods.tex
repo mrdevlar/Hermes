@@ -189,7 +189,7 @@ This provides a route to expressing what is actually being observed within a tim
 
 \section*{Hazard Modeling with Covariates}
 
-Hazards provide the means by which to assess the risk status of the any particular system in our population over any given interval. This makes it an ideal metric through which to model the probability of failure. The constructions discussed so far have had an implicit assumption. Namely, that the lifetime distribution $T$ arises from systems under identical conditions. Effectively, this implies that the population from which these lifetimes are derived is homogeneous. In practice, it is obvious that not all systems will be subject to the identical risks and conditions. Systems will have distinct manufacturers and locations, not to mention being exposed to an assortment of risks due to different operating conditions. However, to enable this diversification of lifetimes, a method to integrate covariates that formalizes this diversity is needed. The following section describes the multiplicative hazard model which provides a means to express this diversity, and demonstrates several extensions to the model to allow for more complex covariates.
+Hazards provide the means by which to assess the risk status of any particular system in the population over any given interval. This makes it an ideal metric through which to model the probability of failure. The constructions discussed so far have had an implicit assumption. Namely, that the lifetime distribution $T$ arises from systems under identical conditions. Effectively, this implies that the population from which these lifetimes are derived is homogeneous. In practice, it is obvious that not all systems will be subject to the identical risks and conditions. Systems will have distinct manufacturers and locations, not to mention being exposed to an assortment of risks due to different operating conditions. However, to enable this diversification of lifetimes, a method to integrate covariates that formalizes this diversity is needed. The following section describes the Multiplicative Hazard Model which provides a means to express this diversity, and demonstrates several extensions to the model to allow for more complex covariates.
 
 To incorporate covariates into the model of lifetimes, a function, $g(\cdot)$, that permits offsets for each individual system, $i$, is required\cite{Cleves2008}\cite{Tableman2004}.
 
@@ -200,18 +200,20 @@ This function should alter the hazard by a given vector of covariates, $\textbf{
 
 There are numerous routes to finding the function $g(\cdot)$. Yet, it is important to keep in mind the constraint on the original hazard. Any hazard must be positive, this means that the output of $g(\cdot)$ must also be positive. There is nothing to prevent the linear model from producing a negative output. However, a simple logarithmic transformation can prevent this outcome.
 
-$$ \ln(Y) = \boldsymbol\beta^T \textbf{x}_i \\
-	Y = \exp(\boldsymbol\beta^T \textbf{x}_i) $$
+\begin{align*}
+\ln(Y) = \boldsymbol\beta^T \textbf{x}_i \\
+Y = \exp(\boldsymbol\beta^T \textbf{x}_i)
+\end{align*}
 
 Once the positive output hazard is ensured, there remains the question of the functional form of $g(\cdot)$. The most common solution is to treat the linear model as acting multiplicatively on a shared baseline hazard, $h_0(t)$.
 
 $$ h_i(t|\textbf{x}_i) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i) $$
 
-The baseline hazard, $h_0(t)$ is the common hazard when  covariates are zero, as $\exp(0) = 1$. In this way, it is the considered the "baseline" as it occurs prior to considering any additional variables\cite{Kleinbaum2005}. Note the linear predictor does not contain an intercept term and rather begins with $beta_1 x_1$. This is because the baseline hazard already acts as an intercept for the model. The absence of the effect of the covariates would simply be the baseline hazard at that time.
+The baseline hazard, $h_0(t)$ is the common hazard when all covariates are zero, as $\exp(0) = 1$. In this way, it is the considered the baseline as it occurs prior to considering any additional variables\cite{Kleinbaum2005}. Note, the linear predictors do not contain an intercept term and rather begin with $beta_1 x_1$. This is because the baseline hazard already acts as an intercept for the model. The absence of the effect of the covariates would simply be the baseline hazard at that time.
 
 This is the simplest form of the Multiplicative Hazard Model\footnote{Also known as the Cox Regression Model}. Whereas in a standard linear model, the estimated parameter value implies a linear change in every individual's fitted value, in this Multiplicative Hazard Model, a change in an estimated parameter implies a proportional shift in each individuals hazard at all time points\cite{Mason2015}.
 
-There is nothing deterministic about the use of multiplication as the form of $g(\cdot)$. The linear model could have just as easily been added rather than multiplied. There exists an entire class of additive hazard models\cite{Lin1997}. However, they are far less common in practice, mainly due to difficulties fitting these models\cite{Boshuizen2010}.
+There is nothing deterministic about the use of multiplication as the form of $g(\cdot)$. The linear model could have just as easily been added rather than multiplied. There exists an entire class of additive hazard models\cite{Lin1997}. However, they are far less common in practice, mainly due to difficulties fitting these models\cite{Boshuizen2010}. This lack of application has led to a smaller quantity of available literature.
 
 This multiplicative construction separates the baseline hazard, $h_0(t)$ from the linear model, $\boldsymbol\beta^T \textbf{x}_i$. This allows for the baseline hazard and linear model to be estimated separately of each other. This greatly simplifies the fitting process. Furthermore, it allows for the comparison of the effect of any set of covariates through a proportion, known as a hazard ratio.
 
@@ -219,8 +221,9 @@ $$ \frac{h(t|x_1)}{h(t|x_2)} = \frac{h_0(t) \exp(\boldsymbol\beta^T x_1)}{h_0(t)
 
 In the above ratio, it is clear that time, $t$, along with the baseline hazard, $h_0(t)$, are factored out of the final construction. In this form, the hazard is not dependent on time, just on the effect of the covariates. This specific form of the Multiplicative Hazard Model is known as the Proportional Hazards Model.
 
-% <!-- 
-% The feature that allows for time to be factored out of the model is also a limitation. In separating the baseline hazard from the linear model, a hard assumption is made about the nature of the covariates. Specifically, that they must be time-invariant, or remain static through time. This does apply to many types of covariates that can specify the level of risk to which a system is exposed, like its location, manufacturer or whether it is part of a control group. 
+The feature that allows for time to be factored out of the model is also a limitation. In separating the baseline hazard from the linear model, a hard assumption is made about the nature of the covariates. Specifically, that they must be time-invariant, or remain static through time. This does apply to many types of covariates that can specify the level of risk to which a system is exposed, like its location, manufacturer or whether it is part of a control group. 
+
+Fortunately, feature engineering methods can be used to construct variables that are time-invariant from ones that are time-dependent in raw data. This allows for any variables to be used within these models. Furthermore, it is possible to extend the Multiplicative Hazard model to explicitly include both time-dependent effects and time-varying covariate\cite{Dekker2008}. However, due to the complexity of the model fitting mechanisms of these constructions, especially with Frailties, these are beyond the scope of this text. 
 
 % Fortunately, the Multiplicative Hazard Model is relatively easy to extend to address two temporal concerns that of time-dependent effects and time-varying covariates\cite{Dekker2008}. However, in extending the model beyond this simplified form the proportionality of hazards is lost, as the linear model segment becomes dependent on time.
 
@@ -235,8 +238,6 @@ In the above ratio, it is clear that time, $t$, along with the baseline hazard, 
 % $$ h_i(t|\textbf{x(t)}_i) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i)  $$
 
 % In this form, model covariates and lifetime no longer so easily separated. This may periodically lead to identifiability problems, as some covariates are highly collinear with time\cite{Rodriguez2007}. In such cases, it is especially important to perform adequate feature engineering to minimize the risk of identifiability problems.
-%  -->
-% <!-- SEGWAY NEEDED -->
 
 \section*{Frailty}
 
