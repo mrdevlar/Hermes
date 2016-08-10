@@ -233,7 +233,7 @@ To facilitate processing two transformation blocks and generated quantities bloc
 
 Once a Stan program is defined, it is compiled into C++ code before being executed. The program begins by validating the known values of $y$ and $x$ and checking their types and constraints. It then generates a sequence of non-independent identically distributed parameter values, which have a marginal distribution of $\Pr(\theta|y,x)$. This translation into C++ code greatly improves the speed and portability of Stan-built models. However, it also results in requirements that do not arise in earlier Bayesian samplers. Notably, Stan is statically typed and requires that all variables have their constraints explicitly defined, if they exist. This is partially to enforce explicitness among model designers, but it is also to prevent modeling errors from creating problematic outputs. For example, a Weibull baseline hazard requires that both the shape and scale parameters be strictly positive otherwise the function is not defined. There is no reason for any sampler to make use of negative parameter values when sampling from these distributions. Strict type setting with constraints ensures that these types of errors are caught as soon as they occur rather than potentially disturbing final results. 
 
-Once the sampler runs until convergence, Stan writes the output values of each parameter to disk in a \listinline{csv} file. This permits sampling to be done multiple times with the values of each iteration updating the output. This is particularly useful for large models that may require a greater amount of computer time for each iteration.
+Once the sampler runs until convergence, Stan writes the output values of each parameter to disk in a \lstinline{csv} file. This permits sampling to be done multiple times with the values of each iteration updating the output. This is particularly useful for large models that may require a greater amount of computer time for each iteration.
 
 Stan comes with a great many of built-in operations and functions. The basic operations are the same as one expects from any programming language, logical and arithmetic operations, matrix and array manipulation, type conversions as well as built in functions for handling mathematical operations like solving ordinary differential equations. The language also includes functions that encode most statistical distributions including those that are found in the previous chapter. Furthermore, sampling statements are used that vectorize the sampling from known distributions improving the speed of execution. 
 
@@ -329,7 +329,7 @@ $$ \hat{p} = \sum^n_{i=1} \text{VAR}[\ln p(y_i|\theta^s)] $$
 
 Where $Var[\cdot]$ is the sample variance.
 
-This entire process is easily implemented in Stan as it can be directly computed in the \listinline{generated quantities{}} block\cite{Vehtari2014}. As with all information criterion metrics, the lower the value the less deviation there is from the true data generating distribution. 
+This entire process is easily implemented in Stan as it can be directly computed in the \lstinline{generated quantities} block\cite{Vehtari2014}. As with all information criterion metrics, the lower the value the less deviation there is from the true data generating distribution. 
 
 The C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
@@ -373,13 +373,13 @@ functions {
 \end{lstlisting}
 
 
-Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a \listinline{function} block at the beginning of the model code. The above code block contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the \listinline{H\_t()} and \listinline{log\_h\_t()} functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the \listinline{surv\_dens\_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
+Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a \lstinline{function} block at the beginning of the model code. The above code block contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the \lstinline{H\_t()} and \lstinline{log\_h\_t()} functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the \lstinline{surv\_dens\_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
 
 The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
-It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input \listinline{cens\_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
+It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input \lstinline{cens\_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
-Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \listinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
+Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \lstinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
 
 
 \begin{lstlisting}
@@ -395,7 +395,7 @@ data {
 \end{lstlisting}
 
 
-To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named \listinline{list()} The names within the list should correspond to the variable names found in the \listinline{data{}} block above. The number of observations, the values of those observations and the values of any covariates should be defined here. Note that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. 
+To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named \lstinline{list()} The names within the list should correspond to the variable names found in the \lstinline{data} block above. The number of observations, the values of those observations and the values of any covariates should be defined here. Note that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. 
 
 
 
@@ -412,7 +412,7 @@ parameters {
 \end{lstlisting}
 
 
-The parameters of the model also must be defined. In this case, this includes the parameters for the Weibull distribution, alpha and gamma, as well as the linear coefficients, betas, associated with the model covariates. Notice the \listinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the alpha and gamma parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where this is not the case, it is best practice to apply constraints if one is aware of them.
+The parameters of the model also must be defined. In this case, this includes the parameters for the Weibull distribution, alpha and gamma, as well as the linear coefficients, betas, associated with the model covariates. Notice the \lstinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the alpha and gamma parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where this is not the case, it is best practice to apply constraints if one is aware of them.
 
 
 \begin{lstlisting}
@@ -433,7 +433,7 @@ model {
 \end{lstlisting}
 
 
-The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The \listinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the \listinline{function} block it is possible to make use of it. Note that the function being called is \listinline{surv\_dens} not \listinline{surv\_dens\_log} as was defined in the \listinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the \listinline{\_log} suffix and acts accordingly. 
+The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The \lstinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the \lstinline{function} block it is possible to make use of it. Note that the function being called is \lstinline{surv\_dens} not \lstinline{surv\_dens\_log} as was defined in the \lstinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the \lstinline{\_log} suffix and acts accordingly. 
 
 Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
 
@@ -448,17 +448,17 @@ generated quantities {
 }
 \end{lstlisting}
 
-Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \listinline{generated quantities{}} block. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. 
+Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \lstinline{generated quantities} block. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. 
 
-Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \listinline{\_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom function.
+Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \lstinline{\_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom function.
 
-Once the model is fit, the parameters can be easily printed out or plotted, with the \listinline{print()} and \listinline{plot()} functions respective. Predictive accuracy can also be assessed using the custom \listinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
+Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
 
 % <!-- QQ-Plot and Traceplot Output -->
 
 A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
 
-Sampling convergence should be performed. This can be done in several ways. The simplest method is to make use of the \listinline{traceplot()} function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the \listinline{Rhat} column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
+Sampling convergence should be performed. This can be done in several ways. The simplest method is to make use of the \lstinline{traceplot()} function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the \lstinline{Rhat} column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
 
 \begin{lstlisting}
 generated quantities {
@@ -471,7 +471,7 @@ generated quantities {
 
 Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index respectively. 
 
-To generate the WAIC or LOO metrics, a point-wise log likelihood, \listinline{log\_lik}, is required. The \listinline{generated quantities{}} block allows for these likelihoods to be extracted upon completion of sampling. The functions \listinline{WAIC()} and \listinline{LOO()} from the \listinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the \listinline{log\_lik} vector is included in the output. 
+To generate the WAIC or LOO metrics, a point-wise log likelihood, \lstinline{log\_lik}, is required. The \lstinline{generated quantities} block allows for these likelihoods to be extracted upon completion of sampling. The functions \lstinline{WAIC()} and \lstinline{LOO()} from the \lstinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the \lstinline{log\_lik} vector is included in the output. 
 
 To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. As stated earlier, the C-Index should be computed on a hold-out sample to prevent overfitting. The simulated data used for this exploration, provides the added ability to estimate the C-Index on the uncensored lifetimes. 
 
@@ -480,7 +480,7 @@ This completes the analysis. A prediction can now be output from the model for e
 % <!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
 
 
-This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the \listinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a \listinline{sig} parameter is added to the \listinline{log\_h\_t()}, \listinline{H()} and \listinline{surv\_dens\_log()} functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
+This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the \lstinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a \lstinline{sig} parameter is added to the \lstinline{log\_h\_t()}, \lstinline{H()} and \lstinline{surv\_dens\_log()} functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
 
 \begin{lstlisting}
 functions {
@@ -511,7 +511,7 @@ functions {
 
 If this is the only change that is made, a univariate Gamma Frailty Model results. To implement a shared Gamma Frailty Model an additional construction is needed. Specifically, an iteration over the grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. In this example, the each park is given its own estimate of the Frailty variance. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
 
-To do this in Stan must be made aware that the parameter \listinline{sig} will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of \listinline{sig} sampling is being done. Thus, the following additions are required to the Stan program:
+To do this in Stan must be made aware that the parameter \lstinline{sig} will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of \lstinline{sig} sampling is being done. Thus, the following additions are required to the Stan program:
 
 
 \begin{lstlisting}
@@ -536,7 +536,7 @@ model {
 \end{lstlisting}
 
 
-The \listinline{data{}} block introduces a grouping variable, \listinline{park} which is the length of the number of observations, \listinline{N} It identifies  park membership of any single observation with an integer value. The \listinline{park\_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \listinline{parameters{}} block for defining the dimensions of the \listinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \listinline{model{}} block, 
+The \lstinline{data} block introduces a grouping variable, \lstinline{park} which is the length of the number of observations, \lstinline{N} It identifies  park membership of any single observation with an integer value. The \lstinline{park\_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \lstinline{parameters} block for defining the dimensions of the \lstinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \lstinline{model} block, 
 
 This completes the shared Frailty extension. Again, upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described above. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. 
 
