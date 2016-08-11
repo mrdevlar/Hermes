@@ -309,7 +309,7 @@ The restriction of $k = \lambda$ is made to ensure that the average Frailty is e
 
 $$ f(z) = \frac{1}{\Gamma(\frac{1}{\sigma^2})} \left (\frac{1}{\sigma^2}  \right )^{\frac{1}{\sigma^2}} t^{\frac{1}{\sigma^2} - 1} \exp(-\frac{t}{\sigma^2}) $$
 
-This density can be transformed into a unconditional survival function and consequently the into the unconditional density and hazard. 
+This density can be transformed into a unconditional survival function and consequently the into the unconditional density and hazard using the following formulas:
 
 $$ f(t) = \frac{h_0(t)}{(1+ \sigma^2 H_0(t))^{\frac{1}{\sigma^2}+ 1 } }$$
 
@@ -317,8 +317,7 @@ $$ S(t) = (1 + \sigma^2 H_0(t))^{- \frac{1}{\sigma^2}}$$
 
 $$ h(t) = \frac{h_0(t)}{1 + \sigma^2 H_0(t)} $$
 
-
-$$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
+% $$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
 
 
 The corresponding hazard and cumulative hazard can be replaced with the appropriate lifetime distribution. For example, let $h(t) =  \frac{\alpha}{\gamma} \left (\frac{t}{\gamma}  \right )^{\alpha - 1}$ be Weibull distributed baseline hazard with a Frailty following a Gamma distribution $Z \sim \text{Gamma}(\frac{1}{\sigma^2}, \frac{1}{\sigma^2} )$. Thus, the unconditional survival and hazard functions are given by the following expressions:
@@ -331,29 +330,29 @@ Where $\sigma^2$ represents the variance of the Gamma distributed Frailty.
 
 % <!-- Possibly introduce covariance structure between independent frailties - Want but not need -->
 
-There are several important issues that should be kept in mind when introducing Frailties to time-to-event models.
-
-A Frailty is assumed to be constant over time. If the random variable $Z$ is introduced as a Frailty into the Multiplicative Hazard Model, then the estimation of $Z$ is fixed for all time points. However, this does not mean that Frailties experience no temporal effects. If the expectation and variance of the Frailty $Z$ are derived:
+There are several important issues that should be kept in mind when introducing Frailties to time-to-event models. A Frailty is assumed to be constant over time. If the random variable $Z$ is introduced as a Frailty into the Multiplicative Hazard Model, then the estimation of $Z$ is fixed for all time points. However, this does not mean that Frailties experience no temporal effects. This can be seen when the conditional expectation and variance of the Frailty $Z$ are derived:
 
 $$\mathrm{E}[Z|\textbf{x},  T > t ] = \frac{1}{1 + \sigma^2 H_0(t) \exp(\boldsymbol\beta^T \textbf{x})} $$
 
 $$ \mathrm{V}[Z|\textbf{x},  T > t ] = \frac{\sigma^2}{(1 + \sigma^2 H_0(t) \exp(\boldsymbol\beta^T \textbf{x}))^2} $$
 
-two things of note arise. First, individuals dying at time $t$ will have a higher mean Frailty compared to survivors. Second, the variance of Frailty declines over time. Thus, early failures reduce the heterogeneity of of the population over time. However, the ratio between the average Frailty and its variance remain constant over time implying that the population does not become more homogeneous relative to the average in time\cite{Wienke2010}.
+Two things of note can be understood from the above. First, individuals dying at time $t$ will have a higher mean Frailty compared to survivors. This is because the cumulative hazard in the denominator increases as time goes on. Second, the variance of Frailty declines over time. This implies that early failures reduce the heterogeneity of of the population over time. However, the ratio between the average Frailty and its variance remain constant over time implying that the population does not become more homogeneous relative to the average in time\cite{Wienke2010}.
 
 The introduction of a Frailty, at any level, will invalidate the Proportional Hazards property\cite{Kleinbaum2005}. The property, explained in the previous section, allows for the a comparison between any set of covariates through a simple proportion. However, with the introduction of the Frailty, any sets of covariates now require the computation of a temporal effect, such that:
 
 $$ \frac{h_1(t)}{h_2(t)} = \frac{1 - \sigma^2 H_0(t)}{1 - \sigma^2 H_0(t) \exp(\boldsymbol\beta)} \exp(\boldsymbol\beta) $$
 
-This is because the ratio of specific population hazards is generally not time-invariant. As can be seen from the above equation, the hazard ratio is a decreasing function, unless there is no difference between groups or the Frailty is not relevant. The reason for this are, again, the alteration of the hazard rate in the population as high-risk individuals fail earlier leading to a lower average hazard rate over time.
+The ratio of specific population hazards is generally not time-invariant. This can be seen from the above equation, the hazard ratio is a decreasing function, unless there is no difference between groups or the Frailty is not relevant. The reason for this are, again, the alteration of the hazard rate in the population as high-risk individuals fail earlier leading to a lower average hazard rate over time.
 
-There is a significant advantage to using a parametric model for the baseline hazard when extending the model to include Frailties. The most important consequence of such a combination is that it enables the explicit description of the evolution of a Frailty over time.
+There are significant advantages to using a parametric baseline hazard when introducing Frailties into a Multiplicative Hazards Model. The most important consequence of such a combination is that it enables the explicit description of the evolution of a Frailty over time. Without a parametric form it is difficult to describe how 
 
 In a traditional context, the values of $Z_i$ are not estimated for each individual system within the population. The reasoning for this is relatively simple. An estimate of a $Z_i$ for each individual system, $i$, would require $N$ parameters. This would result in more parameters in the model than there are observations, leading to an over-saturated model. Furthermore, the estimation of individual Frailties are usually less important than group Frailties and variances. These provide useful estimates of the degree to which these groupings affect survival times, as well as identify patterns among those groups. That said, this traditional restriction is loosened in the context of Bayesian estimation where an estimation for $Z_i$ can be sampled.
 
 
 % <!-- The problem is that what is observed in a study population is no the conditional hazard but the net result for all individuals with different values of the random variable Z.
  % -->
+
+% Possibly talk about other extensions here. Lognormal Frailty, where there is no 
 
 
 \section*{Model Likelihoods}

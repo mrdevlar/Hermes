@@ -119,16 +119,16 @@ r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
-# cens_tweak = 0.1
-# # cens_tweak = 1
-# cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
-# d_i = as.numeric(r_lifetime < cens_time)
-# lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
-# sum(d_i)
+cens_tweak = 0.1
+# cens_tweak = 1
+cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
+d_i = as.numeric(r_lifetime < cens_time)
+lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
+sum(d_i)
 
 # Turn off censoring
-lifetime = r_lifetime
-d_i = rep(1, length(lifetime))
+# lifetime = r_lifetime
+# d_i = rep(1, length(lifetime))
 
 
 stan_data = list(
