@@ -241,9 +241,9 @@ Fortunately, feature engineering methods can be used to construct variables that
 
 \section*{Frailty}
 
-So far, all the models described have implicitly assumed that given a set of covariates, the resulting lifetimes are independent and drawn from the same underlying distribution with the same parameters. In practice, such an assumption, while useful, is rarely realistic. Thus, there is a need to extend the model further to allow for the modeling of correlation between observations. This is done through the introduction of a Frailty into the model.
+So far, all the models described have implicitly assumed that given a set of covariates, the resulting lifetimes are independent and drawn from the same underlying distribution with the same parameters. In practice, such an assumption, while useful, is rarely realistic. Thus, there is a need to extend the model further to allow for correlation between observations. This is done through the introduction of a Frailty into the model.
 
-A Frailty\footnote{also known as a mixed/random effect, longevity factor, susceptibility or liability. When introduced into the model, it makes a mixed hazard model, or a hierarchical hazard model} is an unmeasured random effect that is incorporated into a hazard function to account for heterogeneity in the population\cite{Hosmer2008}. This unobserved random quantity impacts the hazard function multiplicatively.
+A Frailty\footnote{Also known as a mixed/random effect, longevity factor, susceptibility or liability. When introduced into the model, it makes a mixed hazard model, or a hierarchical hazard model} is an unmeasured random effect that is incorporated into a hazard function to account for heterogeneity in the population\cite{Hosmer2008}. This unobserved random quantity impacts the hazard function multiplicatively.
 
 $$ Z\cdot h(t) $$
 
@@ -251,7 +251,7 @@ At its core, the Frailty provides a means by which to account for the fact that 
 
 Yet, much of these similar conditions are unlikely to be fully captured by the covariates in the model. This omission occurs when relevant covariates cannot be observed or are too costly to observe. It is impossible to collect all the risk factors that contribute to failure. There is rarely awareness of all contributing factors, either because their relevance is not known or because there is a lack of means to measure them. This is especially the case for complex electronic systems whose components interact with one another as well as the environment. The cost of observation is of particular relevance to the photovoltaic domain, as the inclusion of relevant data is limited by financial constraints.
 
-The form of the frailty determines how correlation structure is modeled. In its simplest form, a Frailty can be introduced into the Multiplicative Hazard Model as follows:
+The form of the frailty determines how correlation structure is modeled. A Frailty is introduced into the Multiplicative Hazard Model as follows:
 
 $$ h_i(t|\textbf{x}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i)  $$
 
@@ -259,50 +259,41 @@ $$ h_i(t|\textbf{x}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x
 
 Here, $Z$, is defined as a non-negative random variable, with some distribution, $\mathfrak{g}(\cdot)$, varying across the population\cite{Wienke2010} with $Z_i$ being the realization of the Frailty for each individual system. Generally, the Frailty distribution is standardized, resulting in an average value equal to one, $\mathrm{E}[Z] = 1$, and a variance parameter that is estimated from the data, $\text{Var}(Z) = \theta$.
 
-It is important to distinguish between the frailty and the random effect, $b_i^t$:  
+It is important to distinguish between the frailty itself and the random effect, $b_i^t$:  
 
 \begin{align*}
 h_i(t|\textbf{x}_i, Z_{i}) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i + b_i^t z_i)
 \end{align*}
 
-Where $Z_{i} = \exp(b_i^t z_{i})$ and clearly when $b_i = 0$ then $Z_i = 1$.
+Where $Z_{i} = \exp(b_i^t z_{i})$ and clearly when $b_i = 0$ then $Z_i = 1$. This illustrates that the multiplicative effect the Frailty intends to model can alternatively be viewed as an additional covariate in the linear model. 
 
 
 As the average value of the Frailty is set to one, divergences from the average characterize the effect on the hazard. Individual systems with Frailties greater than one will have a higher than average hazard, implying they are more frail. Meanwhile, individual systems with Frailties less than one will have lower than average hazard implying they are less frail. Those that are more frail will die earlier than those that are less frail.
 
-Estimating a regression model without the introduction of random effects can bias the resulting predictions if individual observations are not truly independent. In time-to-event data, this issue is compounded by temporal effects. Individual systems that are more robust will almost certainly live longer and produce more data. The population hazard declines as a result of high-risk individuals failing, but the individual hazard may continue to increase. This systematic observation of the most robust individuals will skew the computation of the average hazard. Thus, an estimate of the individual hazard rate without taking into account unobserved frailty will underestimate the hazard function to an increasingly greater extent as time goes by\cite{Aalen2008}.
+Estimating a regression model without the introduction of random effects can bias the resulting predictions if individual observations are not truly independent. In time-to-event data, this issue is compounded by temporal effects. Individual systems that are more robust will almost certainly live longer and produce more data. The population hazard declines as a result of high-risk individuals failing, but the individual hazard may continue to increase. This systematic observation of the most robust individuals will skew the computation of the average hazard. Thus, an estimate of the individual hazard rate without taking into account unobserved Frailty will underestimate the hazard function to an increasingly greater extent as time goes by\cite{Aalen2008}.
 
 The estimation of the variance parameter, $\theta$, describes the degree of diversity in baseline hazard of a population. A large $\theta$ implies a high degree of heterogeneity as lifetimes deviate heavily from the average value of one. Conversely, a small $\theta$ implies the homogeneity of lifetimes as each one will be heavily concentrated near the average value.
 
-% <!-- Maybe state theta = 0 :=> is no effect -->
 
 In the above construction, the Frailty is introduced in such a way that the entire population of systems is covered by a single distribution. In practice, it is more useful to estimate a Frailty for each distinct group within the population, as follows:
 
 $$ h_{ij}(t|\textbf{x}_i, Z_j) = Z_j \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ij})  $$
 
-Here, a Frailty of a collection is introduced and each distinct group $j$ is composed of a total of $k$ distinct groups. A random variable, represents the collection, $Z_j = (z_1, \dots, z_k)$. A collection is defined as a set of groups that all share a common characteristics. To be properly defined, a collection should be mutually exclusive and exhaustive given the data. For example, there can only be a finite number of parks within which inverters reside. Each park makes up a distinct group, and all of the parks make up the collection. With this structure, it is possible to estimate the Frailty, and thus the level of heterogeneity for each group. The interpretation of the Frailty and its variance are identical to what has been described previously, except localized to each distinct group. This can be extended further to allow for as many different collections as is required, simply by introducing additional Frailties into the model multiplicatively. 
-
-% <!-- 
-% For example, with a new collection $W_k$ the model extends as follows:
-
-% $$ h_{ijk}(t|\textbf{x}_i, Z_j, W_k) = Z_j \cdot W_k \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ijk}) $$
-%  -->
-
-This form of extension can be continued to any arbitrary number of collections of groups. It should be noted, that the multiplicative introduction of further Frailties reveals the underlying assumption that there is independence between lifetimes of different collections. In fact, the lifetimes of individual systems are conditionally independent given the vector of Frailties.
+Here, a Frailty of a collection is introduced and each distinct group $j$ is composed of a total of $k$ distinct groups. A random variable, represents the collection, $Z_j = (z_1, \dots, z_k)$. A collection is defined as a set of groups that all share a common characteristics. To be properly defined, a collection should be mutually exclusive and exhaustive given the data. For example, there can only be a finite number of parks within which inverters reside. Each park makes up a distinct group, and all of the parks make up the collection. With this structure, it is possible to estimate the Frailty, and thus the level of heterogeneity for each group. The interpretation of the Frailty and its variance are identical to what has been described previously, except localized to each distinct group. This can be extended further to allow for as many different collections as is required, simply by introducing additional Frailties into the model multiplicatively. It should be noted, the multiplicative introduction of further Frailties implies independence between lifetimes of different collections. In fact, the lifetimes of individual systems are conditionally independent given the vector of Frailties. 
 
 % <!-- This independence between Frailties can be relaxed, but is often less useful in practice
 
 % In this case rather than defining a single variance parameter, $\theta$, a covariance matrix $\mathbf{V}$ which is meant to represent the dependency structure between each Frailty.
 %  -->
 
-Any distribution which is positive and whose mean can be set to one can be used as the Frailty distribution, $\mathfrak{g}(\cdot)$. The most commonly used distribution is the Gamma. It is used largely due to is flexibility in modeling positive outcomes and due to the ease with which it allows for the expression of all required formulas\cite{Wienke2010}. The density of the Gamma is given as follows:
+Any distribution which is positive and possesses a mean can be set to one, can be used as the Frailty distribution, $\mathfrak{g}(\cdot)$. The most commonly used distribution is the Gamma. It is utilized due to its flexibility in modeling positive outcomes as well as the ease with which it allows for the expression of all required formulas\cite{Wienke2010}. The density of the Gamma is given as follows:
 
 \begin{align*}
 f(t) = \frac{\lambda^k t^{k-1} \exp(-\lambda t)}{\Gamma(k)} \tag{$ k>0, \lambda > 0 $}
 \end{align*}
 
 
-As stated earlier, there is a need to fix the average Frailty and estimate the variance.
+As stated earlier, the goal here is to fix the average Frailty to one and estimate the variance. This can be done the following way:
 
 \begin{align*}
 \mathrm{E}[Z] = \frac{k}{\lambda} = 1 \tag{$ k = \lambda $}
@@ -318,7 +309,7 @@ The restriction of $k = \lambda$ is made to ensure that the average Frailty is e
 
 $$ f(z) = \frac{1}{\Gamma(\frac{1}{\sigma^2})} \left (\frac{1}{\sigma^2}  \right )^{\frac{1}{\sigma^2}} t^{\frac{1}{\sigma^2} - 1} \exp(-\frac{t}{\sigma^2}) $$
 
-That can be transformed into a unconditional survival function and consequently the into the unconditional density and hazard. 
+This density can be transformed into a unconditional survival function and consequently the into the unconditional density and hazard. 
 
 $$ f(t) = \frac{h_0(t)}{(1+ \sigma^2 H_0(t))^{\frac{1}{\sigma^2}+ 1 } }$$
 
@@ -326,10 +317,9 @@ $$ S(t) = (1 + \sigma^2 H_0(t))^{- \frac{1}{\sigma^2}}$$
 
 $$ h(t) = \frac{h_0(t)}{1 + \sigma^2 H_0(t)} $$
 
-% <!-- 
-% $$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
 
-%  -->
+$$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
+
 
 The corresponding hazard and cumulative hazard can be replaced with the appropriate lifetime distribution. For example, let $h(t) =  \frac{\alpha}{\gamma} \left (\frac{t}{\gamma}  \right )^{\alpha - 1}$ be Weibull distributed baseline hazard with a Frailty following a Gamma distribution $Z \sim \text{Gamma}(\frac{1}{\sigma^2}, \frac{1}{\sigma^2} )$. Thus, the unconditional survival and hazard functions are given by the following expressions:
 
