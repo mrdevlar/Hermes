@@ -48,21 +48,24 @@ The evolution of predictive maintenance strategies is not universally applicable
 
 This thesis addresses the development of a predictive maintenance process in informationally sparse systems, specifically using the photovoltaic inverters as the object of interest. It seeks to fill the void in the current literature on predictive maintenance in environments where there is limited access to operational data. It addresses the problem through the use of Bayesian time-to-event analysis, a statistical modeling approach used to estimate the remaining lifetime of an object. As such, it progresses through the process of developing a predictive maintenance system starting from the mathematics of time-to-event analysis through to the practical concerns of deploying an process. Finally, it presents an application using simulated data using Stan, the probabilistic programming language.
 
+
+\newpage
+
 \section*{List of Abbreviations}
 
 \begin{itemize}
 
-\item PV -  Photovoltaic
-\item BOS - Balance of Systems
-\item AC - Alternating Current
-\item DC - Direct Current
-\item kWh - KiloWatt Hours
+\item[] PV -  Photovoltaic
+\item[] BOS - Balance of Systems
+\item[] AC - Alternating Current
+\item[] DC - Direct Current
+\item[] kWh - KiloWatt Hours
 
-\item pdf - Probability Density Function
-\item cdf - Cumulative Distribution Function
-\item MLE - Maximum Likelihood Estimation
-\item MCMC - Markov Chain Monte Carlo
-\item HMC - Hamiltonian Monte Carlo
+\item[] pdf - Probability Density Function
+\item[] cdf - Cumulative Distribution Function
+\item[] MLE - Maximum Likelihood Estimation
+\item[] MCMC - Markov Chain Monte Carlo
+\item[] HMC - Hamiltonian Monte Carlo
 
 
 \end{itemize}
@@ -71,20 +74,20 @@ This thesis addresses the development of a predictive maintenance process in inf
 
 \begin{itemize}
 
-\item $T$ - Random variable for a lifetime
-\item $t$ - Realization of the above random variable; an instance of time.
-\item $Y$ - Random variable for observed lifetimes
-\item $y$ - Realization of the above random variable; an observed instance of time.
-\item $d$ - Censoring Indicator
-\item $\theta$ - Unknown Parameter
+\item[] $T$ - Random variable for a lifetime
+\item[] $t$ - Realization of the above random variable; an instance of time.
+\item[] $Y$ - Random variable for observed lifetimes
+\item[] $y$ - Realization of the above random variable; an observed instance of time.
+\item[] $d$ - Censoring Indicator
+\item[] $\theta$ - Unknown Parameter
 
-\item $f(\cdot)$ - Probability Density Function
-\item $F(\cdot)$ - Cumulative Distribution Function
-\item $S(\cdot)$ - Survival Function (Reliability Function)
-\item $h(\cdot)$ - Hazard Function (Conditional Failure Rate, Intensity, Force of Mortality)
-\item $H(\cdot)$ - Cumulative Hazard Function
-\item $h_0(\cdot)$ - Baseline Hazard Function
-\item $H_0(\cdot)$ - Baseline Cumulative Hazard Function
+\item[] $f(\cdot)$ - Probability Density Function
+\item[] $F(\cdot)$ - Cumulative Distribution Function
+\item[] $S(\cdot)$ - Survival Function (Reliability Function)
+\item[] $h(\cdot)$ - Hazard Function (Conditional Failure Rate, Intensity, Force of Mortality)
+\item[] $H(\cdot)$ - Cumulative Hazard Function
+\item[] $h_0(\cdot)$ - Baseline Hazard Function
+\item[] $H_0(\cdot)$ - Baseline Cumulative Hazard Function
 
 \end{itemize}
 

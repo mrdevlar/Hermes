@@ -433,50 +433,41 @@ In the Bayesian paradigm, the posterior distribution encompasses the credibility
 
 $$ \Pr(\theta|D) = \frac{\mathcal {L}(\theta|D)\Pr(\theta)}{\int_\theta\mathcal {L}(\theta|D)\Pr(\theta) d\theta} $$
 
-Where $D$ is the observed data. It can be seen from the above equation, that the posterior probability is proportional to the likelihood multiplied by the prior. This is because the denominator is a normalizing constant. Thus,
+Where $D$ is the observed data. It can be seen from the above equation, that the posterior probability is proportional to the likelihood multiplied by the prior. 
 
 $$ \Pr(\theta|D) \propto  \mathcal {L}(\theta|D)\Pr(\theta) $$
 
-This normalizing constant is interesting because in Bayesian models, it often lacks a closed form solution and has to be estimated through an alternative process. This produces a similar situation to the one found in the time-to-event models described so far in the text. When the closed form solution is not available, the methods of Bayesian model estimation become useful. Shared Frailties can be re-contextualized as Bayesian hierarchical models. However, even when closed form solutions are available, the Bayesian method of fitting may prevent the need to manually integrate a complex likelihood. 
+This is because the denominator is a normalizing constant: 
 
-% <!-- Features in complex models, like variances, often require asymptotic arguments to be computed, that is assuming these arguments are possible in the first place. In contrast, in the Bayesian framework these features are simply by-products of sampling from the posterior and their calculation is trivial\cite{Ibrahim2005}. -->
+$$ \int_\theta\mathcal {L}(\theta|D)\Pr(\theta) d\theta $$
 
-The most common approach for describing the posterior distributions make use of MCMC methods. These methods generate representative samples from the posterior distribution.
+This normalizing constant is interesting because in Bayesian models, it often lacks a closed form solution and has to be estimated through an alternative process. This produces a similar situation to the one found in the time-to-event models. When the closed form solution is not available, similar methods as those used for fitting Bayesian models become useful. However, even when closed form solutions are available, the Bayesian method of fitting may prevent the need to manually integrate a complex likelihood. Additionally, features like shared Frailties can be re-contextualized as Bayesian hierarchical models. This forestalls the requirement for asymptotic arguments required to compute model extensions. In contrast, in the Bayesian context, these features are simply by-products of sampling from the posterior and their calculation becomes substantially simpler\cite{Ibrahim2005}. 
 
-% <!-- Make explicit what value is being recorded -->
-
-The general process, also known as the Metropolis-Hastings algorithm\cite{Metropolis1953}, for generating these representative samples proceeds as follows: First, an arbitrary starting point along the distribution is selected and its value is recorded. Next, a candidate point is randomly selected around the starting point. If the value of the candidate point is greater than the starting point, then the algorithm moves to that new point. If the value of the candidate point is less than the starting point, then the the move is made probabilistically. The probability of the move is determined by the ratio of values between the starting point and the candidate point. Such that:
+The most common approach for describing a posterior distribution make use of MCMC methods. These methods generate representative samples from the posterior distribution. The earliest method for generating representative samples, also known as the Metropolis-Hastings algorithm\cite{Metropolis1953}, proceeds as follows: First, an arbitrary starting point along the distribution is selected and its value is recorded. This value is the posterior probability at that point. Next, a candidate point is randomly selected around the starting point. If the value of the candidate point is greater than the starting point, then the algorithm moves to that new point. If the value of the candidate point is less than the starting point, then the the move is made probabilistically. The probability of the move is determined by the ratio of values between the starting point and the candidate point. Such that:
 
 $$ \Pr_{\text{accept}} = \min\left (\frac{\Pr(\theta_{\text{proposed}}|D)}{\Pr(\theta_{\text{current}}|D)} , 1 \right )$$
 
 Once the algorithm decides whether or not to move, the process begins again, with that position being the new starting point. This process is repeated a very large number of times, which creates a representative sample of the posterior distribution.
 
-There have been numerous attempts to improve the efficiency of this simple algorithm. The largest inefficiencies arise in two areas in two areas. First, the tails of the distribution require a large amount of iterations to accurately map. Second, distributions with several local optima requires a greater amount of iterations for the algorithm to escape these minima/maxima. Many of the attempts to improve the efficiency of this algorithm have tried to address these points. The most recent is Hamiltonian Monte Carlo (HMC), which was codified into the Stan statistical software package\cite{Carpenter2016}. The key difference between what was described above and HMC, is the proposal distribution\cite{Kruschke2015}. This makes HMC more computationally costly, but considerably more efficient as fewer samples are required to build a representative posterior distribution.
+There have been numerous attempts to improve the efficiency of this simple algorithm. The largest inefficiencies arise in two areas. The tails of the distribution require a large amount of iterations to accurately map. This is because each step toward those tails has a very small probability of being accepted. For much the same reason, distributions with several local optima require a greater amount of iterations for the algorithm to escape these optima. Many of the attempts to improve the efficiency of this algorithm have tried to address these deficiencies. The most recent is Hamiltonian Monte Carlo (HMC), which was codified into the Stan statistical software package\cite{Carpenter2016}. 
+
+The central difference between the Metropolis-Hastings algorithm and HMC, is the mechanism for determining the proposal distribution\cite{Kruschke2015}. 
 
 After the algorithm selects a starting point, it has to randomly select a candidate point. These candidates are usually drawn from a symmetric distribution like a multivariate Gaussian. This fixed shape leads to candidates being selected regardless of where in the distribution the starting point is. As a result, candidates can just as easily travel away from the posterior mode as towards it. HMC uses a proposal distribution that differs based upon the current position. It alters the proposal by calculating the gradient, or the direction of change, of the posterior distribution. It then distorts the proposal distribution to match that gradient.
 
-The process of selecting from candidates is also altered in HMC. Rather than simply selecting a point from the proposal distribution and evaluating it, HMC uses a 'momentum', $\phi$ around the candidate point. The area around the selected point is then allowed to be sampled given this momentum. The final point is selected based on the value that the point 'rolls' into\cite{Kruschke2015}. The probability of acceptance takes into account this momentum when finally deciding on a move.
+The process of selecting from candidates is also altered in HMC. Rather than simply selecting a point from the proposal distribution and evaluating it, HMC uses a 'momentum', around the candidate point. The area around the selected point is then allowed to be sampled given this momentum. The final point is selected based on the value that the point 'rolls' into\cite{Kruschke2015}. The probability of acceptance takes into account this momentum when finally deciding on a move.
 
 $$ \Pr_{\text{accept}} = \min\left (\frac{\Pr(\theta_{\text{proposed}}|D)\Pr(\phi_{\text{proposed}}|D)}{\Pr(\theta_{\text{current}}|D)\Pr(\phi_{\text{current}}|D)} , 1 \right )$$
 
-As before, this process is repeated a multitude of times until the posterior probability distribution is approximated. From this approximation, it is possible to extract the features necessary to facilitate model fitting.
+As before, this process is repeated a multitude of times until the posterior probability distribution is approximated. From this approximation, it is possible to extract the features necessary to enable model fitting. These alterations make HMC more computationally costly, as the gradient is required to be calculated. However, it is also considerably more efficient as fewer samples are required to build a representative posterior distribution.
+
 
 Numerous additional technical details are required to properly understand HMC which are not covered in this text, such as No U-Turn sampling, step size and duration tuning. Fortunately, software will optimize these particularities for a user. If the reader is interested in these topics, the 'Extended Reading' section provides some references of interest.
-
-
-% <!--
-% Consider explaining:
-% - No U-Turn
-% - Step Size
-% - Duration
-
-% All from Stan Manual, 24-25
-%  -->
 
 
 
 \section*{Extended Reading}
 
-For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. For a detailed description of Frailty Modeling, including detailed mathematical derivations of incrementally complex models, Wienke\cite{Wienke2010}, as well as Duchateau and Janssen\cite{Duchateau2008}. For more details on Hamiltonian Monte Carlo, the reader is directed to Kruschke\cite{Kruschke2015}, Gelman et al.\cite{Gelman2014} For a technical review of Bayesian estimation, Marin and Roberts\cite{Marin2007} are suggested.
+For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. For a detailed description of Frailty Modeling, including detailed mathematical derivations of incrementally complex models, Wienke\cite{Wienke2010}, as well as Duchateau and Janssen\cite{Duchateau2008} should be explored. For more details on Hamiltonian Monte Carlo, the reader is directed to Kruschke\cite{Kruschke2015}, Gelman et al\cite{Gelman2014}. For a technical review of Bayesian estimation, Marin and Roberts\cite{Marin2007} are suggested.
 
 
