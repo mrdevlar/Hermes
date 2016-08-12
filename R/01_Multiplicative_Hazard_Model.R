@@ -23,7 +23,7 @@ h_t = function(lifetime, alp, gam, lin_pred){
 
 N = 500
 alp = 3
-gam = 180
+gam = 5
 
 
 # Inverter-Level Covariates
@@ -111,8 +111,7 @@ lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 
 # (II)
 # No random effect
-# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
-r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(lin_pred)) )^(1/alp)
+r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
 
 # With random effect, note bias
 # r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)

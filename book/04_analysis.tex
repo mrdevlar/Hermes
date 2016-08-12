@@ -219,7 +219,7 @@ Stan is the most recent addition to the toolkit for fitting Bayesian models. Lik
 A Stan program defines a statistical model through a conditional probability function, $\Pr(\theta|y,x)$, where $\theta$ is a sequence of unknown modeled values while $y$ is composed of modeled known values, and $x$ of unmodeled covariates and constants\cite{StanDevelopmentTeam2016}. Stan is an imperative probabilistic programming language. This implies that the language requires the user to tell it how to do something more than just declare that it should be done. Precise instructions have to be written verbatim to achieve the desired modeling outcome. Yet, as the previous chapter demonstrated, models are constructed by combining relatively simple building blocks. This permits models of any complexity to be defined and built upon.
 
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \begin{lstlisting}[belowskip=-2 \baselineskip]
         functions {
@@ -268,16 +268,13 @@ While these built-ins are useful for the vast majority of tasks, time-to-event m
 
 \section*{Building The Model}
 
-This section brings all the previous insights together and provides a step-by-step process to fitting time-to-event models. It begins with the construction and output of a simple Multiplicative Hazard Model, it then extends to this model to accommodate shared Gamma Frailties and time-dependent covariates. The emphasis in this section is on practical exposition, over theory. As a result, some implementation details may be omitted for the sake of brevity. 
+This section brings all the previous insights together and provides a step-by-step process to fitting and evaluating time-to-event models. It begins with the construction and output of a simple Multiplicative Hazard Model, it then extends to this model to accommodate shared Gamma Frailties. The emphasis in this section is on practical exposition, over theory. As a result, some implementation details may be omitted for the sake of brevity. 
 
-It is important to start simple with model construction. A good first step is to fit a basic Multiplicative Hazards Model, one that does not contain any time-dependent covariates or random effects. This can be done in the following way:
+It is important to start simple with model construction. A good first step is to fit a basic Multiplicative Hazards Model, in this case with a Weibull baseline hazard. 
 
-% <!-- Also critical is that each  failure mode is separately fit, with the censored observations being included divided into each data set.  -->
-
-% <!-- FigureXXX -->
-
-
-\begin{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
 functions {
   real log_h_t(real lifetime, real alp, real gam, real lin_pred);
   real H_t(real lifetime, real alp, real gam, real lin_pred);
@@ -300,36 +297,45 @@ functions {
     return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
   }
 }
-\end{lstlisting}
+    \end{lstlisting}
+    \caption{Function Block for Multiplicative Hazard Model}
+    \label{mhazm_funs}
+\end{figure}
 
 
-Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a \lstinline{function} block at the beginning of the model code. The above code block contains the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the \lstinline{H\_t()} and \lstinline{log\_h\_t()} functions. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the \lstinline{surv\_dens\_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
+Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a \lstinline{function} block at the beginning of the model code. Figure~\ref{mhazm_funs} contains code block for the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the \lstinline{H\_t()} and \lstinline{log\_h\_t()} functions, respectively. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the \lstinline{surv\_dens\_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
 
 The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
 It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input \lstinline{cens\_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
-Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \lstinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
+Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. These are provided in Figure~\ref{mhaz_data}. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \lstinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
 
 
-\begin{lstlisting}
-data {
-  int<lower=0>  N;
-  vector[2]     lifetime[N];
-  real          x_err1[N];
-  real          x_err2[N];
-  real          x_repair[N];
-  real          x_kWh[N];
-  real          park_weather[N];
-}
-\end{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
+		data {
+		  int<lower=0>  N;
+		  vector[2]     lifetime[N];
+		  real          x_err1[N];
+		  real          x_err2[N];
+		  real          x_repair[N];
+		  real          x_kWh[N];
+		  real          park_weather[N];
+		}
+    \end{lstlisting}
+    \caption{Data Block for Multiplicative Hazard Model}
+    \label{mhaz_data}
+\end{figure}
 
 
-To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named \lstinline{list()} The names within the list should correspond to the variable names found in the \lstinline{data} block above. The number of observations, the values of those observations and the values of any covariates should be defined here. Note that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. 
+To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named \lstinline{list()} The names within the list should correspond to the variable names found in the \lstinline{data} block in Figure~\ref{mhaz_data}. The number of observations, the values of those observations and the values of any covariates must be defined here. Note, that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. Of course, caution is advised as it is possible that the data one wishes to import cannot take on real values. 
 
 
-
-\begin{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
 parameters {
   real<lower=0> alp;
   real<lower=0> gam;
@@ -339,13 +345,17 @@ parameters {
   real          beta_kWh;
   real          beta_weather;
 }
-\end{lstlisting}
+    \end{lstlisting}
+    \caption{Parameters Block for Multiplicative Hazard Model}
+    \label{mhaz_params}
+\end{figure}
 
 
-The parameters of the model also must be defined. In this case, this includes the parameters for the Weibull distribution, alpha and gamma, as well as the linear coefficients, betas, associated with the model covariates. Notice the \lstinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the alpha and gamma parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where this is not the case, it is best practice to apply constraints if one is aware of them.
+The parameters of the model also must be defined. This is done in Figure~\ref{mhaz_params}. In this case, this includes the parameters for the Weibull distribution, \lstinline{alp} and \lstinline{gam}, as well as the linear coefficients, \lstinline{beta\_}, associated with the model covariates. Notice the \lstinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the \lstinline{alp} and \lstinline{gam} parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where where the sampler does not explicitly warn about negative probabilities, it is best practice to apply constraints if one is aware of them.
 
-
-\begin{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
 model {
   for(i in 1:N){
     lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
@@ -360,29 +370,48 @@ model {
   beta_kWh ~ normal(0,10);
   beta_weather ~ normal(0, 1);
 }
-\end{lstlisting}
+    \end{lstlisting}
+    \caption{Model Block for Multiplicative Hazard Model}
+    \label{mhaz_model}
+\end{figure}
 
 
-The model block encapsulates the high-level configuration of the model and defines the sampling process. Here, both the method of sampling as well as priors are defined. The sampling is declared through a sampling statement. The \lstinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the \lstinline{function} block it is possible to make use of it. Note that the function being called is \lstinline{surv\_dens} not \lstinline{surv\_dens\_log} as was defined in the \lstinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the \lstinline{\_log} suffix and acts accordingly. 
+The model block encapsulates the high-level configuration of the model and defines the sampling process. Figure~\ref{mhaz_model}, defines both the priors as well as the method of sampling. The sampling is declared through a sampling statement. The \lstinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the \lstinline{function} block it is possible to make use of it. Note that the function being called is \lstinline{surv\_dens} not \lstinline{surv\_dens\_log} as was defined in the \lstinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the \lstinline{\_log} suffix and acts accordingly. This is meant to ensure that the focus is retained on the characteristics of the model rather than its fitting process. 
 
-Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. 
+Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. This is especially true of the scale parameter of the Weibull distribution, \lstinline{gam}, whose true value is often far from zero. Weakly regularizing priors centered near zero are advisable, especially if all the variables were scaled beforehand. If there is some existing knowledge about the expected lifetime of a system, a prior can also be used as a means by which to introduce this expertise into the model. 
 
 
 
-\begin{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
 generated quantities {
   vector[N] pred_log_h_t;
   for(i in 1:N){
     pred_log_h_t[i] <- log_h_t(lifetime[i,2], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 }
-\end{lstlisting}
+    \end{lstlisting}
+    \caption{Generated Quantities Block for Multiplicative Hazard Model}
+    \label{mhaz_quants}
+\end{figure}
 
-Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \lstinline{generated quantities} block. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. 
+Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \lstinline{generated quantities} block. This is shown in Figure~\ref{mhaz_quants}. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \lstinline{\_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom range function.
 
-Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \lstinline{\_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom function.
+\begin{lstlisting}
+              mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+alp           2.96       0 0.13  2.72  2.87  2.96  3.04  3.21  4797    1
+gam           5.10       0 0.10  4.91  5.03  5.10  5.17  5.30 11654    1
+beta_err1     0.21       0 0.06  0.10  0.17  0.21  0.25  0.33 10551    1
+beta_err2     2.99       0 0.13  2.73  2.90  2.98  3.07  3.24  4844    1
+beta_repair  -0.23       0 0.05 -0.34 -0.26 -0.23 -0.19 -0.12 12435    1
+beta_kWh     -3.92       0 0.17 -4.26 -4.04 -3.92 -3.81 -3.60  4897    1
+beta_weather  0.25       0 0.06  0.14  0.21  0.25  0.28  0.36  9761    1
+    \end{lstlisting}
 
-Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
+Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. The \lstinline{print()} output can be seen in Figure~\ref{mhaz_print}. It includes what is generally expected from a linear model output, the mean values of the posterior, standard errors, the distributions standard deviations and quantiles. Additionally two metrics for diagnosing convergence issues are given. The \lstinline{n\_eff} is a crude measure of effective sample size. As the MCMC process produces autocorrelated samples, the effective samples are an estimate of the number of independent samples in the process, this number should be high relative to the number of samples given. Very low numbers can be a sign of bias in the outcome. The \lstinline{Rhat} is the Gelman-Rubin statistic, which can roughly be thought of as a estimate of the convergence of the Markov chains to the target distribution\cite{Gelman1992}. If convergence occurs, \lstinline{Rhat} approaches 1 from above. As such values greater than one can suggest that the model has not yet converged and the samples should not be trusted.
+
+Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
 
 % <!-- QQ-Plot and Traceplot Output -->
 
