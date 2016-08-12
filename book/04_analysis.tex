@@ -398,7 +398,9 @@ generated quantities {
 
 Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \lstinline{generated quantities} block. This is shown in Figure~\ref{mhaz_quants}. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \lstinline{\_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom range function.
 
-\begin{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
               mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
 alp           2.96       0 0.13  2.72  2.87  2.96  3.04  3.21  4797    1
 gam           5.10       0 0.10  4.91  5.03  5.10  5.17  5.30 11654    1
@@ -407,19 +409,33 @@ beta_err2     2.99       0 0.13  2.73  2.90  2.98  3.07  3.24  4844    1
 beta_repair  -0.23       0 0.05 -0.34 -0.26 -0.23 -0.19 -0.12 12435    1
 beta_kWh     -3.92       0 0.17 -4.26 -4.04 -3.92 -3.81 -3.60  4897    1
 beta_weather  0.25       0 0.06  0.14  0.21  0.25  0.28  0.36  9761    1
-    \end{lstlisting}
+\end{lstlisting}
+    \caption{Generated Quantities Block for Multiplicative Hazard Model}
+    \label{mhaz_print}
+\end{figure}
 
-Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. The \lstinline{print()} output can be seen in Figure~\ref{mhaz_print}. It includes what is generally expected from a linear model output, the mean values of the posterior, standard errors, the distributions standard deviations and quantiles. Additionally two metrics for diagnosing convergence issues are given. The \lstinline{n\_eff} is a crude measure of effective sample size. As the MCMC process produces autocorrelated samples, the effective samples are an estimate of the number of independent samples in the process, this number should be high relative to the number of samples given. Very low numbers can be a sign of bias in the outcome. The \lstinline{Rhat} is the Gelman-Rubin statistic, which can roughly be thought of as a estimate of the convergence of the Markov chains to the target distribution\cite{Gelman1992}. If convergence occurs, \lstinline{Rhat} approaches 1 from above. As such values greater than one can suggest that the model has not yet converged and the samples should not be trusted.
+Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. The \lstinline{print()} output can be seen in Figure~\ref{mhaz_print}. It includes what is generally expected from a linear model output, the mean values of the posterior, standard errors, the distributions standard deviations and quantiles. Additionally two metrics for diagnosing convergence issues are given. The \lstinline{n\_eff} is a crude measure of effective sample size. As the MCMC process produces autocorrelated samples, the effective samples are an estimate of the number of independent samples in the process, this number should be high relative to the number of samples given. Very low numbers can be a sign of bias in the outcome. The \lstinline{Rhat} is the Gelman-Rubin statistic, which can roughly be thought of as a estimate of the convergence of the Markov chains to the target distribution\cite{Gelman1992}. If convergence occurs, \lstinline{Rhat} approaches 1 from above. As such values greater than one can suggest that the model has not yet converged and the samples should not be trusted. Alternatively, convergence can be checked visually through the use of a traceplot. Figure~\ref{mhaz_traceplot} illustrates the traceplot for the \lstinline{alp} and \lstinline{gam} parameters. Ideally, there should be no visible pattern in the traceplot and it should be centered around the mean of the parameter value. 
 
-Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics{img/mhaz_traceplot}
+    \caption{Traceplot of \lstinline{alp} and \lstinline{gam} Parameters}
+    \label{mhaz_traceplot}
+\end{figure}
+
+
+
+% Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
 
 % <!-- QQ-Plot and Traceplot Output -->
 
-A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
+% <!-- ln(-ln(S(t))) => check baseline-->
+% A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
+Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index. 
 
-Sampling convergence should be performed. This can be done in several ways. The simplest method is to make use of the \lstinline{traceplot()} function in R which displays the history of the sampling iterations. Any irregularities in the sampling will be visible in this plot. An alternative method is to examine the model output and check the \lstinline{Rhat} column. If this value is greater than one, it may be a symptom of a convergence problem with the model.
-
-\begin{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
 generated quantities {
   vector[N] log_lik;
   for (i in 1:N){
@@ -427,10 +443,13 @@ generated quantities {
   }
 }
 \end{lstlisting}
+    \caption{Log Likelihood in Generated Quantities Block for Multiplicative Hazard Model}
+    \label{mhaz_loglik}
+\end{figure}
 
-Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index respectively. 
 
-To generate the WAIC or LOO metrics, a point-wise log likelihood, \lstinline{log\_lik}, is required. The \lstinline{generated quantities} block allows for these likelihoods to be extracted upon completion of sampling. The functions \lstinline{WAIC()} and \lstinline{LOO()} from the \lstinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the \lstinline{log\_lik} vector is included in the output. 
+
+To generate the WAIC metric, a point-wise log likelihood, \lstinline{log\_lik}, is required. Figure~\ref{mhaz_loglik} demonstrates how to retrieve this value. The \lstinline{generated quantities} block allows for these likelihoods to be extracted upon completion of sampling. The functions \lstinline{WAIC()} and \lstinline{LOO()} from the \lstinline{rethinking} package can be used to compute the WAIC and LOO value for the model under the assumption that the \lstinline{log\_lik} vector is included in the output. 
 
 To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. As stated earlier, the C-Index should be computed on a hold-out sample to prevent overfitting. The simulated data used for this exploration, provides the added ability to estimate the C-Index on the uncensored lifetimes. 
 
@@ -438,7 +457,7 @@ This completes the analysis. A prediction can now be output from the model for e
 
 % <!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
 
-% <!-- ln(-ln(S(t))) => check baseline-->
+
 
 This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the \lstinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a \lstinline{sig} parameter is added to the \lstinline{log\_h\_t()}, \lstinline{H()} and \lstinline{surv\_dens\_log()} functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
 
@@ -500,7 +519,7 @@ The \lstinline{data} block introduces a grouping variable, \lstinline{park} whic
 
 This completes the shared Frailty extension. Again, upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described above. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. 
 
-One of the joys of working with Stan is its ability to be extended indefinitely. Additional flexibility can be added to the model a similar manner as was done with the park. For example, Frailty parameters can be included that account for the variation on inverter model or if there is reason to believe the baseline hazard is different per grouping. A stratified baseline hazard can be introduced that provides a different $\alpha$ and $\gamma$ parameter per group. Even, a correlation structure can be given to the Frailty parameters. The extension potential is limitless. 
+One of the joys of working with Stan is its ability to be extended indefinitely. Additional flexibility can be added to the model a similar manner as was done with the park. For example, Frailty parameters can be included that account for the variation on inverter model or if there is reason to believe the baseline hazard is different per grouping. A stratified baseline hazard can be introduced that provides a different \lstinline{alp} and \lstinline{gam} parameter per group. Even, a correlation structure can be given to the Frailty parameters. The extension potential is limitless. 
 
 
 
