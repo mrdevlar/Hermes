@@ -39,9 +39,7 @@ Raw data can rarely be input into a model as-is. The first chapter broadly exami
 
 % <!-- Reason for using simulated data -->
 
-Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. Attribute-value data can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. 
-
-The input data then provides a table of the last observed value of each system and their respective covariates. These values can then be transformed into a table which can be fed into Stan. 
+Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. This data format can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. The input data then provides a table of the last observed value of each system and their respective covariates. These values can then be transformed into a table which can be fed into Stan. 
 
 % <!-- Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required.  -->
 
@@ -49,87 +47,33 @@ The input data then provides a table of the last observed value of each system a
 % $$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
 % -->
 
-$$ (Y_ijk, d_{ijk}, Z_j,  \textbf{x}_{ijk}) $$
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{ll}
+    Covariate/Feature & Description \\
+    time  & observed time \\
+    censor & censoring indicator  \\
+    id    & unique identifier for inverter \\
+    park  & unique identifier for park \\
+    type  & inverter type: central string or micro \\
+    kWh\_l30d & average kwh in last 30 days standardized \\
+    weather\_l6m & count of extreme weather events in last 6 months \\
+    err\_code01\_l30d & count of minor errors in last 30 days \\
+    err\_code02\_l30d & count of major errors in last 30 days \\
+    repair\_days & days since last repair \\
+    \end{tabular}%
+  \label{vars}%
+  \caption{Covariates/Features of Simulated Data}
+\end{table}%
 
 
-\begin{lstlisting}
-time	
-censor	
-id	
-park	
-type	
-kWh_l30d	
-weather_l6m	
-err_code01_l30d	
-err_code02_l30d	
-repair_days
-\end{lstlisting}
+The Table~\ref{vars} gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
 
-The above table gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
+Recall that the input for the models was structured as follows:
 
-<!-- From the above table, it should be clear that that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days. -->
+$$ (Y_ij, d_{ij}, Z_i,  \textbf{x}_{ij}) $$
 
-The general summary of the simulated data is provided in the Figure below. It should be noted that this data is an example of what should arise after the feature engineering process is complete. As stated earlier, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can accurately encapsulate a failure mode of a device.
-
-
-
-\begin{lstlisting}
-Figure: Simulated Data Structure
-
-500 Inverters
-
-5 Parks with 150, 150, 100, 50, 50 inverters, respectively.
-
-3 Types of inverters: central, string, micro. Which are distributed among the parks in the following manner:
-
-(125, 25, 0,
-75 , 50, 25,
-0  , 75, 25,
-40 ,  0, 10,
-0  , 30, 20)
-
-
-Park Level Covariates
-weather_l6m: Number of Extreme Weather Events in last 6 months
-
-Covariates
-kWh: kWh inverter output on the current day
-
-err_code01: Count of errors
-err_code02: Count of critical errors
-
-repair_days: Days since last repair or replacement
-\end{lstlisting}
-
-
-% <!-- 
-% - Data Generation Redux - Now with Numbers
-% 	- N = 500, 5 Parks, uneven number of inverters at parks
-% 	- Big Table
-% 		- Define Failure Mode (Failure is requires replacement)
-% 			- Infant Mortality
-% 			- Old Age Mortality
-% 		- Define each category $w_{ij}$
-% 			- Park - Big $\sigma^2$
-% 			- Inverter Type - Small $\sigma^2$
-% 		- Define each covariate, $\textbf{x}_{ij}$
-% 			- Days of operation
-% 			- Standardized Electrical Output - $\mathcal{N}(0,1)$
-% 			- Maintenance Logs
-% 				- Count of repairs
-% 				- Days since last repair
-% 				- Count of replacement
-% 				- Days since last replacement part
-% 			- Park Level Data
-% 				- Standardized Avg Temperature
-% 				- Standardized Humidity
-% 				- Interaction effect between low avg temp and low humidity
-
-% Several complications were added to the data.
-% - Random noise on a proportion of data 10%
-% - Certain categories were given baseline distributions with different parameters
-% - 
-%  -->
+In this case, the observation time is $Y$, the censor indicator is $d$, the park is the Frailty, $Z$, and the remaining variables make up, $\textbf{x}$. It should be noted that this data is an example of what should arise after the feature engineering process is complete. As stated earlier, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can adequately represent the failure mode of a device in order to enhance the understanding of the model not to necessarily replicate all the nuance of the real-world.
 
 % <!-- ## Simulation Process -->
 
