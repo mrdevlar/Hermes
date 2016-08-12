@@ -41,11 +41,7 @@ Raw data can rarely be input into a model as-is. The first chapter broadly exami
 
 Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. This data format can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. The input data then provides a table of the last observed value of each system and their respective covariates. These values can then be transformed into a table which can be fed into Stan. 
 
-% <!-- Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required.  -->
 
-% <!-- 
-% $$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
-% -->
 
 \begin{table}[htbp]
   \centering
@@ -69,21 +65,19 @@ Data required for a predictive maintenance process often comes from several diff
 
 
 
-The Table~\ref{dat_vars} gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
+Table~\ref{dat_vars} gives an illustration of how data should be structured on input. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. 
 
 Recall that the input for the models was structured as follows:
 
 $$ (Y_ij, d_{ij}, Z_i,  \textbf{x}_{ij}) $$
 
-In this case, the observation time is $Y$, the censor indicator is $d$, the park is the Frailty, $Z$, and the remaining variables make up, $\textbf{x}$. It should be noted that this data is an example of what should arise after the feature engineering process is complete. As stated earlier, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can adequately represent the failure mode of a device in order to enhance the understanding of the model not to necessarily replicate all the nuance of the real-world.
-
-% <!-- ## Simulation Process -->
+In this case, the observation time is $Y$, the censor indicator is $d$, the park is the Frailty, $Z$, and the remaining variables make up, $\textbf{x}$. It should be noted that this data is an example of what should arise after the feature engineering process is complete. That said, this is far simpler data than what would result from a real-world setting and is meant for illustration purposes. The goal is to produce a set of covariates that can adequately represent the failure mode of a device in order to enhance the understanding of the model not to necessarily replicate all the nuance of the real-world.
 
 Data is simulated using inverse transform sampling. This method generates random values from any distribution using only standard uniform random values as inputs. Generally speaking, this enables the generation of values from any continuous distribution. 
 
-Briefly, let $F$ be a continuous cdf. This guarantees that $F^{-1}$ exists as a function from $[0,1]$ to $\mathbb{R}$. If $U$ is defined as a uniform random variable on the unit interval, $[0,1]$ and $T = F^{-1}(U)$, then $T$ is a random variable with the cdf, $F(\cdot)$. As the function of a random variable is also a random variable itself, the inverse of the cdf, $F^{-1}(U)$, known as the quantile function, is also a random variable\cite{Blitzstein2014}. This implies that, $F^{-1}(U) = T$ if and only if $U = F(T)$. Thus, all that is required to generate random values from any given distribution is the quantile function and uniform random variables. 
+Briefly, let $F$ be a continuous cdf. This guarantees that $F^{-1}$ exists as a function from $(0,1]$ to $\mathbb{R}$. If $U$ is defined as a uniform random variable on the unit interval, $(0,1]$ and $T = F^{-1}(U)$, then $T$ is a random variable with the cdf, $F(\cdot)$. As the function of a random variable is also a random variable itself, the inverse of the cdf, $F^{-1}(U)$, known as the quantile function, is also a random variable\cite{Blitzstein2014}. This implies that, $F^{-1}(U) = T$ if and only if $U = F(T)$. Thus, all that is required to generate random values from any given distribution is the quantile function and uniform random variables. 
 
-In this case, there is a desire to generate survival lifetimes. In the previous chapter, the cdf of a lifetime distribution was given as:
+In this case, there is a desire to generate survival lifetimes. In the previous chapter, the cdf of a general lifetime distribution was given as follows:
 
 $$ F(t) = 1 - S(t) = 1 - \exp(-H(t)) $$
 
@@ -95,7 +89,7 @@ As long as all hazards are defined to be strictly positive, $h(t) > 0$, the cumu
 
 $$ T = H^{-1}(-\ln(U)) $$
 
-Fortunately, for all of the models presented thus far an inverse of the cumulative hazard exists\footnote{except for the Gamma function}. From this starting point it is possible to generate models with considerably more complex features.
+Fortunately, for all of the models presented thus far an inverse of the cumulative hazard exists. From this starting point it is possible to generate models with considerably more complex features.
 
 For the Multiplicative Hazards Model with covariates, survival times are generated the following manner\cite{Bender2005}:
 
@@ -103,9 +97,9 @@ $$ T = H_0^{-1}(-\ln(U) \exp(-\boldsymbol\beta^T \textbf{x})) $$
 
 Where $H_0^{-1}$ is the inverse of the baseline cumulative hazard function which is multiplied by the exponentiated effect of the covariates. 
 
-This simulation can be extended further to include the a Frailty term, $Z_j$, it then becomes\cite{Romdhane2015}:
+This simulation can be extended further to include the a Frailty term, $Z_i$, it then becomes\cite{Romdhane2015}:
 
-$$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{j} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
+$$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{i} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
 
 % <!-- Or a time-dependent covariate:
 
@@ -113,19 +107,13 @@ $$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{j} \exp(\boldsymbol\beta^T \textbf{x}_{i
 
 % Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}.  -->
 
-Of course, the precise model depends on the parameterization of the baseline cumulative hazard. As stated in the previous chapter, numerous different distributions can be used for modeling lifetimes and can therefore be used for this baseline cumulative hazard. 
+Of course, the precise model depends on the parameterization of the baseline cumulative hazard. As stated in the previous chapter, numerous different distributions can be used for modeling lifetimes and any of them can be used for this baseline cumulative hazard. In this case, a Weibull baseline hazard is employed. The resulting model with shared Frailties can therefore be simulated as follows:
 
-For the simulated data, a Weibull baseline hazard is employed. The resulting model with shared Frailties can therefore be simulated as follows:
+$$T = \left [\frac{- \ln(U) }{Z_{i} \gamma^{-\alpha}  \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\alpha} $$
 
-$$T = \left [\frac{- \ln(U) }{Z_{j} \gamma^{-\alpha}  \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ]^{1/\alpha} $$
+Where $u$ is the realization of a uniformly distributed random variable, $U \sim \text{Unif}(0,1]$ and $\alpha$ and $\sigma$ are the shape and scale parameters of Weibull distribution, respectively.
 
-Where $u$ is the realization of a uniformly distributed random variable, $U \sim \text{Unif}[0,1]$ and $\alpha$ and $\sigma$ are the shape and scale parameters of Weibull distribution, respectively.
 
-% <!-- 
-% Maybe include an explicit extension about simulating time-dependent covariates 
-% -->
-
-% <!-- ln(-ln(S(t))) => check baseline-->
 
 
 
@@ -424,6 +412,7 @@ This completes the analysis. A prediction can now be output from the model for e
 
 % <!-- As can be seen from the final output, the Multiplicative Hazards Model is not particularly predictive on this data. Despite retrieving the original parameters, the random variation in the baseline hazard generated during the simulation process provides only -->
 
+% <!-- ln(-ln(S(t))) => check baseline-->
 
 This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity and clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the \lstinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a \lstinline{sig} parameter is added to the \lstinline{log\_h\_t()}, \lstinline{H()} and \lstinline{surv\_dens\_log()} functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
 
