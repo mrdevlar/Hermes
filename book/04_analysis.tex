@@ -139,7 +139,7 @@ Censoring also creates problems for this technique. It results in data that is s
 
 In the time-to-event context, the Concordance Index (C-Index) can serve as a reasonable measure of the predictive performance of a model. It is commonly used in prognostic studies in the medical domain\cite{Tripepi2010}. The C-Index is the conditional concordance probability measure of a lifetime and a predictive score variable\cite{Kang2015}. In this case, the predictive score is the hazard, as it estimates the risk a system is in at a given time. The C-Index compares the relationship between the actual lifetime and the hazard of a particular model. Its computation is also relatively straight forward and is capable of being extended to include censorship.
 
-In the case for non-censored observations the following applies. Let $(t_i, h_i)$ be the observed time and hazard of an individual system, $i$, in a collection of $n$ systems.
+In the case for non-censored observations, the following applies: Let $(t_i, h_i)$ be the observed time and hazard of an individual system, $i$, in a collection of $n$ systems.
 
 Probability of concordance is defined as:
 
@@ -153,12 +153,17 @@ Then, generally the C-Index is:
 
 $$ C_{t, h} = \frac{\mathbb{P}_c}{\mathbb{P}_c + \mathbb{P}_d} $$
 
-As can be seen from the above, the C-Index is simply the fraction of concordant pairs to all pairs. Put another way, it is the proportion of times the hazard correctly orders the lifetime of a system. Of course, the above is only applicable if all lifetimes are observed and as noted earlier this is rarely the case. However, to extend the C-Index to censored observations a more imperative version of the above is required. 
+As can be seen from the above, the C-Index is simply the fraction of concordant pairs to all pairs. Put another way, it is the proportion of times the hazard correctly orders the lifetime of a system. Of course, the above is only applicable if all lifetimes are observed and, as noted earlier, this is rarely the case. However, to extend the C-Index to censored observations a more imperative version of the above is required. 
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=350pt]{img/c_index_graph}
+    \caption{Order Graph of C-Index Without and With Censoring}
+    \label{ci_graph}
+\end{figure}
 
 
-To introduce the effect of censored observations, it is easier to think of time-to-event data as an ordered graph, $\mathcal{G} = (\mathcal{V}, \mathcal{E})$\cite{Steck2008}. Each observation is a triple, $(t_i, h_i, d_i)$, with the observed time, hazard and censoring indicator for any individual system. The set of vertices $\mathcal{V}$ represent all individual triples in the data set. Each vertex, $\mathcal{V_i}$, is indicated to be either an event or censored using the censoring indicator, $d_i$. Edges, $\mathcal{E}_{ij}$ between the vertices of the graph are only drawn such that $t_i < t_j$ and no edges can come from a censored observation.
-
-% <!-- Insert Picture from Steck 2008 -->
+To introduce the effect of censored observations, it is easier to think of time-to-event data as an ordered graph, $\mathcal{G} = (\mathcal{V}, \mathcal{E})$, and as displayed in Figure~\ref{ci_graph}\cite{Steck2008}. Each observation is a triple, $(t_i, h_i, d_i)$, with the observed time, hazard and censoring indicator for any individual system. The set of vertices $\mathcal{V}$ represent all individual triples in the data set. Each vertex, $\mathcal{V_i}$, is indicated to be either an event or censored using the censoring indicator, $d_i$. Edges, $\mathcal{E}_{ij}$ between the vertices of the graph are only drawn such that $t_i < t_j$ and no edges can come from a censored observation.
 
 In such a context, the C-Index is:
 
@@ -166,13 +171,13 @@ $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{\mathcal{E}_{ij}} I(h
 
 With $I(\cdot)$ being the indicator function, which is one if $h_i < h_j$, and zero otherwise. The $\mathcal{|E|}$ is the number of edges in the graph.
 
-It is important to take a moment and understand what this construction implies. Censored observations contribute to the C-Index only in one direction. Specifically, if and only if an uncensored failure time is smaller than a censored survival time. This makes intuitive sense. If a pair of observations are given, $i,j$, where $t_i < t_j$, then if the first observation, $i$, is an event it can still be compared to the censored observation later in time. If the score of the first observation is larger, then a concordant pair results, if not, the result is a discordant pair. However, if the first observation is censored, nothing can be said about the pair. This is because, by definition, a censored observation will have a lifetime greater than that of an event. So there is nothing to determine whether that censored observation will continue to survive until it has a lifetime less than or greater than the event observation. 
+It is important to take a moment and understand what this construction implies. Censored observations contribute to the C-Index only in one direction. Specifically, if and only if, an uncensored failure time is smaller than a censored survival time. This makes intuitive sense. If a pair of observations are given, $i,j$, where $t_i < t_j$, then if the first observation, $i$, is an event it can still be compared to the censored observation later in time. If the score of the first observation is larger, then a concordant pair results, if not, the result is a discordant pair. However, if the first observation is censored, nothing can be said about the pair. This is because, by definition, a censored observation will have a lifetime greater than that of an event. So there is nothing to determine whether that censored observation will continue to survive until it has a lifetime less than or greater than the event observation. 
 
 The C-Index can have this one-directionality made more explicit in the following way\cite{Steck2008}:
 
 $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{t_i < t_j} I(h_i < h_j) $$
 
-The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{NEEDED}. Clearly in this context, the goal is not binary classification, rather the correct ordering of events. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, $0.5$, indicates that the model has a probability equivalent to flipping a coin of achieving an accurate prediction. 
+The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{Cook2007}\cite{Tripepi2010}. Clearly in this context, the goal is not binary classification, rather the correct ordering of events. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, $0.5$, the model has a probability equivalent to flipping a coin. 
 
 % <!-- C-Index holdout sample? Leave One Out CV? -->
 
@@ -180,7 +185,7 @@ The C-Index does have its drawbacks. While the C-Index has objective value as a 
 
 In the Bayesian context, the Widely Applicable Information Criterion (WAIC) is a novel metric that provides point-wise average out-of-sample deviance\cite{Watanabe2010}. The WAIC is an improvement over the Deviance Information Criterion (DIC) which is commonly used in Bayesian analysis. It addresses several of the shortcomings that are associated with this metric, mainly stemming from the DIC being computed around a point estimate. 
 
-Briefly, the WAIC is an integral part of approximating the expected log posterior predictive density for a new dataset\cite{Vehtari2015}. 
+Briefly, the WAIC approximates the expected log posterior predictive density for a new dataset\cite{Vehtari2015}. 
 
 $$ \text{elpd} = \sum_{i=1}^n \int p_t(\tilde{y_i})\ln p(\tilde{y}|y) d\tilde{y}_i $$
 
@@ -202,7 +207,7 @@ Where $Var[\cdot]$ is the sample variance.
 
 This entire process is easily implemented in Stan as it can be directly computed in the \lstinline{generated quantities} block\cite{Vehtari2014}. As with all information criterion metrics, the lower the value the less deviation there is from the true data generating distribution. 
 
-The C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. As such, if the model is stable, both should result in the same conclusion being reached about the efficiency of a model. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
+The C-Index and WAIC evaluate performance but through different means. Both assess the generalization of the model to new data. But both have substantially different practical interpretations. Yet, if the model is stable, both should result in the same conclusion being reached about accuracy and discrimination. Yet, if an error in model design or fit has occurred, their lack of harmony should be a signal to reevaluate the current model. 
 
 
 
