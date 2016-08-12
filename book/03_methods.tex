@@ -368,13 +368,13 @@ Generally, a parametric model is fit by finding the maximum values for a set of 
 
 In the time-to-event context, there is an added complication. As noted earlier, this type of data often features censoring and truncation. When non-informative right-censoring is present, it is required to extend the likelihood. The data, $T$, is now input as a pair, $(y_i, d_i)$. The $Y$ random variable is defined as the minimum of the actual and censored lifetime. It represents the observed lifetimes found in the data. A binary random variable, $d$, is introduced to make explicit when censoring occurs. The likelihood is altered as follows:
 
-$$ \mathcal {L}(\theta|Y, d) = \prod^n_i f(y_i)^{(d_i)} S(y_i)^{1 - d_i} $$
+$$ \mathcal {L}(\theta) = \prod^n_i f(y_i)^{(d_i)} S(y_i)^{1 - d_i} $$
 
-The probability density function, $f(y_i)$, of the parametric distribution is still present in the above equation, much like in the standard likelihood. However, its contribution is now controlled by the $d$ random variable. When the variable $d$ equals one, it implies a failure event and the likelihood is evaluated in the general way. However, when $d$ is zero,  censoring occurs and the likelihood evaluates instead the survival function,$S(y_i)$, which implies the object has survived up to that particular point in time. The combination provides information about both observed events and about yet to be observed events. 
+The probability density function, $f(y_i)$, of the parametric distribution is still present in the above equation, much like in the standard likelihood. However, its contribution is now controlled by the $d$ random variable. When the variable $d$ equals one, it implies a failure event and the likelihood is evaluated in the general way. However, when $d$ is zero,  censoring occurs and the likelihood evaluates instead the survival function, $S(y_i)$, which implies the object has survived up to that particular point in time. The combination provides information about both observed events and about yet to be observed events. 
 
 Given the identities found at the beginning of this chapter, it is possible to transform the joint likelihood to make use of hazards.  Such that the likelihood becomes:
 
-$$ \mathcal {L}(\theta|Y, d) = \prod^n_i h(y_i)^{d_i} \exp(-H(y_i)) $$
+$$ \mathcal {L}(\theta) = \prod^n_i h(y_i)^{d_i} \exp(-H(y_i)) $$
 
 This generally provides easier functions to work with when constructing the likelihood. It should be noted that hazard estimation is restricted here to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard. There is a large body of research into non-parametric baseline hazard estimation, including the Kaplan-Meier and Nelson-Aalen estimators. If contrasting the effect of covariates is the predominant purpose of the model, semi-parametric or non-parametric methods are often preferred. However, the structure of the baseline hazard has substantive implications for the ability to understand the model and predict. This is especially the case when Frailties are involved as parametric hazards aide in understanding the evolution of group hazards over time. Furthermore, non-parametric methods lack the ability to forecast future hazard rates beyond the last failure time, as any value beyond the last time is simply undefined. That said, the parametric form is not without its price, namely it is an assumption about the evolution of lifetimes which must be verified to be used.
 
@@ -384,23 +384,26 @@ $$ h_i(y|\textbf{x}_i) = h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i) $$
 
 In this case the data is input as a triple, $(y_i, d_i, \textbf{x}_i)$ as the covariates are also introduced. The likelihood for this function is as follows:
 
-$$ \mathcal {L}(\theta|Y, d, \textbf{x}) = \prod^n_i \left (h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+$$ \mathcal {L}(\theta) = \prod^n_i \left (h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
-The introduction of Frailties into the Multiplicative Hazard Model is equally straight-forward. As stated earlier, the Frailty model can be generally stated as:
+The introduction of a univariate Frailty into the Multiplicative Hazard Model is straight-forward. As stated earlier, the Frailty model can be generally stated as:
 
 $$ h_{i}(y|\textbf{x}_i, Z) = Z_i \cdot h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_{i})  $$
 
 Thus, the likelihood with univariate Frailty and non-informative right censoring simply expands to:
 
-$$ \mathcal {L}(\theta|Y, Z, d, \textbf{x}) = \prod^n_i \left (Z_i \cdot h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_i \cdot H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+$$ \mathcal {L}(\theta) = \prod^n_i \left (Z_i \cdot h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_i \cdot H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
 As can be seen from the above, a product is now required to handle the additional, $k$, Frailty terms. In each extension the effect is simply the multiplication of an additional term, or set of terms, on the baseline hazard.
 
-Integrating out the Frailty parameters, $Z$, and the following likelihood remains:
+If a Gamma Frailty is used, and the parameters, $Z$ are integrated out, the likelihood of the univariate Frailty becomes: 
 
-$$ \mathcal {L}(\theta|Y, \sigma^2, d, \textbf{x}) = \prod_{i=1}^n \left (\frac{h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}{1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}  \right )^{d_i} (1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i))^{-\frac{1}{\sigma^2}} $$
+$$ \mathcal {L}(\theta) = \prod_{i=1}^n \left (\frac{h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}{1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}  \right )^{d_i} (1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i))^{-\frac{1}{\sigma^2}} $$
+
+The extension to shared Frailty adds an additional complication. Specifically, for each cluster a separate frailty 
 
 
+% Shared Frailty Likelihood goes here:
 
 There are many technical details which are required to properly fit a Frailty model. Most of these are specialized and are far beyond the scope of this text. The reader is directed to the "Extended Reading" section at the end of this chapter for more details on this front.
 
@@ -420,11 +423,11 @@ It should be noted, that these are intentionally generic and the parametric form
 
 
 
-\section*{Bayesian Model Estimation}
+\section*{Model Estimation}
 
-Model estimation can be done in a number of ways. However, as the model complexity increases with the addition of covariates and Frailties, there are increasing difficulties in using traditional methods of model fitting. Many of these issues arise from a lack of closed form solutions for the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm and provide some intuition as to the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo.
+Model estimation can be done in a number of ways. However, as model complexity increases with the addition of covariates, random effects or other features, increasing difficulties in using traditional methods of model fitting are encountered. Many of these issues arise from a lack of closed form solutions for the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm and provide some intuition as to the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo (HMC).
 
-In the preceding section, likelihoods for the various models were presented. It was stated that these parametric models could be fit by finding the maximum of the likelihood function. While in simple cases this is practical, as model complexity increases this becomes considerably more difficult. The introduction of random effects, like shared Frailties, pose an especially large challenge as closed form solutions for the models either become too complicated or cease to exist.
+In the preceding section, likelihoods for the various models were presented. It was stated that these parametric models could be fit by finding the maximum of the likelihood function. While in simple cases this is practical, as model complexity increases this becomes considerably more difficult. The introduction of random effects, like shared Frailties, pose an especially large challenge as closed form solutions for the models either become too complicated or cease to exist. In the case of Gamma Frailties, these closed form solutions still exist but are remarkably complex. The final equation from the previous section is an affirmation of that fact. However, if the model were to be extended further to introduce a different parametric distribution for the shared Frailty, the likelihood would lack an explicit formulation. For example, log-normal Frailties no longer have a closed form solution for a likelihood that factors out the Frailty. In these cases, Expectation-Maximization, Adaptive Gaussian quadrature or Markov Chain Monte Carlo (MCMC) are some of the few available numerical optimization methods that can be employed. While the exact process for fitting such model extensions is beyond the scope of this text, it is important to provide the route by which the model could be extended further. For that, a flexible fitting mechanism is required. In this case, Hamiltonian Monte Carlo, which is a special case of MCMC is used. 
 
 In the Bayesian paradigm, the posterior distribution encompasses the credibility of the parameter values, of a particular model. Unlike in traditional statistics, the vector of unknown parameter values, $\theta$, is assumed to be random variable with its own distribution as well as a prior distribution, $\Pr(\theta)$\cite{Ibrahim2005}. Inferences concerning the parameter values are based on the posterior distribution, given by:
 
@@ -438,7 +441,7 @@ This normalizing constant is interesting because in Bayesian models, it often la
 
 % <!-- Features in complex models, like variances, often require asymptotic arguments to be computed, that is assuming these arguments are possible in the first place. In contrast, in the Bayesian framework these features are simply by-products of sampling from the posterior and their calculation is trivial\cite{Ibrahim2005}. -->
 
-The most common approach for describing the posterior distributions make use of Markov Chain Monte Carlo (MCMC) methods. These methods use generate representative samples from the posterior distribution.
+The most common approach for describing the posterior distributions make use of MCMC methods. These methods generate representative samples from the posterior distribution.
 
 % <!-- Make explicit what value is being recorded -->
 
