@@ -63,13 +63,13 @@ Data required for a predictive maintenance process often comes from several diff
     err\_code02\_l30d & count of major errors in last 30 days \\
     repair\_days & days since last repair \\
     \end{tabular}%
-  \label{vars}%
   \caption{Covariates/Features of Simulated Data}
+  \label{dat_vars}%
 \end{table}%
 
 
 
-The Table~\ref{vars} gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
+The Table~\ref{dat_vars} gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
 
 Recall that the input for the models was structured as follows:
 
