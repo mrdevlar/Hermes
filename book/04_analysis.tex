@@ -49,8 +49,9 @@ Data required for a predictive maintenance process often comes from several diff
 
 \begin{table}[htbp]
   \centering
-    \begin{tabular}{ll}
-    Covariate/Feature & Description \\
+    \begin{tabular}{l|l}
+    \textbf{Covariate/Feature} & \textbf{Description} \\
+    \hline
     time  & observed time \\
     censor & censoring indicator  \\
     id    & unique identifier for inverter \\
@@ -65,6 +66,7 @@ Data required for a predictive maintenance process often comes from several diff
   \label{vars}%
   \caption{Covariates/Features of Simulated Data}
 \end{table}%
+
 
 
 The Table~\ref{vars} gives an illustration of how data should be structured on input to a time-to-event model. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. These are hypothetical covariates, and in a real world application it is important to perform proper feature extraction to develop the correct set.
