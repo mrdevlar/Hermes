@@ -1,4 +1,4 @@
-\chapter*{Domain}
+\chapter{Domain}
 \markboth{Domain}{Domain}
 
 It is impossible to perform an analysis without a thorough understanding of the context in which it is performed. At its heart, the purpose of statistics and machine learning is to glue the crystalline dimension of mathematics to a messy and unstructured world. A comprehensive understanding of the conditions of that world are required for this purpose to be successful. This ensures that the models built accurately represent what they seek to influence. Models for predictive maintenance are no exception. 
@@ -7,7 +7,7 @@ This chapter covers the domain in which a predictive maintenance process is deve
 
 
 
-\section*{Solar Industry}
+\section{Solar Industry}
 
 Altering the global energy mix is essential to the future evolution of civilization and possibly the survival of the species. Currently, the global energy mix is dominated by fossil fuels. Approximately, 82\% of global energy consumption remains the product of coal, natural gas and petroleum\cite{EIAOutlook2016}. A century of heavy reliance on these non-renewable fossil fuels as the central source of energy has had severe ecological and socio-economic consequences. Locally, there have been countless instances of environmental damage, such as air\cite{Tatlow2016} and groundwater\cite{Schlanger2014} contamination and oil spills\cite{OilSpills2015}. Additionally, regions rich in fossil fuels are destabilized as wealthy nations seek to guarantee future supplies\cite{Solnit2015}. Globally, the prospect of catastrophic climate change looms large, with implications including rising sea levels\cite{Davenport2015}, ocean acidification\cite{Feely2008}, crop failure\cite{Parry2004} and the economic devastation of a bursting carbon bubble\cite{Carrington2013}. 
 
@@ -25,7 +25,7 @@ However, further cost reductions are needed. The central bottleneck for greater 
 
 While technological innovation is likely to continue to reduce costs, there are avenues for further optimization given the current infrastructure. Among them are improvements in reliability, specifically in photovoltaic systems. Reliability has been a long-standing challenge\cite{Petrone2008} and a particularly important one given systems long payback periods\cite{Moore2008}. Innovation in components and manufacturing are methods for addressing reliability, but other more immediate options exist. Among them, optimized maintenance activities have the potential to dramatically reduce costs. Yet, these optimizations require predictions about the state of component health. Therefore, predictive maintenance is required.
 
-\section*{Predictive Maintenance}
+\section{Predictive Maintenance}
 
 Predictive maintenance is generally defined as the process of using direct monitoring of conditions, efficiency and other indicators to determine the health and likelihood of failure of a system. These results indicate when maintenance tasks should be performed\cite{Mobley2002}. Informally, predictive maintenance is an activity geared toward indicating the degree of wear of a piece of equipment and predicting its useful life\cite{Levitt2011}. In doing so, it empowers organizations with the ability to plan and act against operational hazards. This additional time allows for corrective actions to be prepared including the ordering of parts and materials, often at lower prices, coordinating labor and scheduling downtime. In turn, this allows the business, not the environment, to dictate when service interruptions occur. 
 
@@ -48,7 +48,7 @@ Maintenance history logs contain all service interactions with any particular sy
 
 Finally, failure history includes the time and conditions of observed breakdowns across systems. These values are usually entered manually upon system failure. An accurate and timely declaration that a machine has failed and the cause of that failure is central to the task of predictive maintenance. A generic recording of failure, without determining the cause, is not sufficient. Utmost care must be taken to ensure that the failure history records are current and complete. Delays in recording failure times detrimentally impact predictive performance. This is likely the single most important data source for a predictive maintenance process. If recorded inaccurately, it will undo the entire endeavor. 
 
-\section*{Predictive Maintenance in Photovoltaic Inverters}
+\section{Predictive Maintenance in Photovoltaic Inverters}
 
 Predictive maintenance presents an opportunity for improved cost optimization in the solar industry. This section examines one area of application within the industry, namely predictive maintenance of photovoltaic inverters. First, a general picture of a typical photovoltaic system at the utility-scale is given, demonstrating the role of inverter reliability in its operation. Second, a description of the considerations when developing a predictive maintenance process in this domain are given. 
 
@@ -86,7 +86,7 @@ Maintenance logs and failure history are usually kept but the level of detail de
 
 As is clear, there are some significant hurdles to overcome in the development of a predictive maintenance process within the solar energy domain. However, as the industry matures and becomes increasingly self-sustainable it will undoubtedly correct many of these imperfections. 
 
-\section*{Simulated Data and Model Justification}
+\section{Simulated Data and Model Justification}
 
 The purpose of this section is to broadly lay out the simulated data set used throughout the remainder of the text and justify the use of a Bayesian time-to-event model. 
 
@@ -94,16 +94,7 @@ The simulated data uses the basic designs of a real-world photovoltaic system, b
 
 It contains enough similar features to allow for it to be considered a reasonably representative data set. Five-hundred inverters unevenly clustered in five solar parks are generated. Each of the five-hundred inverters is provided with an ID, a model type, and a park. One generic failure mode is used. One which occurs within the first year of operation, representing sources of infant mortality commonly found in inverters\cite{Dhere2005}. The same type of process could just as easily applied to old age wear or any other failure mode. However, given that inverters expected lifetime is a decade, this would insert added complications related to technological innovation in that period which are beyond the scope of this text.
 
-
-% <!-- The other failure mode is old age wear, which peaks within ten years of operation, on average. Admittedly, this is a pessimistic choice for a time frame given improvements in inverter reliability over the preceding decade. However, it is justified in that most current solar systems will still be making use of older components. -->
-
-% <!-- The temporal granularity of the data is daily. A predictive maintenance process could be set up on an hourly, even second basis. However, the inability to act, not to mention the time required to refit the model, makes such such narrow intervals impractical. -->
-
 Electrical output data is provided, with both trend and seasonality removed. Furthermore, error codes are provided. Two generic error codes are generated whose combinations are related to the aforementioned failure mode. Park level data is also provided. Temperature and humidity measurements are provided at the solar park level, which are combined into an extreme weather event count. 
-
-%<!-- All of this data is then subject to feature engineering, to extract its relevant values for the modeling process. -->
-
-%<!-- As time-dependent data requires a trajectory in time-to-event models, this data is heavily processed to extract  -->
 
 Finally, maintenance logs are compressed into a single activity, related to component repair or replacement within a photovoltaic inverter. It should be stressed that replacement refers to subcomponents of the inverter, like capacitors, not the inverter itself. A count of the days since the last instance of such an activity is given.
 
@@ -114,9 +105,8 @@ There are numerous available techniques for generating predictions of remaining 
 The use of time-to-event models is an acknowledgment that any system's history informs the state of any other system at similar stages of deterioration. While other methods exist that could be used for the development of a predictive maintenance process, like multiclass classification models or multiclass logit models or regression trees, none of these methods operate well in a context with a limited amount of censored data. Yet, Bayesian methods make optimal use of this small amount of available data and can be adapted to deal with censoring. Furthermore, these methods provide valuable insight into the nature and composition of breakdowns. Thus, they provide valuable information that can be used for corrective and preventive purposes outside of the predictive process.
 
 
-\section*{Extended Reading}
+\section{Extended Reading}
 
 For an understanding of international energy policy and the role that solar power plays, the OECD's World Energy Outlook is a good place to start\cite{EIAOutlook2016}. For an in-depth, but dated, introduction to predictive maintenance, the reader is directed to Mobley\cite{Mobley2002}. For a general view of constructing predictive maintenance solutions in informationally rich domains, Microsoft has assembled an excellent step-by-step guide\cite{Uz2016}. For an overview of the reliability issues specifically related to photovoltaic systems, the reader is directed to Golnas\cite{Golnas2013} and Petrone\cite{Petrone2008}. 
 
 
-% Maybe add alternative methods?

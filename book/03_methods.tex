@@ -1,13 +1,13 @@
-\chapter*{Methodology}
+\chapter{Methodology}
 \markboth{Methodology}{Methodology}
 
 Time-to-event analysis/footnote{also known as survival analysis, reliability analysis and event history analysis} concerns itself with the modeling of the expected duration of time until an object experiences a well-defined event. This event is a transition between a finite number of possible states, such as from operational to non-operational or from alive to dead\cite{Andersen1992}. In this particular context, these states define the transition of a photovoltaic inverter from functional to failed.
 
-To be able to model the time until these transitions, precision in describing phenomenon is needed, and for that, mathematics is required. The following section describes the mathematical narrative that underlies the construction, manipulation and estimation of Bayesian time-to-event models. It begins with the basic functions required to understand this class of models, their relationship, and role in defining time-to-event distributions. Then, censoring and truncation which are common characteristics of time-to-event data are examined. From these basics units, the Multiplicative Hazard Model for time-to-event analysis is formulated. Following this, a hierarchical model which describes shared risk, or Frailty is introduced. Finally, a description of the likelihood and model estimation with Hamiltonian Monte Carlo is given.
+To be able to model the time until these transitions, precision in describing phenomenon is needed, and for that, mathematics is required. The following chapter describes the mathematical narrative that underlies the construction, manipulation and estimation of Bayesian time-to-event models. It begins with the basic functions required to understand this class of models, their relationship, and role in defining time-to-event distributions. Then, censoring and truncation which are common characteristics of time-to-event data are examined. From these basics units, the Multiplicative Hazard Model for time-to-event analysis is formulated. Following this, a hierarchical model which describes shared risk, or Frailty is introduced. Finally, a description of the likelihood and model estimation with Hamiltonian Monte Carlo is given.
 
 
 
-\section*{Time-to-Event Functions}
+\section{Time-to-Event Functions}
 
 The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a diverse number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}\cite{Rodriguez2007}.
 
@@ -91,19 +91,7 @@ One final construction of interest is the expected residual lifetime. This is th
 $$ E(t|T > t_0) = \int^\infty_{t_0} S(t) dt \cdot \frac{1}{S(t_0)} $$
 
 
-
-
-% <!-- Maybe insert the picture of what you're measuring
-% Survival Function, color in the right hand side of that function
-%  -->
-
-
-
-\section*{Common Lifetime Distributions}
-
-% <!--
-% Nice to have: A full page picture of the distributions with various parameters.
-%  -->
+\section{Common Lifetime Distributions}
 
 Any continuous distribution defined over the positive numbers can be used as a lifetime distribution. This section briefly covers several commonly used distributions for modeling lifetimes and provides justifications for their use. The exponential, Weibull, Gompertz and Gamma are described.
 
@@ -166,7 +154,7 @@ In traditional model fitting techniques, the incomplete gamma function imposes n
 Other lifetime distributions exist. However, the preceding cover the overwhelming majority of common parametric distributions used to model lifetimes. Further, while all the distributions described have mathematical and contextual justifications for their use in specific contexts, these are not always of utmost importance. Historically, the fact that a distribution provides an accurate fit for the data has been an overriding justification in many applications\cite{Marshall2007}. Furthermore, it should be stressed, regardless of which distribution is selected to model lifetimes, its adequacy should be checked. A topic which will be returned to in the following chapter.
 
 
-\section*{Truncation and Censoring}
+\section{Truncation and Censoring}
 
 Truncation and censoring are defining elements of time-to-event models. The functions that have been described so far have assumed an environment where the waiting time until an event is fully observed. In most real-world applications, however, it is impractical to wait until all systems in the population fail. Therefore, time-to-event models usually exist in incomplete information. Truncation and censoring provide mechanisms to formalize how that state of limited information affects the model. The following section describes how truncation and censorship affect data, provide several standardized schemes for censorship and how the phenomena can be expressed mathematically.
 
@@ -188,7 +176,7 @@ This provides a route to expressing what is actually being observed within a tim
 
 
 
-\section*{Hazard Modeling with Covariates}
+\section{Hazard Modeling with Covariates}
 
 Hazards provide the means by which to assess the risk status of any particular system in the population over any given interval. This makes it an ideal metric through which to model the probability of failure. The constructions discussed so far have had an implicit assumption. Namely, that the lifetime distribution $T$ arises from systems under identical conditions. Effectively, this implies that the population from which these lifetimes are derived is homogeneous. In practice, it is obvious that not all systems will be subject to the identical risks and conditions. Systems will have distinct manufacturers and locations, not to mention being exposed to an assortment of risks due to different operating conditions. However, to enable this diversification of lifetimes, a method to integrate covariates that formalizes this diversity is needed. The following section describes the Multiplicative Hazard Model which provides a means to express this diversity, and demonstrates several extensions to the model to allow for more complex covariates.
 
@@ -226,21 +214,8 @@ The feature that allows for time to be factored out of the model is also a limit
 
 Fortunately, feature engineering methods can be used to construct variables that are time-invariant from ones that are time-dependent in raw data. This allows for any variables to be used within these models. Furthermore, it is possible to extend the Multiplicative Hazard model to explicitly include both time-dependent effects and time-varying covariate\cite{Dekker2008}. However, due to the complexity of the model fitting mechanisms of these constructions, especially with Frailties, these are beyond the scope of this text. 
 
-% Fortunately, the Multiplicative Hazard Model is relatively easy to extend to address two temporal concerns that of time-dependent effects and time-varying covariates\cite{Dekker2008}. However, in extending the model beyond this simplified form the proportionality of hazards is lost, as the linear model segment becomes dependent on time.
 
-% The model can be generalized to include time-dependent effects, these alter how identical model coefficient affect the outcome at a specific point in time. For example, the level of lubricant may have a different impact in a recently installed machine than one that has been in operation for several weeks due to "burn in". Thus, while the covariate would remain unaltered, its effect would be dependent on when in the lifetime of the machine it is observed. This leads to the following extension:
-
-% $$ h_i(t|\textbf{x}_i) = h_0(t) \exp(\boldsymbol\beta(t)^T \textbf{x}_i)  $$
-
-% The form of these effects must be specified parametrically to be able to identify the model and estimate the parameters. Polynomials on duration, where $\boldsymbol\beta(t)$ is a linear or quadratic function of time appear as obvious candidates\cite{Rodriguez2007}. The requirement to specify the form creates an additional overhead, as such an extension will not automatically adapt time-invariant covariates to time-dependent ones. As such, care should be taken to ensure that covariates that appear time-invariant actually are.
-
-% The model can also be generalized to include time-varying covariates. This generalization is more common, as numerous variables that can be included in a model change over the lifetime of a system. The majority of condition monitoring covariates are time-varying. For example, sensor telemetry on electrical output or environmental conditions, such as average daily temperature, will always be reported with a time-stamp. These values will be different given any particular point in time. The model can be extended in the following way:
-
-% $$ h_i(t|\textbf{x(t)}_i) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i)  $$
-
-% In this form, model covariates and lifetime no longer so easily separated. This may periodically lead to identifiability problems, as some covariates are highly collinear with time\cite{Rodriguez2007}. In such cases, it is especially important to perform adequate feature engineering to minimize the risk of identifiability problems.
-
-\section*{Frailty}
+\section{Frailty}
 
 So far, all the models described have implicitly assumed that given a set of covariates, the resulting lifetimes are independent and drawn from the same underlying distribution with the same parameters. In practice, such an assumption, while useful, is rarely realistic. Thus, there is a need to extend the model further to allow for correlation between observations. This is done through the introduction of a Frailty into the model.
 
@@ -255,8 +230,6 @@ Yet, much of these similar conditions are unlikely to be fully captured by the c
 The form of the frailty determines how correlation structure is modeled. A Frailty is introduced into the Multiplicative Hazard Model as follows:
 
 $$ h_i(t|\textbf{x}_i, Z_i) = Z_i \cdot h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_i)  $$
-
-% <!-- Maybe insert S(t|Z) = S(t)^Z -->
 
 Here, $Z$, is defined as a non-negative random variable, with some distribution, $\mathfrak{g}(\cdot)$, varying across the population\cite{Wienke2010} with $Z_i$ being the realization of the Frailty for each individual system. Generally, the Frailty distribution is standardized, resulting in an average value equal to one, $\mathrm{E}[Z] = 1$, and a variance parameter that is estimated from the data, $\text{Var}(Z) = \theta$.
 
@@ -282,10 +255,6 @@ $$ h_{ij}(t|\textbf{x}_i, Z_j) = Z_j \cdot h_0(t) \exp(\boldsymbol\beta^T \textb
 
 Here, a Frailty of a collection is introduced and each distinct group $j$ is composed of a total of $k$ distinct groups. A random variable, represents the collection, $Z_j = (z_1, \dots, z_k)$. A collection is defined as a set of groups that all share a common characteristics. To be properly defined, a collection should be mutually exclusive and exhaustive given the data. For example, there can only be a finite number of parks within which inverters reside. Each park makes up a distinct group, and all of the parks make up the collection. With this structure, it is possible to estimate the Frailty, and thus the level of heterogeneity for each group. The interpretation of the Frailty and its variance are identical to what has been described previously, except localized to each distinct group. This can be extended further to allow for as many different collections as is required, simply by introducing additional Frailties into the model multiplicatively. It should be noted, the multiplicative introduction of further Frailties implies independence between lifetimes of different collections. In fact, the lifetimes of individual systems are conditionally independent given the vector of Frailties. 
 
-% <!-- This independence between Frailties can be relaxed, but is often less useful in practice
-
-% In this case rather than defining a single variance parameter, $\theta$, a covariance matrix $\mathbf{V}$ which is meant to represent the dependency structure between each Frailty.
-%  -->
 
 Any distribution which is positive and possesses a mean can be set to one, can be used as the Frailty distribution, $\mathfrak{g}(\cdot)$. The most commonly used distribution is the Gamma. It is utilized due to its flexibility in modeling positive outcomes as well as the ease with which it allows for the expression of all required formulas\cite{Wienke2010}. The density of the Gamma is given as follows:
 
@@ -318,8 +287,6 @@ $$ S(t) = (1 + \sigma^2 H_0(t))^{- \frac{1}{\sigma^2}}$$
 
 $$ h(t) = \frac{h_0(t)}{1 + \sigma^2 H_0(t)} $$
 
-% $$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
-
 
 The corresponding hazard and cumulative hazard can be replaced with the appropriate lifetime distribution. For example, let $h(t) =  \frac{\alpha}{\gamma} \left (\frac{t}{\gamma}  \right )^{\alpha - 1}$ be Weibull distributed baseline hazard with a Frailty following a Gamma distribution $Z \sim \text{Gamma}(\frac{1}{\sigma^2}, \frac{1}{\sigma^2} )$. Thus, the unconditional survival and hazard functions are given by the following expressions:
 
@@ -328,8 +295,6 @@ $$ S(t) = \left (1 + \sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha}  \right
 $$ h(t) = \frac{\frac{\alpha}{\gamma}\left (\frac{t}{\gamma}  \right )^{\alpha - 1}}{1 + \sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} } $$
 
 Where $\sigma^2$ represents the variance of the Gamma distributed Frailty.
-
-% <!-- Possibly introduce covariance structure between independent frailties - Want but not need -->
 
 There are several important issues that should be kept in mind when introducing Frailties to time-to-event models. A Frailty is assumed to be constant over time. If the random variable $Z$ is introduced as a Frailty into the Multiplicative Hazard Model, then the estimation of $Z$ is fixed for all time points. However, this does not mean that Frailties experience no temporal effects. This can be seen when the conditional expectation and variance of the Frailty $Z$ are derived:
 
@@ -350,13 +315,9 @@ There are significant advantages to using a parametric baseline hazard when intr
 In a traditional context, the values of $Z_i$ are not estimated for each individual system within the population. The reasoning for this is relatively simple. An estimate of a $Z_i$ for each individual system, $i$, would require $N$ parameters. This would result in more parameters in the model than there are observations, leading to an over-saturated model. Furthermore, the estimation of individual Frailties are usually less important than group Frailties and variances. These provide useful estimates of the degree to which these groupings affect survival times, as well as identify patterns among those groups. That said, this traditional restriction is loosened in the context of Bayesian estimation where an estimation for $Z_i$ can be sampled.
 
 
-% <!-- The problem is that what is observed in a study population is no the conditional hazard but the net result for all individuals with different values of the random variable Z.
- % -->
-
-% Possibly talk about other extensions here. Lognormal Frailty, where there is no 
 
 
-\section*{Model Likelihoods}
+\section{Model Likelihoods}
 
 The likelihood is a function of the parameters of a statistical model given data. Its formulation is the means by which the appropriate mathematical abstraction is selected after data has been observed. In this section, likelihoods for the models developed so far are formulated. First in the simplest cases, then with the model additions.
 
@@ -413,7 +374,7 @@ Where $\delta_i = \sum^{n_i}_{j=1} d_{ij}$ or the count of events within each cl
 & + \sum_{j=1}^{n_i} d_{ij} \left (\boldsymbol\beta^T \textbf{x}_{ij} + \ln h_0(t) \right )  \Bigg]
 \end{align*}
 
-% As we can see this likelihood is incredibly complex. Yet, the Gamma Frailty is one of the few that is capable of being fit in this manner, as it is one of the few distribution that has a closed form solution for the log likelihood. If 
+% As we can see this likelihood is incredibly complex. Yet, the Gamma Frailty is one of the few that is capable of being fit in this manner, as it has a closed form solution for the log likelihood. If 
 
 
 
@@ -424,20 +385,9 @@ There are many technical details which are required to properly fit a Frailty mo
 It should be noted, that these are intentionally generic and the parametric forms for both the baseline hazard and the Frailty are required to properly estimate the model.
 
 
-% <!-- Log likelihood
-
-% $$ l(\beta_i, h_0, b_i) = \sum^{n_i}_{j=1} \left [ d_{ij} (\ln h_0(t_{ij}) + \beta^tx_{ij} + b_i z^t_{ij})  - H_0(t_{ij} \exp(\beta^tx_{ij} + b_i z^t_{ij}))\right ] $$
-
-% See\cite{Romdhane2015}.
-% -->
 
 
-% <!-- Maybe insert Weibull with Gamma Frailties -->
-
-
-
-
-\section*{Model Estimation}
+\section{Model Estimation}
 
 Model estimation can be done in a number of ways. However, as model complexity increases with the addition of covariates, random effects or other features, increasing difficulties in using traditional methods of model fitting are encountered. Many of these issues arise from a lack of closed form solutions for the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm and provide some intuition as to the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo (HMC).
 
@@ -480,7 +430,7 @@ Numerous additional technical details are required to properly understand HMC wh
 
 
 
-\section*{Extended Reading}
+\section{Extended Reading}
 
 For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. For a detailed description of Frailty Modeling, including detailed mathematical derivations of incrementally complex models, Wienke\cite{Wienke2010}, as well as Duchateau and Janssen\cite{Duchateau2008} should be explored. For more details on Hamiltonian Monte Carlo, the reader is directed to Kruschke\cite{Kruschke2015}, Gelman et al\cite{Gelman2014}. For a technical review of Bayesian estimation, Marin and Roberts\cite{Marin2007} are suggested.
 

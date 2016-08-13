@@ -20,12 +20,21 @@
 \usepackage{fancyhdr}
 
 
+% ----------------------------- Headers  -----------------------------
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[RE]{\leftmark~ $\bigg|$ ~ \thepage}
-\fancyhead[LO]{\thepage~ $\bigg|$ ~ \rightmark}
+\fancyhead[RE]{\it\leftmark~ $\bigg|$ ~ \thepage}
+\fancyhead[LO]{\it\thepage~ $\bigg|$ ~ \rightmark}
 % \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
+
+
+% ----------------------- Chapters and Sections ----------------------
+\usepackage{titlesec}
+\titleformat{\chapter}{\normalfont\Huge}{}{24pt}{\Huge\it}
+\titleformat{\section}{\normalfont\LARGE}{}{18pt}{\LARGE\it}
+
+
 
 % ------------------------ Page settings -----------------------------
 % If you change these, the cover layout will also change.  In that

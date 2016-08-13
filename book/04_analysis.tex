@@ -3,9 +3,11 @@
 
 % <!-- Needs two or three opening sentences -->
 
-This section outlines the heuristic for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event models described in the previous chapter. Finally, the model fit, evaluation and performance are presented.
 
-\section*{The Goal}
+
+This chapter outlines the heuristic for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event models described in the previous chapter. Finally, the model fit, evaluation and performance are presented.
+
+\section{The Goal}
 
 The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by a score function, $V$, at a given time. Such that:
 
@@ -14,7 +16,7 @@ $$ V_{(1)}(t) > V_{(2)}(t) > \dots V_{(n)}(t) $$
 Where the time point, $t$, is fixed at the current moment for prediction. It should be noted, the absolute value of the score is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest score is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk is secondary to the action it prompts. This equates time-to-event analysis with rank-order prediction, where the order of failures, and thus the order of maintenance activities are the central goal. 
 
 
-\section*{Feature Engineering}
+\section{Feature Engineering}
 
 Feature engineering is sometimes considered the dark art of the statistical modeling process. Its informal nature makes it difficult to find a general consensus as to what the concept actually means within academic literature\cite{Zabokrtsky2015}. Loosely speaking, feature engineering is the art of creating covariates that conceptually embody aspects of a phenomena or object of observation. In this case, it refers to the task of finding and encoding historical information that can describe a photovoltaic inverter's health at any given moment. 
 
@@ -28,17 +30,15 @@ Experimentation is the last source of feature engineering and is meant to comple
 
 As feature engineering is more an art-form than a science, there is no single correct method for performing the task. Despite the lack of a clear heuristic, there are some guidelines for introducing features in time-to-event models. An important condition to keep in mind is that time-to-event models have difficulty in dealing with noisy variables across small intervals. The purpose of these models is to determine the contribution of covariates to the rate of failure. However, the introduction of stochastic variables, such as daily temperature, may not have that desired effect. This is because the effect of temperature on an inverter is only relevant in certain extreme cases over time and not in any one case. The effect of a single day of extreme temperature is unlikely to result in a failure on that day. In effect, this violates the association that the model demands between covariate value and inverter status. This can be partially offset by the use of rolling aggregates, that provide an average temperature over a specific intervals. However, by definition, these extreme events are rare, and will likely be smoothed out in these rolling aggregates. Furthermore, this does not account for compounding effects. A better solution is the use of monotonically increasing variables like a count of extreme temperatures across a specific interval. Of course, such a feature requires a definition for 'extreme', one which should be subject to experimentation on a validation set. Yet, it is important to realize that time-dependent variables require trajectories to be utilized effectively for predictive purposes. 
 
-% Anything else I can recommend?
 
 
 
 
 
-\section*{Data Management and Simulation}
+\section{Data Management and Simulation}
 
 Raw data can rarely be input into a model as-is. The first chapter broadly examined the standard data sources for a predictive maintenance process as well as provided a general outline of the simulated data. This section returns to these topics and examines the structure of the input data. It then turns its attention to the process of data simulation, introducing the quantile function and the inverse cumulative hazard. Finally, it presents the data used in the subsequent analysis.
 
-% <!-- Reason for using simulated data -->
 
 Data required for a predictive maintenance process often comes from several different database tables meant to record different aspects of a collection of systems. This includes databases that document system attributes, maintenance and failure history and condition monitoring and usage patterns. Conversely, time-to-event models, require a form of attribute-value data. This data format can be roughly thought of as tabular data. Each row is a system, and each column encodes a covariate, with one column containing the failure status of the system. The input data then provides a table of the last observed value of each system and their respective covariates. These values can then be transformed into a table which can be fed into Stan. 
 
@@ -102,11 +102,7 @@ This simulation can be extended further to include the a Frailty term, $Z_i$, it
 
 $$ T = H_0^{-1}\left [\frac{-\ln(U)}{Z_{i} \exp(\boldsymbol\beta^T \textbf{x}_{ij})}  \right ] $$
 
-% <!-- Or a time-dependent covariate:
 
-% $$ T = \left [\frac{1}{k} \ln\left ( \frac{(1 + \nu)(-\ln(U))}{\beta_t \lambda \nu \exp(\boldsymbol\beta^T \textbf{x}) } \right )  \right ]^{\frac{1}{(1+\nu)}} $$
-
-% Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}.  -->
 
 Of course, the precise model depends on the parameterization of the baseline cumulative hazard. As stated in the previous chapter, numerous different distributions can be used for modeling lifetimes and any of them can be used for this baseline cumulative hazard. In this case, a Weibull baseline hazard is employed. The resulting model with shared Frailties can therefore be simulated as follows:
 
@@ -116,7 +112,7 @@ Where $u$ is the realization of a uniformly distributed random variable, $U \sim
 
 
 
-\section*{Evaluating Model Performance}
+\section{Evaluating Model Performance}
 
 Time-to-event models focusing on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the hazard and observed remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the real lifetime difficult to observe in many cases. Knowledge of the order in which failure occur is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
@@ -126,15 +122,12 @@ Ideally, a well-performing time-to-event model should behave in a manner that ge
 
 Underfitting refers to when a model is unable to capture the complexity of the underlying phenomena. This is caused by the sin of omission, such as when important structural features or relevant covariates are not included in the model. As a result, the model is inflexible and will systematically bias results both in and out-of-sample. This is because underfitting results in an insensitivity to the structure of any sample. Overfitting refers to when random variation is treated as structure by a model. In an extreme case, overfitting can be thought of as data memorization. Thus the model memorizes the sample used to fit it. This makes it incredibly accurate in-sample. However, since new data is unlikely to have the exact same configuration as any single sample, it would result in poor out-of-sample, or generalized performance. Broadly speaking, the difference between underfitting and overfitting rests in the complexity of the model as well as the sensitivity of that model to the exact composition of the sample used to fit it\cite{McElreath2016}. 
 
-% <!-- - Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
-% - In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
-% - The use of regularizing priors -->
+
 
 As both underfitting and overfitting affect out-of-sample performance, it is important to utilize a metric that takes into account the generality of the model. One of the most common methods to do so in a predictive context is k-fold cross-validation. In the simplest version of the technique, the data is randomly split into $k$ equal sized samples. Then, the model is fit on $k-1$ samples, with the remaining one being used to evaluate out-of-sample performance. This evaluation usually takes the form of mean-squared error (MSE) or mean-absolute error (MAE), both of which measure the distance of predicted values to the observed values in the $k^{th}$ sample. This last sample is not used to fit the model thus acts as a replacement for out-of-sample data. An average of the MSE or MAE can then be taken to provide the general performance of any model. 
 
 Unfortunately, with time-to-event data, k-fold cross-validation becomes difficult to apply. The process has an implicit assumption that each observation is independent and therefore can be randomly split into $k$ samples. In a time-to-event context, the sequence of lifetimes is of importance. As such, this method would result in historical information about a lifetime being randomly excluded from model fitting. The result would be a systematically underfitting of the baseline hazard. It would also increase deviations from the real hazard over time, as changes in initial conditions would result in greater deviations from the true hazard as time progresses.
 
-% <!-- Maybe include statement about this being the result of time-to-event data coming from skewed distributions -->
 
 Censoring also creates problems for this technique. It results in data that is severely unbalanced. Very few industrial settings feature an abundance of failures. Decades of reliability engineering has ensured that most industrial systems are not prone to widespread failure. Photovoltaic inverters are not excluded from this generalization\cite{Petrone2008}. As a result, the majority of observations will be non-events. While all observations may eventually become events, as all systems eventually break down, it is highly unlikely in a production setting that the data will be balanced. Datasets where the majority of observations are non-events are the rule in time-to-event contexts, not the exception. As a result, the balanced comparison of predicted to observed lifetimes is difficult as that data makes up such a minor proportion. 
 
@@ -180,7 +173,6 @@ $$ C(t, h, d, \mathcal{G}) = \frac{1}{\mathcal{|E|}} \sum_{t_{i}|d_i = 1} \sum_{
 
 The C-Index is a generalization of the Area Under Curve (AUC) or the Receiver Operating Conditions (ROC) plot, both of which assess the predictive performance of a binary classifiers\cite{Cook2007}\cite{Tripepi2010}. Clearly in this context, the goal is not binary classification, rather the correct ordering of events. However, a similar interpretation result occurs as in other contexts. The C-Index has a range of $[0.5,1]$. At one extreme a C-Index is one, which implies the model produces a perfect prediction, such that the rankings of each hazards are concordant with each lifetime across all observations. At the other extreme, $0.5$, the model has a probability equivalent to flipping a coin. 
 
-% <!-- C-Index holdout sample? Leave One Out CV? -->
 
 The C-Index does have its drawbacks. While the C-Index has objective value as a metric for establishing the predictive accuracy of a model, it is less suitable for selecting which set of covariates produce the best model. This is because it is relatively insensitive to the inclusion of covariates\cite{Cook2007}. Different sets of covariates are unlikely to result in substantial changes in the C-Index's numerical value. The lack of substantial variation can make the task of model selection somewhat more difficult. Thus, it is important to complement the C-Index with more traditional methods of assessing the goodness-of-fit of a model. Highly recommended are the use of methods that derive out-of-sample deviance based on Information Criteria. 
 
@@ -213,7 +205,7 @@ The C-Index and WAIC evaluate performance but through different means. Both asse
 
 
 
-\section*{Stan}
+\section{Stan}
 
 Stan is the most recent addition to the toolkit for fitting Bayesian models. Like its predecessors, BUGS and JAGS, Stan seeks to abstract the task of fitting complex models with a general programmatic process. Stan makes use of Hamiltonian Monte Carlo (HMC) for the sampling of continuous parameters from a model. The existence of Stan stems from the operational difficulties of its predecessors in dealing with multilevel generalized linear modeling contexts. These software packages have requirements, such as conjugate priors or log-concave posterior densities, for models. This made anything outside of those rigid constraints incredibly inefficient when sampling was performed. In the current context, the introduction of complex shared Frailties can create similar problems with these existing modeling tools. 
 
@@ -267,7 +259,7 @@ Stan comes with a great many of built-in operations and functions. The basic ope
 While these built-ins are useful for the vast majority of tasks, time-to-event models pose a problem for 'vanilla' Stan. Much of the difficulty in building time-to-event models in Stan stems from the presence of censoring and truncation in the data. While Stan does have some support for dealing with censoring and truncation, the nature of this support is fairly inflexible, especially when dealing with more complex models, such as those with time-dependent variables or Frailties. The recent introduction a function block in the language has largely enabled the fitting of time-to-event models in Stan. As the name suggests, the function block allows for any arbitrary function to be declared. This includes the ability to explicitly define a likelihood function. This mechanism permits the development of time-to-event models as the effect of censoring can be written explicitly into the models. 
 
 
-\section*{Building The Model}
+\section{Building The Model}
 
 This section brings all the previous insights together and provides a step-by-step process to fitting and evaluating time-to-event models. It begins with the construction and output of a simple Multiplicative Hazard Model, it then extends to this model to accommodate shared Gamma Frailties. The emphasis in this section is on practical exposition, over theory. As a result, some implementation details may be omitted for the sake of brevity. 
 
@@ -427,12 +419,7 @@ Once the model is fit, the parameters can be easily printed out or plotted, with
 
 
 
-% Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
 
-% <!-- QQ-Plot and Traceplot Output -->
-
-% <!-- ln(-ln(S(t))) => check baseline-->
-% A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
 
 
 \begin{figure}[htbp]
@@ -527,31 +514,8 @@ One of the joys of working with Stan is its ability to be extended indefinitely.
 
 
 
-% <!-- 
 
-
-
-% $$ \frac{\frac{\frac{\alpha}{\gamma}(\frac{t}{\gamma})^{\alpha - 1}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}}  \exp{\beta}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}} \exp(\beta) $$
-
-% $$ \frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} $$
-
-% $$\frac{\frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} * \exp(X)}{1 + s^2 (\frac{t}{g})^a *\exp(X)} $$
-
-% $$ (1 + s^2 (\frac{t}{g})^a *\exp(X)))^{-\frac{1}{s^2}} $$
-
-
-% $$(a (t/g)^a)/(t + s^2 t (t/g)^a)$$
-
-% $$ (\alpha \exp(\beta^T X) (t/\gamma)^(\alpha-1))/(\gamma (\sigma^2 (t/\gamma)^\alpha+1) (\sigma^2 \exp(\beta^T X) (t/\gamma)^\alpha+1)) $$
-
-
-% $$ d (-log(s^2 e^X (g/t)^(-a)+1)-log(s^2 (g/t)^(-a)+1)-a log(g)+a log(t)+log(a)-log(t)+X) $$
-
-
-
-%  -->
-
-\section*{Extended Reading}
+\section{Extended Reading}
 
 For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. For more information about WAIC, Vehtari, Gelman and Garby cover the derivation and properties\cite{Vehtari2015}. For an overview of how to implement models in Stan, the massive Stan Reference Manual is likely without equal\cite{StanDevelopmentTeam2016}. For slightly less overwhelming information about Stan, the documentation page on the project website contains a wide assortment of tutorials, videos and softer introductions to the software\cite{StanDevelopmentTeam2016a}.
 
