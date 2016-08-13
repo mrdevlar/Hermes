@@ -338,18 +338,18 @@ Generally, a parametric model is fit by finding the maximum values for a set of 
 
 \begin{align*}
 \displaystyle \arg \max _{\theta }{\mathcal {L}}(\theta | T) &= \arg \max _{\theta }f(T|\theta ) \\
-{\mathcal {L}}(\theta | T) = \Pr(T | \theta) &= \prod_i f_{\theta}(t_i)
+{\mathcal {L}}(\theta | T) = \Pr(T | \theta) &= \prod_{i=1}^n f_{\theta}(t_i)
 \end{align*}
 
 In the time-to-event context, there is an added complication. As noted earlier, this type of data often features censoring and truncation. When non-informative right-censoring is present, it is required to extend the likelihood. The data, $T$, is now input as a pair, $(y_i, d_i)$. The $Y$ random variable is defined as the minimum of the actual and censored lifetime. It represents the observed lifetimes found in the data. A binary random variable, $d$, is introduced to make explicit when censoring occurs. The likelihood is altered as follows:
 
-$$ \mathcal {L}(\theta) = \prod^n_i f(y_i)^{(d_i)} S(y_i)^{1 - d_i} $$
+$$ \mathcal {L}(\theta) = \prod^n_{i=1} f(y_i)^{(d_i)} S(y_i)^{1 - d_i} $$
 
 The probability density function, $f(y_i)$, of the parametric distribution is still present in the above equation, much like in the standard likelihood. However, its contribution is now controlled by the $d$ random variable. When the variable $d$ equals one, it implies a failure event and the likelihood is evaluated in the general way. However, when $d$ is zero,  censoring occurs and the likelihood evaluates instead the survival function, $S(y_i)$, which implies the object has survived up to that particular point in time. The combination provides information about both observed events and about yet to be observed events. 
 
 Given the identities found at the beginning of this chapter, it is possible to transform the joint likelihood to make use of hazards.  Such that the likelihood becomes:
 
-$$ \mathcal {L}(\theta) = \prod^n_i h(y_i)^{d_i} \exp(-H(y_i)) $$
+$$ \mathcal {L}(\theta) = \prod^n_{i=1} h(y_i)^{d_i} \exp(-H(y_i)) $$
 
 This generally provides easier functions to work with when constructing the likelihood. It should be noted that hazard estimation is restricted here to only include parametric forms. It is incredibly common to not make parametric assumptions about the baseline hazard. There is a large body of research into non-parametric baseline hazard estimation, including the Kaplan-Meier and Nelson-Aalen estimators. If contrasting the effect of covariates is the predominant purpose of the model, semi-parametric or non-parametric methods are often preferred. However, the structure of the baseline hazard has substantive implications for the ability to understand the model and predict. This is especially the case when Frailties are involved as parametric hazards aide in understanding the evolution of group hazards over time. Furthermore, non-parametric methods lack the ability to forecast future hazard rates beyond the last failure time, as any value beyond the last time is simply undefined. That said, the parametric form is not without its price, namely it is an assumption about the evolution of lifetimes which must be verified to be used.
 
@@ -359,7 +359,7 @@ $$ h_i(y|\textbf{x}_i) = h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i) $$
 
 In this case the data is input as a triple, $(y_i, d_i, \textbf{x}_i)$ as the covariates are also introduced. The likelihood for this function is as follows:
 
-$$ \mathcal {L}(\theta) = \prod^n_i \left (h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+$$ \mathcal {L}(\theta) = \prod^n_{i=1} \left (h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
 The introduction of a univariate Frailty into the Multiplicative Hazard Model is straight-forward. As stated earlier, the Frailty model can be generally stated as:
 
@@ -367,7 +367,7 @@ $$ h_{i}(y|\textbf{x}_i, Z) = Z_i \cdot h_0(y) \exp(\boldsymbol\beta^T \textbf{x
 
 Thus, the likelihood with univariate Frailty and non-informative right censoring simply expands to:
 
-$$ \mathcal {L}(\theta) = \prod^n_i \left (Z_i \cdot h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_i \cdot H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
+$$ \mathcal {L}(\theta) = \prod^n_{i=1} \left (Z_i \cdot h_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)  \right )^{d_i} \exp(-Z_i \cdot H_0(y_i) \exp(\boldsymbol\beta^T \textbf{x}_i)) $$
 
 As can be seen from the above, a product is now required to handle the additional, $k$, Frailty terms. In each extension the effect is simply the multiplication of an additional term, or set of terms, on the baseline hazard.
 
@@ -387,15 +387,13 @@ Where $\delta_i = \sum^{n_i}_{j=1} d_{ij}$ or the count of events within each cl
 & + \sum_{j=1}^{n_i} d_{ij} \left (\boldsymbol\beta^T \textbf{x}_{ij} + \ln h_0(t) \right )  \Bigg]
 \end{align*}
 
-% As we can see this likelihood is incredibly complex. Yet, the Gamma Frailty is one of the few that is capable of being fit in this manner, as it has a closed form solution for the log likelihood. Yet, there is another way this can be done without explicitly deriving the log likelihood. Specifically, this involves treating the 
+As we can see this likelihood is incredibly complex. Yet, the Gamma Frailty is one of the few distributions that is capable of being fit in this manner, as it has a closed form solution for the log likelihood. Yet, there is another way this can be done without explicitly deriving the log likelihood. Specifically, by introducing the Frailty, $Z_j$ as a parameter on the original likelihood of the Multiplicative Hazard Model and allowing sampling to directly estimate it. Thus, the shared Frailty retrns to:
 
+$$ \mathcal {L}(\theta) = \prod^n_{i=1} \prod^{n_i}_{j=1} \left (Z_j \cdot h_0(y_{ij}) \exp(\boldsymbol\beta^T \textbf{x}_{ij})  \right )^{d_{ij}} \exp(-Z_j \cdot H_0(y_{ij}) \exp(\boldsymbol\beta^T \textbf{x}_{ij}) )$$
 
-
-
+The added benefit of directly sampling from such a likelihood construction is that the parametric form is no longer restricted to the Gamma distribution. Any positive distribution, such as the log-normal or inverse Gaussian, can be used to model the Frailty parameter. Furthermore, the restrictions imposed by the use of the Gamma as the Frailty distribution, such as a uniform correlation structure can be discarded. Of course nothing is free, and the price paid for such an extension is that the model will take substantially more computer time to fit correctly. However, this provides a powerful means to further extend the model.
 
 There are many technical details which are required to properly fit a Frailty model. Most of these are specialized and are far beyond the scope of this text. The reader is directed to the "Extended Reading" section at the end of this chapter for more details on this front.
-
-It should be noted, that these are intentionally generic and the parametric forms for both the baseline hazard and the Frailty are required to properly estimate the model.
 
 
 
