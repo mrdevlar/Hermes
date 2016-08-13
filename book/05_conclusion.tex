@@ -1,6 +1,6 @@
 \chapter*{Conclusion}
-
-
+\markboth{Conclusion}{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
 
 The preceding chapters addressed the development of predictive maintenance process in informationally sparse systems. They sought to fill the void in the current literature on predictive maintenance in domains with limited access to operational data. To address this vacuum, the lens of Bayesian time-to-event modeling, a statistical approach used to estimate the remaining lifetime of an object, was used. The text was split into three broad sections, the photovoltaic domain, the mathematical construction of time-to-event models and the analytical process. 
 
@@ -43,68 +43,7 @@ Predictive maintenance is a rapidly evolving field. However, it is one that will
 
 
 
-% <!-- 
-% While it is likely that the price of sensors will continue to decline, ...
-% As gradual improvments in photovoltaic inverters occur\cite{Fife2012}.
 
-% Something for the conclusion, start recording your data correctly and make money yo
-
-% The size and breadth of conventional capacity makes it difficult to displace existing generation methods. 
-% Yet, the size and breadth of conventional generation capacity makes it difficult to displace without technological and policy incentives. 
-
-
-% Lack of trained maintenance workers is a constraint on the industry.
-%  -->
-% <!-- 
-% ## Conclusion?
-
-% IF we know that certain factors contribute to the deterioration of objects in the environment, whether from literature or subject-matter experts in the company, we should make use of them. Simply inputing data from existing systems and expecting perfect prediction is naive and foolish. Regardless of the perpetual drive toward greater automation in model optimization, ultimately, it is people that determine what is input. A mixed model can help provide a degree of flexibility to offset what is not being input. However, it is not magic (even if it may seem that way), and its performance can be easily overcome by a more sensible strategy of inputting variables.  -->
-% <!-- 
-% - Make extensive use domain knowledge
-% - Codify everything that can be codified
-% - Do not expect sensors to save you
-
-% In summation, general guidelines for time-to-event modeling in a predictive context can be constructed. However, to quote Harrell\cite{Harrell2001}, "we are for better or worse forced to develop models empirically in the majority of cases". Thus, general guidelines should be treated more as horoscopes than rigid battle plans\cite{McElreath2016}. They should not override domain knowledge, modeling experience or common sense. 
-
-% - Increment model development. 
-% - Check the assumptions of the model. 
-% 	- Parameterization of the baseline hazard
-% 	- Check HDPI of covariates
-% 	- The affect of Frailties
-% - For each set of relevant covariates:
-% 	- Fit model
-% 	- Refit model with regularizing priors
-% - When in doubt, simulate data with the properties found in real-world sources then validate that the model returns the expected parameters.
-% - 
-
-% create a unique circumstances 
-
-% - Robustness of Fit
-% - Residual Overdispersion
-
-
-
-% - Write out the full probability model. That is, a joint probability model of all data and parameters of the model.
-% - Simulate the model with known values for the parameters.
-% - Estimate the model to recover the parameters from simulated data.
-% - Estimate the model against real data.
-% - Check that the estimation has run properly.
-% - Run posterior predictive checking/time series cross validation to evaluate model fit.
-% - Perform inference and prediction.
-% - Model comparison.
-% - Iterate!
-
-
-
-
-% ## Outline
-
-% - Model Extensions
-% 	- Repeated Failures - Repeated Events
-% 	- Competing Risk
-% 	- Improved Baseline Hazard Estimation
-
-%  -->
 
 
 \section*{Code}

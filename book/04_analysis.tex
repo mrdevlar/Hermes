@@ -1,13 +1,13 @@
 \chapter*{Analysis and Application}
 \markboth{Analysis and Application}{Analysis and Application}
-
+\addcontentsline{toc}{chapter}{Analysis and Application}
 % <!-- Needs two or three opening sentences -->
 
 
 
 This chapter outlines the heuristic for building a predictive maintenance process. It begins by restating the goal of predictive maintenance in precise terms. It then explores data management and feature engineering. The quality of a predictive maintenance process in the photovoltaic domain largely depends on the ability to extract meaningful covariates from the small amount of relevant information. How data should be combined and what methods can be used to improve the quality of covariates is discussed. Then, the data simulation process is returned to, this time with its mathematical underpinnings fully exposed. A comprehensive structure of the simulated data set is provided. Then, a brief introduction to Stan, the probabilistic programming language, is given. This includes a detailed set up of the time-to-event models described in the previous chapter. Finally, the model fit, evaluation and performance are presented.
 
-\section{The Goal}
+\section*{The Goal}
 
 The goal of a predictive maintenance process in the photovoltaic domain is to create a system that allows for the correct allocation of maintenance resources regarding inverters with the greatest potential for failure. Formally, this can be seen as creating an sequence of inverters ranked by a score function, $V$, at a given time. Such that:
 
@@ -16,7 +16,7 @@ $$ V_{(1)}(t) > V_{(2)}(t) > \dots V_{(n)}(t) $$
 Where the time point, $t$, is fixed at the current moment for prediction. It should be noted, the absolute value of the score is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest score is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk is secondary to the action it prompts. This equates time-to-event analysis with rank-order prediction, where the order of failures, and thus the order of maintenance activities are the central goal. 
 
 
-\section{Feature Engineering}
+\section*{Feature Engineering}
 
 Feature engineering is sometimes considered the dark art of the statistical modeling process. Its informal nature makes it difficult to find a general consensus as to what the concept actually means within academic literature\cite{Zabokrtsky2015}. Loosely speaking, feature engineering is the art of creating covariates that conceptually embody aspects of a phenomena or object of observation. In this case, it refers to the task of finding and encoding historical information that can describe a photovoltaic inverter's health at any given moment. 
 
@@ -35,7 +35,7 @@ As feature engineering is more an art-form than a science, there is no single co
 
 
 
-\section{Data Management and Simulation}
+\section*{Data Management and Simulation}
 
 Raw data can rarely be input into a model as-is. The first chapter broadly examined the standard data sources for a predictive maintenance process as well as provided a general outline of the simulated data. This section returns to these topics and examines the structure of the input data. It then turns its attention to the process of data simulation, introducing the quantile function and the inverse cumulative hazard. Finally, it presents the data used in the subsequent analysis.
 
@@ -112,7 +112,7 @@ Where $u$ is the realization of a uniformly distributed random variable, $U \sim
 
 
 
-\section{Evaluating Model Performance}
+\section*{Evaluating Model Performance}
 
 Time-to-event models focusing on predictive outcomes create a unique problem for evaluating performance. On one hand, the output of the model creates hazards, which are continuous and have a support on all positive real numbers $[0, \infty)$. In parametric models, these hazards are monotonically related to expected residual lifetimes. So an estimate of the difference between the hazard and observed remaining lifetime could be used to assess model performance. On the other hand, a determination of the exact failure time provides more information than is required for the task, not to mention censorship makes the real lifetime difficult to observe in many cases. Knowledge of the order in which failure occur is generally sufficient to schedule maintenance activities. This is especially true given the limited amount of information available in photovoltaic systems. 
 
@@ -205,7 +205,7 @@ The C-Index and WAIC evaluate performance but through different means. Both asse
 
 
 
-\section{Stan}
+\section*{Stan}
 
 Stan is the most recent addition to the toolkit for fitting Bayesian models. Like its predecessors, BUGS and JAGS, Stan seeks to abstract the task of fitting complex models with a general programmatic process. Stan makes use of Hamiltonian Monte Carlo (HMC) for the sampling of continuous parameters from a model. The existence of Stan stems from the operational difficulties of its predecessors in dealing with multilevel generalized linear modeling contexts. These software packages have requirements, such as conjugate priors or log-concave posterior densities, for models. This made anything outside of those rigid constraints incredibly inefficient when sampling was performed. In the current context, the introduction of complex shared Frailties can create similar problems with these existing modeling tools. 
 
@@ -259,7 +259,7 @@ Stan comes with a great many of built-in operations and functions. The basic ope
 While these built-ins are useful for the vast majority of tasks, time-to-event models pose a problem for 'vanilla' Stan. Much of the difficulty in building time-to-event models in Stan stems from the presence of censoring and truncation in the data. While Stan does have some support for dealing with censoring and truncation, the nature of this support is fairly inflexible, especially when dealing with more complex models, such as those with time-dependent variables or Frailties. The recent introduction a function block in the language has largely enabled the fitting of time-to-event models in Stan. As the name suggests, the function block allows for any arbitrary function to be declared. This includes the ability to explicitly define a likelihood function. This mechanism permits the development of time-to-event models as the effect of censoring can be written explicitly into the models. 
 
 
-\section{Building The Model}
+\section*{Building The Model}
 
 This section brings all the previous insights together and provides a step-by-step process to fitting and evaluating time-to-event models. It begins with the construction and output of a simple Multiplicative Hazard Model, it then extends to this model to accommodate shared Gamma Frailties. The emphasis in this section is on practical exposition, over theory. As a result, some implementation details may be omitted for the sake of brevity. 
 
@@ -515,7 +515,7 @@ One of the joys of working with Stan is its ability to be extended indefinitely.
 
 
 
-\section{Extended Reading}
+\section*{Extended Reading}
 
 For an excellent guide to feature engineering of time-dependent processes, the reader is directed to Microsoft Playbook by Uz\cite{Uz2016}. Inverse transform sampling in time-to-event models is covered by Bender, Augustin and Blettner\cite{Bender2005}, is extended to Frailties by Romdhane and Belkacem\cite{Romdhane2015} and into time-dependent covariates by Austin\cite{Austin2012} and Hendry\cite{Hendry2014}. For more information on the Stan probabilistic programming language, the Stan development team has a exhaustive manual in place\cite{StanDevelopmentTeam2016}. For development of measures to assess the accuracy of predictive models or any models, the classic text by Harrell is highly recommended\cite{Harrell2001}. For more information about WAIC, Vehtari, Gelman and Garby cover the derivation and properties\cite{Vehtari2015}. For an overview of how to implement models in Stan, the massive Stan Reference Manual is likely without equal\cite{StanDevelopmentTeam2016}. For slightly less overwhelming information about Stan, the documentation page on the project website contains a wide assortment of tutorials, videos and softer introductions to the software\cite{StanDevelopmentTeam2016a}.
 
