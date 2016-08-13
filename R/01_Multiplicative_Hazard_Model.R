@@ -22,8 +22,6 @@ h_t = function(lifetime, alp, gam, lin_pred){
 #### Model Parameters ####
 
 N = 500
-alp = 3
-gam = 5
 
 
 # Inverter-Level Covariates
@@ -80,6 +78,18 @@ park_weather_beta = c(0.2, 0.15, 0.5, 0.1, 0.25)
 park_weather      = s(rep(park_weather , park_N))
 park_weather_beta = rep(park_weather_beta , park_N)
 park_weather_beta = sapply(park_weather_beta, function(x) rnorm(1, x, 0.05))
+
+
+# Shared baseline hazard
+alp = 3
+gam = 5
+
+
+## OR With different baseline hazards
+# alps = c(3, 2.5, 2, 4, 7)
+# alp = rep(alps, park_N)
+# gams = c(5, 7, 10, 3, 8)
+# gam = rep(gams, park_N)
 
 
 ## Final Linear Predictor
