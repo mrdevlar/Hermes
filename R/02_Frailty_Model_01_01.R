@@ -1,5 +1,6 @@
 # Shared Frailty Model
 
+
 source("R/C-Index.R")
 library(rethinking)
 library(rstan)
@@ -112,7 +113,6 @@ lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 # (II)
 # No random effect
 # r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
-# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(lin_pred)) )^(1/alp)
 
 # With random effect, note bias
 r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij) )^(1/alp)
@@ -147,20 +147,21 @@ stan_data = list(
 
 
 
+
 #### Stan Model ####
 
 m_code = "
 
 functions {
-  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred);
-  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred);
+  real log_h_t(real lifetime, real alp, real gam);
+  real H_t(real lifetime, real alp, real gam);
 
-  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred){
-    return log(alp) - log(lifetime * ((sig^2) + (gam/lifetime)^alp)) + lin_pred;
+  real log_h_t(real lifetime, real alp, real gam){
+    return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) );
   }
   
-  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred){
-    return exp(lin_pred) * (1 / sig^2) * log((sig^2) * ((lifetime / gam)^alp) + 1);
+  real H_t(real lifetime, real alp, real gam){
+    return ( (lifetime / gam) )^alp ;
   }
   
   real surv_dens_log(vector cens_lifetime, real alp, real gam, real sig, real lin_pred){
@@ -172,7 +173,9 @@ functions {
     lifetime <- cens_lifetime[1];
     d_i      <- cens_lifetime[2];
   
-    return d_i * log_h_t(lifetime, alp, gam, sig_i, lin_pred) - H_t(lifetime, alp, gam, sig_i, lin_pred);
+    return d_i * log(sig^2) + log(tgamma((1/sig^2) + d_i)) - log(tgamma( (1/sig^2) )) -
+            ((1/sig^2) + d_i) * log(1 + sig^2 * H_t(lifetime, alp, gam) * exp(lin_pred)) +
+            d_i * (lin_pred + log_h_t(lifetime, alp, gam));
   }
 
 }
@@ -235,7 +238,9 @@ generated quantities {
 "
 
 ## Fit Model
-mf2m = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
+mf2m = stan(model_code = m_code, data = stan_data, 
+            cores = 7, chains = 2, iter = 1e4, warmup = 1e3, 
+            control = list(adapt_delta=0.99))
 
 ## Parameter Output
 print(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )

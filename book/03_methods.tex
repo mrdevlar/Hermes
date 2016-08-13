@@ -404,12 +404,15 @@ The extension to shared Frailty adds an additional complication. Specifically, f
 
 $$ \mathcal {L}(\theta) =\prod_{i=1}^n \frac{\Gamma(\frac{1}{\sigma^2} + \delta_i) \prod^{n_i}_{j=1} (h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ij}))^{d_{ij}} }{(\frac{1}{\sigma^2} + \sum_{j =1}^{n_i} H_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ij}))^{\frac{1}{\sigma^2} + \delta_i} \sigma^{\frac{2}{\sigma^2}} \Gamma(\frac{1}{\sigma^2})} $$
 
-Where $\delta_i = \sum^{n_i}_{j=1} d_{ij}$ or the count of events within each cluster and $\Gamma (t) = \int _{0}^{\infty }x^{t-1}\exp(-x)dx$ is the Gamma function. Taking the log of the above, we get the log likelihood:
+Where $\delta_i = \sum^{n_i}_{j=1} d_{ij}$ or the count of events within each cluster and the Gamma function is $\Gamma (t) = \int _{0}^{\infty }x^{t-1}\exp(-x)dx$. Taking the log of the above, we get the log likelihood\cite{Duchateau2008}:
 
-$$ \ell(\theta) = \sum^n_{i=1} \left [\delta_i \ln(\sigma^2) + \ln \Gamma\left (\frac{1}{\sigma^2} + \delta_i  \right ) - \ln\Gamma\left (\frac{1}{\sigma^2}  \right ) - \left (\frac{1}{\sigma^2} + \delta_i  \right ) \ln \left (1 + \sigma^2 \sum_{j=1}^{n_i} H_0(t)\exp(\boldsymbol\beta^T \textbf{x}_{ij})  \right ) + \sum_{j=1}^{n_i} d_{ij} \left (\boldsymbol\beta^T \textbf{x}_{ij} + \ln h_0(t) \right )  \right ] $$
+\begin{align*}
+\ell(\theta)& = \sum^n_{i=1}  \Bigg[\delta_i \ln(\sigma^2) + \ln \Gamma\left (\frac{1}{\sigma^2} + \delta_i  \right )  - \ln\Gamma\left (\frac{1}{\sigma^2}  \right )\\
+& - \left (\frac{1}{\sigma^2} + \delta_i  \right ) \ln \left (1 + \sigma^2 \sum_{j=1}^{n_i} H_0(t)\exp(\boldsymbol\beta^T \textbf{x}_{ij})  \right )\\
+& + \sum_{j=1}^{n_i} d_{ij} \left (\boldsymbol\beta^T \textbf{x}_{ij} + \ln h_0(t) \right )  \Bigg]
+\end{align*}
 
-
-
+% As we can see this likelihood is incredibly complex. Yet, the Gamma Frailty is one of the few that is capable of being fit in this manner, as it is one of the few distribution that has a closed form solution for the log likelihood. If 
 
 
 

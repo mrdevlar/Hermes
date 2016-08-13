@@ -1,4 +1,6 @@
-# Multiplicative Hazard Model
+# Shared Frailty Model
+## Bayesian Edition
+## No Pooling Model
 
 source("R/C-Index.R")
 library(rethinking)
@@ -22,8 +24,7 @@ h_t = function(lifetime, alp, gam, lin_pred){
 #### Model Parameters ####
 
 N = 500
-alp = 3
-gam = 5
+
 
 
 # Inverter-Level Covariates
@@ -81,6 +82,11 @@ park_weather      = s(rep(park_weather , park_N))
 park_weather_beta = rep(park_weather_beta , park_N)
 park_weather_beta = sapply(park_weather_beta, function(x) rnorm(1, x, 0.05))
 
+alps = c(3, 2.5, 2, 4, 7)
+alp = rep(alps, park_N)
+gams = c(5, 7, 10, 3, 8)
+gam = rep(gams, park_N)
+
 
 ## Final Linear Predictor
 
@@ -111,23 +117,24 @@ lin_pred = x_err1 * beta_err1 + x_err2 * beta_err2 + x_repair * beta_repair +
 
 # (II)
 # No random effect
-r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
+# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred)) )^(1/alp)
+# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(lin_pred)) )^(1/alp)
 
 # With random effect, note bias
-# r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij * type_Wij) )^(1/alp)
+r_lifetime = ((gam^alp) * (-log(runif(N)) * exp(-lin_pred) * park_Zij) )^(1/alp)
 
 
 ## Censoring and observed lifetimes
-cens_tweak = summary(r_lifetime)["3rd Qu."]* 1.7
+cens_tweak = 0.1
 # cens_tweak = 1
-cens_time = runif(N, min = 0, max = max(cens_tweak) )
+cens_time = runif(N, min = 0, max = max(cens_tweak * r_lifetime) )
 d_i = as.numeric(r_lifetime < cens_time)
 lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
 sum(d_i)
 
 # Turn off censoring
-# lifetime = r_lifetime
-# d_i = rep(1, length(lifetime))
+lifetime = r_lifetime
+d_i = rep(1, length(lifetime))
 
 
 stan_data = list(
@@ -135,6 +142,7 @@ stan_data = list(
   N = N,
   id = id,
   park = park,
+  park_N = length(park_N),
   park_weather = park_weather,
   x_err1 = x_err1,
   x_err2 = x_err2,
@@ -174,8 +182,11 @@ functions {
 }
 
 
+
 data {
-  int<lower=0>  N;
+  int<lower=1>  N;
+  int<lower=1>  park[N];
+  int<lower=1>  park_N;
   vector[2]     lifetime[N];
   real          x_err1[N];
   real          x_err2[N];
@@ -186,8 +197,8 @@ data {
 
 
 parameters {
-  real<lower=0> alp;
-  real<lower=0> gam;
+  real<lower=0> alp[park_N];
+  real<lower=0> gam[park_N];
   real          beta_err1;
   real          beta_err2;
   real          beta_repair;
@@ -198,13 +209,17 @@ parameters {
 
 model {
   for(i in 1:N){
-    lifetime[i] ~ surv_dens(alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
-    beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+      lifetime[i] ~ surv_dens(alp[park[i]], gam[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+                  beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
   
-  alp ~ lognormal(0, 1.5);
-  gam ~ lognormal(0, 1.5);
-  
+
+
+  for(j in 1:park_N){
+    alp[j] ~ lognormal(0, 1.5);
+    gam[j] ~ lognormal(0, 1.5);
+  }
+
   beta_err1 ~ normal(0, 1);
   beta_err2 ~ normal(0, 10);
   beta_repair ~ normal(0, 1);
@@ -212,34 +227,36 @@ model {
   beta_weather ~ normal(0, 1);
 }
 
-generated quantities {
+/*generated quantities {
   vector[N] log_lik;
   for (i in 1:N){
-  	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
-    beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
+    log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+        beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
-}
+
+}*/
 
 "
 
 ## Fit Model
-mhazm = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
+mf2m = stan(model_code = m_code, data = stan_data, cores = 7, chains = 2, iter = 1e4, warmup = 1e3)
 
 ## Parameter Output
-print(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
-plot(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+print(mf2m, pars = c("alp","gam", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+plot(mf2m, pars = c("alp","gam", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Check Traceplot
-traceplot(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+traceplot(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Get WAIC
-WAIC(mhazm)
-
-##
+WAIC(mf2m)
+LOO(mf2m)
 
 ## Extract Samples
-samp = extract(mhazm, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
-samp_lik = extract(mhazm, pars = c("log_lik") )
+samp = extract(mf2m, pars = c("alp","gam","sig","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+samp_lik = extract(mf2m, pars = c("log_lik") )
+
+
 
 
 ## Posterior Samples
@@ -249,6 +266,7 @@ s_n    = 500
 
 s_alp           = rnorm(s_n, mean = s_mean$alp,          sd = s_sd$alp)
 s_gam           = rnorm(s_n, mean = s_mean$gam,          sd = s_sd$gam)
+s_sig           = rnorm(s_n, mean = s_mean$sig,          sd = s_sd$sig)
 s_beta_err1     = rnorm(s_n, mean = s_mean$beta_err1,    sd = s_sd$beta_err1)
 s_beta_err2     = rnorm(s_n, mean = s_mean$beta_err2,    sd = s_sd$beta_err2)
 s_beta_repair   = rnorm(s_n, mean = s_mean$beta_repair,  sd = s_sd$beta_repair)
@@ -261,11 +279,12 @@ pred_lin_pred = x_err1 * mean(s_beta_err1) + x_err2 * mean(s_beta_err2) + x_repa
 
 # Posterior Hazard
 hazard = h_t(lifetime, mean(s_alp), mean(s_gam), pred_lin_pred)
-s_lik = colMeans(samp_lik$log_lik)
+
+
 
 # Put it all together
 df = data.frame(h_t = hazard,
-                s_lik = s_lik,
+                s_lik = colMeans(samp_lik$log_lik),
                 H_t = -pweibull(lifetime, mean(s_alp), mean(s_gam), lower = FALSE, log = TRUE),
                 S_t =  pweibull(lifetime, mean(s_alp), mean(s_gam), lower = FALSE),
                 d_i = d_i,
@@ -281,9 +300,8 @@ C_Index(df, lifetime = "diff_times")
 
 
 
-df %>% ggplot(aes(y = h_t, x= lifetime)) + geom_point()
-df %>% ggplot(aes(y = s_lik, x= lifetime)) + geom_point()
 df %>% ggplot(aes(y = H_t, x= lifetime)) + geom_point()
 df %>% ggplot(aes(y = S_t, x= lifetime)) + geom_point()
+df %>% ggplot(aes(y = h_t, x= lifetime)) + geom_point()
 
 

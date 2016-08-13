@@ -276,26 +276,27 @@ It is important to start simple with model construction. A good first step is to
     \centering
     \begin{lstlisting}[belowskip=-2 \baselineskip]
 functions {
-  real log_h_t(real lifetime, real alp, real gam, real lin_pred);
-  real H_t(real lifetime, real alp, real gam, real lin_pred);
-
-  real log_h_t(real lifetime, real alp, real gam, real lin_pred){
-    return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) ) + lin_pred;
-}
-
-  real H_t(real lifetime, real alp, real gam, real lin_pred){
-    return exp(lin_pred) * ( (lifetime / gam) )^alp ;
-}
-
+  real log_h_t(real lifetime, real alp, real gam);
+  real H_t(real lifetime, real alp, real gam);
+  
+  real log_h_t(real lifetime, real alp, real gam){
+    return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) );
+  }
+  
+  real H_t(real lifetime, real alp, real gam){
+    return ( (lifetime / gam) )^alp ;
+  }
+  
   real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred){
     real lifetime;
     real d_i;
   
     lifetime <- cens_lifetime[1];
     d_i      <- cens_lifetime[2];
-    
-    return d_i * log_h_t(lifetime, alp, gam, lin_pred) - H_t(lifetime, alp, gam, lin_pred);
+  
+    return d_i * (log_h_t(lifetime, alp, gam) + lin_pred) - H_t(lifetime, alp, gam) * exp(lin_pred);
   }
+
 }
     \end{lstlisting}
     \caption{Function Block for Multiplicative Hazard Model}
@@ -443,7 +444,7 @@ generated quantities {
   }
 }
 \end{lstlisting}
-    \caption{Log Likelihood in Generated Quantities Block for Multiplicative Hazard Model}
+    \caption{Log Likelihood in Generated Quantities Block}
     \label{mhaz_loglik}
 \end{figure}
 
@@ -456,36 +457,32 @@ To compute the C-Index, the hazard function, the prognostic measure, must first 
 
 Unobserved heterogeneity or clustered observations can be implemented in several ways in Stan, with roughly the same results. However, the strategy for what is being optimized varies significantly.
 
-This implementation can be extended in a straight-forward manner to accommodate unobserved heterogeneity or clustered observations. The Frailty parameter is incorporated through the addition of its variance, $\sigma^2$, into the hazard and cumulative hazard in the \lstinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Only the variance is identifiable, so only it is modeled. Thus, a \lstinline{sig} parameter is added to the \lstinline{log\_h\_t()}, \lstinline{H()} and \lstinline{surv\_dens\_log()} functions. The hazard and cumulative hazard are reconstructed using the definitions in the previous chapter. 
+First, it is possible to repeat the mechanism with which the Multiplicative Hazard was fit, by explicitly writing out the log likelihood into the \lstinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Rather the unconditional likelihood is used with the Frailty parameter integrated out. Figure~\ref{frail_funs} illustrates the necessary changes required for the density function.
 
-\begin{lstlisting}
-functions {	
-  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred);
-  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred);
-  
-  real log_h_t(real lifetime, real alp, real gam, real sig, real lin_pred){
-    return log(alp) - log(lifetime * ((sig^2) + (gam/lifetime)^alp)) + lin_pred;
-  }
-  
-  real H_t(real lifetime, real alp, real gam, real sig, real lin_pred){
-    return exp(lin_pred) * (1 / sig^2) * log((sig^2) * ((lifetime / gam)^alp) + 1);
-  }
-  
+
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
   real surv_dens_log(vector cens_lifetime, real alp, real gam, real sig, real lin_pred){
     real lifetime;
     real d_i;
-    
+    real sig_i;
+
+    sig_i    <- sig;
     lifetime <- cens_lifetime[1];
     d_i      <- cens_lifetime[2];
   
-    return d_i * log_h_t(lifetime, alp, gam, sig, lin_pred) - H_t(lifetime, alp, gam, sig, lin_pred);
+    return d_i * log(sig^2) + log(tgamma((1/sig^2) + d_i)) - log(tgamma( (1/sig^2) )) -
+            ((1/sig^2) + d_i) * log(1 + sig^2 * H_t(lifetime, alp, gam) * exp(lin_pred)) +
+            d_i * (lin_pred + log_h_t(lifetime, alp, gam));
   }
-
-}
 \end{lstlisting}
+    \caption{Gamma Frailty Likelihood in Function Block}
+    \label{frail_funs}
+\end{figure}
 
 
-If this is the only change that is made, a univariate Gamma Frailty Model results. To implement a shared Gamma Frailty Model an additional construction is needed. Specifically, an iteration over the grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. In this example, the each park is given its own estimate of the Frailty variance. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
+Beyond the density function, there is also a requirement to resolve the sums across the clusters. To do this a grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. In this example, the each park is given its own estimate of the Frailty variance. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
 
 To do this in Stan must be made aware that the parameter \lstinline{sig} will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of \lstinline{sig} sampling is being done. Thus, the following additions are required to the Stan program:
 
@@ -514,7 +511,11 @@ model {
 
 The \lstinline{data} block introduces a grouping variable, \lstinline{park} which is the length of the number of observations, \lstinline{N} It identifies  park membership of any single observation with an integer value. The \lstinline{park\_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \lstinline{parameters} block for defining the dimensions of the \lstinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \lstinline{model} block, 
 
-This completes the shared Frailty extension. Again, upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described above. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. 
+This completes the shared Frailty extension. Again, upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described before. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. 
+
+
+% Alternative method
+
 
 One of the joys of working with Stan is its ability to be extended indefinitely. Additional flexibility can be added to the model a similar manner as was done with the park. For example, Frailty parameters can be included that account for the variation on inverter model or if there is reason to believe the baseline hazard is different per grouping. A stratified baseline hazard can be introduced that provides a different \lstinline{alp} and \lstinline{gam} parameter per group. Even, a correlation structure can be given to the Frailty parameters. The extension potential is limitless. 
 
