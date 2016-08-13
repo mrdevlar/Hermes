@@ -9,6 +9,7 @@ To be able to model the time until these transitions, precision in describing ph
 
 
 \section*{Time-to-Event Functions}
+\addcontentsline{toc}{section}{Time-to-Event Functions}
 
 The purpose of this section is to firmly root time-to-event analysis in the broader context of statistical modeling. It demonstrates the mathematical functions required to interact with this class of models, as well as providing their relationships. As this section is foundational, its content can be attributed to a diverse number of sources\cite{Aalen2008}\cite{Tableman2004}\cite{Klein2003}\cite{Kleinbaum2005}\cite{Cleves2008}\cite{Rodriguez2007}.
 
@@ -93,6 +94,8 @@ $$ E(t|T > t_0) = \int^\infty_{t_0} S(t) dt \cdot \frac{1}{S(t_0)} $$
 
 
 \section*{Common Lifetime Distributions}
+\addcontentsline{toc}{section}{Common Lifetime Distributions}
+
 
 Any continuous distribution defined over the positive numbers can be used as a lifetime distribution. This section briefly covers several commonly used distributions for modeling lifetimes and provides justifications for their use. The exponential, Weibull, Gompertz and Gamma are described.
 
@@ -156,6 +159,8 @@ Other lifetime distributions exist. However, the preceding cover the overwhelmin
 
 
 \section*{Truncation and Censoring}
+\addcontentsline{toc}{section}{Truncation and Censoring}
+
 
 Truncation and censoring are defining elements of time-to-event models. The functions that have been described so far have assumed an environment where the waiting time until an event is fully observed. In most real-world applications, however, it is impractical to wait until all systems in the population fail. Therefore, time-to-event models usually exist in incomplete information. Truncation and censoring provide mechanisms to formalize how that state of limited information affects the model. The following section describes how truncation and censorship affect data, provide several standardized schemes for censorship and how the phenomena can be expressed mathematically.
 
@@ -178,6 +183,8 @@ This provides a route to expressing what is actually being observed within a tim
 
 
 \section*{Hazard Modeling with Covariates}
+\addcontentsline{toc}{section}{Hazard Modeling with Covariates}
+
 
 Hazards provide the means by which to assess the risk status of any particular system in the population over any given interval. This makes it an ideal metric through which to model the probability of failure. The constructions discussed so far have had an implicit assumption. Namely, that the lifetime distribution $T$ arises from systems under identical conditions. Effectively, this implies that the population from which these lifetimes are derived is homogeneous. In practice, it is obvious that not all systems will be subject to the identical risks and conditions. Systems will have distinct manufacturers and locations, not to mention being exposed to an assortment of risks due to different operating conditions. However, to enable this diversification of lifetimes, a method to integrate covariates that formalizes this diversity is needed. The following section describes the Multiplicative Hazard Model which provides a means to express this diversity, and demonstrates several extensions to the model to allow for more complex covariates.
 
@@ -217,6 +224,8 @@ Fortunately, feature engineering methods can be used to construct variables that
 
 
 \section*{Frailty}
+\addcontentsline{toc}{section}{Frailty}
+
 
 So far, all the models described have implicitly assumed that given a set of covariates, the resulting lifetimes are independent and drawn from the same underlying distribution with the same parameters. In practice, such an assumption, while useful, is rarely realistic. Thus, there is a need to extend the model further to allow for correlation between observations. This is done through the introduction of a Frailty into the model.
 
@@ -319,6 +328,8 @@ In a traditional context, the values of $Z_i$ are not estimated for each individ
 
 
 \section*{Model Likelihoods}
+\addcontentsline{toc}{section}{Model Likelihoods}
+
 
 The likelihood is a function of the parameters of a statistical model given data. Its formulation is the means by which the appropriate mathematical abstraction is selected after data has been observed. In this section, likelihoods for the models developed so far are formulated. First in the simplest cases, then with the model additions.
 
@@ -389,6 +400,8 @@ It should be noted, that these are intentionally generic and the parametric form
 
 
 \section*{Model Estimation}
+\addcontentsline{toc}{section}{Model Estimation}
+
 
 Model estimation can be done in a number of ways. However, as model complexity increases with the addition of covariates, random effects or other features, increasing difficulties in using traditional methods of model fitting are encountered. Many of these issues arise from a lack of closed form solutions for the required mathematical constructions needed to fit these models. Bayesian methods provide a means to circumvent some of this difficulty through the use of sampling rather than explicit formulation to derive the model output. In this section we examine the Bayesian paradigm and provide some intuition as to the model fitting technique used in the remainder of the text, Hamiltonian Monte Carlo (HMC).
 
@@ -432,6 +445,7 @@ Numerous additional technical details are required to properly understand HMC wh
 
 
 \section*{Extended Reading}
+\addcontentsline{toc}{section}{Extended Reading}
 
 For additional treatments of the topic, several notable sources can be accessed. For a comprehensive mathematical treatment of classical survival analysis, the reader is directed to Klein and Moeschberger\cite{Klein2003}. For a mathematical treatment of survival analysis based on counting processes, the reader is directed to Andersen\cite{Andersen1992} and Aalen, Borgan and Gjessing\cite{Aalen2008}. If the reader is interested in a pedagogical viewpoint on survival analysis or model computation, the reader should explore Kleinbaum and Klein\cite{Kleinbaum2005} and Tableman and Kim\cite{Tableman2004}. For a treatment of Bayesian time-to-event analysis including extensions to this model, the reader is directed to Ibrahim, Chen and Sinha\cite{Ibrahim2005}. For a detailed description of Frailty Modeling, including detailed mathematical derivations of incrementally complex models, Wienke\cite{Wienke2010}, as well as Duchateau and Janssen\cite{Duchateau2008} should be explored. For more details on Hamiltonian Monte Carlo, the reader is directed to Kruschke\cite{Kruschke2015}, Gelman et al\cite{Gelman2014}. For a technical review of Bayesian estimation, Marin and Roberts\cite{Marin2007} are suggested.
 
