@@ -400,10 +400,20 @@ If a Gamma Frailty is used, and the parameters, $Z$ are integrated out, the like
 
 $$ \mathcal {L}(\theta) = \prod_{i=1}^n \left (\frac{h_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}{1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i)}  \right )^{d_i} (1+ \sigma^2 H_0(y) \exp(\boldsymbol\beta^T \textbf{x}_i))^{-\frac{1}{\sigma^2}} $$
 
-The extension to shared Frailty adds an additional complication. Specifically, for each cluster a separate frailty 
+The extension to shared Frailty adds an additional complication. Specifically, for each cluster a separate frailty distribution must be fit. As right censoring is at play, this vastly complicates the model likelihood. For, $n$, clusters, $j$, of size, $n_i$,, such that, $i \dots, n$, the shared frailty becomes\cite{Wienke2010}:
+
+$$ \mathcal {L}(\theta) =\prod_{i=1}^n \frac{\Gamma(\frac{1}{\sigma^2} + \delta_i) \prod^{n_i}_{j=1} (h_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ij}))^{d_{ij}} }{(\frac{1}{\sigma^2} + \sum_{j =1}^{n_i} H_0(t) \exp(\boldsymbol\beta^T \textbf{x}_{ij}))^{\frac{1}{\sigma^2} + \delta_i} \sigma^{\frac{2}{\sigma^2}} \Gamma(\frac{1}{\sigma^2})} $$
+
+Where $\delta_i = \sum^{n_i}_{j=1} d_{ij}$ or the count of events within each cluster and $\Gamma (t) = \int _{0}^{\infty }x^{t-1}\exp(-x)dx$ is the Gamma function. Taking the log of the above, we get the log likelihood:
+
+$$ \ell(\theta) = \sum^n_{i=1} \left [\delta_i \ln(\sigma^2) + \ln \Gamma\left (\frac{1}{\sigma^2} + \delta_i  \right ) - \ln\Gamma\left (\frac{1}{\sigma^2}  \right ) - \left (\frac{1}{\sigma^2} + \delta_i  \right ) \ln \left (1 + \sigma^2 \sum_{j=1}^{n_i} H_0(t)\exp(\boldsymbol\beta^T \textbf{x}_{ij})  \right ) + \sum_{j=1}^{n_i} d_{ij} \left (\boldsymbol\beta^T \textbf{x}_{ij} + \ln h_0(t) \right )  \right ] $$
 
 
-% Shared Frailty Likelihood goes here:
+
+
+
+
+
 
 There are many technical details which are required to properly fit a Frailty model. Most of these are specialized and are far beyond the scope of this text. The reader is directed to the "Extended Reading" section at the end of this chapter for more details on this front.
 
