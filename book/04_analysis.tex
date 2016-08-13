@@ -511,11 +511,11 @@ model {
 }
 \end{lstlisting}
     \caption{Park Grouping in Stan Blocks}
-    \label{frail_funs}
+    \label{park_group}
 \end{figure}
 
 
-The \lstinline{data} block introduces a grouping variable, \lstinline{park} which is the length of the number of observations, \lstinline{N} It identifies park membership of any single observation with an integer value. The \lstinline{park\_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \lstinline{parameters} block for defining the dimensions of the \lstinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \lstinline{model} block, the same sampling statement is made as before, however, now the additional indexing of the \lstinline{sig} parameter is introduced. This is done through the use of an index on the \lstinline{park} variable, which has a range between one and five. As such, when the sampling statement is run, a value at each park is generated with, \lstinline{sig[park[i]]}.
+Figure~\ref{park_group} demonstrates the required changes. The \lstinline{data} block introduces a grouping variable, \lstinline{park} which is the length of the number of observations, \lstinline{N}. It identifies park membership of any single observation with an integer value. The \lstinline{park\_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \lstinline{parameters} block for defining the dimensions of the \lstinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \lstinline{model} block, the same sampling statement is made as before, however, now the additional indexing of the \lstinline{sig} parameter is introduced. This is done through the use of an index on the \lstinline{park} variable, which has a range between one and five. As such, when the sampling statement is run, a value at each park is generated with, \lstinline{sig[park[i]]}.
 
 This completes the shared Frailty extension. The remainder of the process is identical to that which was performed above. Upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described before. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. Finally, a list of the most at-risk inverters can be output.
 
