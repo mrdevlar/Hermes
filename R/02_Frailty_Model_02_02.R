@@ -133,8 +133,8 @@ lifetime = apply(cbind(r_lifetime, cens_time), 1, min)
 sum(d_i)
 
 # Turn off censoring
-lifetime = r_lifetime
-d_i = rep(1, length(lifetime))
+# lifetime = r_lifetime
+# d_i = rep(1, length(lifetime))
 
 
 stan_data = list(
@@ -227,14 +227,14 @@ model {
   beta_weather ~ normal(0, 1);
 }
 
-/*generated quantities {
+generated quantities {
   vector[N] log_lik;
   for (i in 1:N){
-    log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, sig[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
+    log_lik[i] <- surv_dens_log(lifetime[i], alp[park[i]], gam[park[i]], beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + 
         beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
 
-}*/
+}
 
 "
 
@@ -246,14 +246,14 @@ print(mf2m, pars = c("alp","gam", "beta_err1","beta_err2","beta_repair","beta_kW
 plot(mf2m, pars = c("alp","gam", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Check Traceplot
-traceplot(mf2m, pars = c("alp","gam","sig", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+traceplot(mf2m, pars = c("alp","gam", "beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 
 ## Get WAIC
 WAIC(mf2m)
 LOO(mf2m)
 
 ## Extract Samples
-samp = extract(mf2m, pars = c("alp","gam","sig","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
+samp = extract(mf2m, pars = c("alp","gam","beta_err1","beta_err2","beta_repair","beta_kWh","beta_weather") )
 samp_lik = extract(mf2m, pars = c("log_lik") )
 
 
@@ -266,7 +266,6 @@ s_n    = 500
 
 s_alp           = rnorm(s_n, mean = s_mean$alp,          sd = s_sd$alp)
 s_gam           = rnorm(s_n, mean = s_mean$gam,          sd = s_sd$gam)
-s_sig           = rnorm(s_n, mean = s_mean$sig,          sd = s_sd$sig)
 s_beta_err1     = rnorm(s_n, mean = s_mean$beta_err1,    sd = s_sd$beta_err1)
 s_beta_err2     = rnorm(s_n, mean = s_mean$beta_err2,    sd = s_sd$beta_err2)
 s_beta_repair   = rnorm(s_n, mean = s_mean$beta_repair,  sd = s_sd$beta_repair)
