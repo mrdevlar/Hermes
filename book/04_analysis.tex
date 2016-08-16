@@ -18,7 +18,7 @@ $$ V_{(1)}(t) > V_{(2)}(t) > \dots V_{(n)}(t) $$
 
 Where the time point, $t$, is fixed at the current moment for prediction. It should be noted, the absolute value of the score is of secondary importance in this process. If maintenance resources are allocated as part of a continuous service it does not matter if the inverter with the highest score is likely to fail within the next day, week or month. It is still the most likely to fail and should still be the inverter to which the maintenance process is applied to first. Therefore, an exact determination of risk is secondary to the action it prompts. This equates time-to-event analysis with rank-order prediction, where the order of failures, and thus the order of maintenance activities are the central goal. 
 
-
+\newpage
 \section*{Feature Engineering}
 \addcontentsline{toc}{section}{Feature Engineering}
 
@@ -213,7 +213,7 @@ The C-Index and WAIC evaluate performance but through different means. Both asse
 
 
 
-
+\newpage
 \section*{Stan}
 \addcontentsline{toc}{section}{Stan}
 
@@ -246,8 +246,7 @@ A Stan program defines a statistical model through a conditional probability fun
         }
         generated quantities {
         	// ... declarations ... statements ...
-        }
-    \end{lstlisting}
+        }\end{lstlisting}
     \caption{Available Stan Blocks}
     \label{stanblocks}
 \end{figure}
@@ -284,7 +283,7 @@ It is important to start simple with model construction. A good first step is to
 functions {
   real log_h_t(real lifetime, real alp, real gam);
   real H_t(real lifetime, real alp, real gam);
-  
+ 
   real log_h_t(real lifetime, real alp, real gam){
     return log( (alp/gam) ) + (alp - 1) * log( (lifetime / gam) );
   }
@@ -302,9 +301,7 @@ functions {
   
     return d_i * (log_h_t(lifetime, alp, gam) + lin_pred) - H_t(lifetime, alp, gam) * exp(lin_pred);
   }
-
-}
-    \end{lstlisting}
+}\end{lstlisting}
     \caption{Function Block for Multiplicative Hazard Model}
     \label{mhazm_funs}
 \end{figure}
@@ -330,8 +327,7 @@ Stan is statically typed and forces precision in definitions. As a result, every
 		  real          x_repair[N];
 		  real          x_kWh[N];
 		  real          park_weather[N];
-		}
-    \end{lstlisting}
+		}\end{lstlisting}
     \caption{Data Block for Multiplicative Hazard Model}
     \label{mhaz_data}
 \end{figure}
@@ -351,8 +347,7 @@ parameters {
   real          beta_repair;
   real          beta_kWh;
   real          beta_weather;
-}
-    \end{lstlisting}
+}\end{lstlisting}
     \caption{Parameters Block for Multiplicative Hazard Model}
     \label{mhaz_params}
 \end{figure}
@@ -376,8 +371,7 @@ model {
   beta_repair ~ normal(0, 1);
   beta_kWh ~ normal(0,10);
   beta_weather ~ normal(0, 1);
-}
-    \end{lstlisting}
+}\end{lstlisting}
     \caption{Model Block for Multiplicative Hazard Model}
     \label{mhaz_model}
 \end{figure}
@@ -397,8 +391,7 @@ generated quantities {
   for(i in 1:N){
     pred_log_h_t[i] <- log_h_t(lifetime[i,2], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
-}
-    \end{lstlisting}
+}\end{lstlisting}
     \caption{Generated Quantities Block for Multiplicative Hazard Model}
     \label{mhaz_quants}
 \end{figure}
@@ -415,8 +408,7 @@ beta_err1     0.21       0 0.06  0.10  0.17  0.21  0.25  0.33 10551    1
 beta_err2     2.99       0 0.13  2.73  2.90  2.98  3.07  3.24  4844    1
 beta_repair  -0.23       0 0.05 -0.34 -0.26 -0.23 -0.19 -0.12 12435    1
 beta_kWh     -3.92       0 0.17 -4.26 -4.04 -3.92 -3.81 -3.60  4897    1
-beta_weather  0.25       0 0.06  0.14  0.21  0.25  0.28  0.36  9761    1
-\end{lstlisting}
+beta_weather  0.25       0 0.06  0.14  0.21  0.25  0.28  0.36  9761    1\end{lstlisting}
     \caption{Output of Multiplicative Hazard Model}
     \label{mhaz_print}
 \end{figure}
@@ -443,8 +435,7 @@ generated quantities {
   for (i in 1:N){
   	log_lik[i] <- surv_dens_log(lifetime[i], alp, gam, beta_err1 * x_err1[i] + beta_err2 * x_err2[i] + beta_repair * x_repair[i] + beta_kWh * x_kWh[i] + beta_weather * park_weather[i]);
   }
-}
-\end{lstlisting}
+}\end{lstlisting}
     \caption{Log Likelihood in Generated Quantities Block}
     \label{mhaz_loglik}
 \end{figure}
@@ -475,8 +466,7 @@ First, it is possible to repeat the mechanism with which the Multiplicative Haza
     return d_i * log(sig^2) + log(tgamma((1/sig^2) + d_i)) - log(tgamma( (1/sig^2) )) -
             ((1/sig^2) + d_i) * log(1 + sig^2 * H_t(lifetime, alp, gam) * exp(lin_pred)) +
             d_i * (lin_pred + log_h_t(lifetime, alp, gam));
-  }
-\end{lstlisting}
+  }\end{lstlisting}
     \caption{Gamma Frailty Likelihood in Function Block}
     \label{frail_funs}
 \end{figure}
@@ -507,8 +497,7 @@ model {
     sig[j] ~ lognormal(0, 1.5);
   }
 
-}
-\end{lstlisting}
+}\end{lstlisting}
     \caption{Park Grouping in Stan Blocks}
     \label{park_group}
 \end{figure}
@@ -528,19 +517,13 @@ Figure~\ref{park_group} demonstrates the required changes. The \lstinline{data} 
     d_i      <- cens_lifetime[2];
   
     return d_i * (log_h_t(lifetime, alp, gam) + lin_pred + Z) - (H_t(lifetime, alp, gam) * exp(lin_pred) * exp(Z));
-  }
-\end{lstlisting}
+  }\end{lstlisting}
     \caption{Fraily Model with Direct Estimation of $Z$ parameter}
     \label{z_lik}
 \end{figure}
 
 
 An alternative method can be used to fit the model in a substantially more flexible and extensible form. This allows for the direct sampling of the $Z$ parameter rather than integrating it out through a constraint. This greatly simplifies the model. Figure~\ref{z_lik} provides the likelihood function, \lstinline{surv_dens_log}, needed to fit the model. The other alterations required to the code are the same as in in the previous case, a vector of $Z$ parameters must be defined in the \lstinline{parameter} block and added to the end of the likelihood function call in the \lstinline{model} block. As before, a park grouping should be used like \lstinline{Z[park[i]] to ensure the sampling is done for each park. As can be seen from Figure~\ref{z_lik}, the introduction of the $Z$ parameter simply requires the inclusion of a single term to the hazard and cumulative hazard of the likelihood. This likelihood is the original simple likelihood of the Multiplicative Hazard Model. 
-
-Unfortunately, this ease of construction is without its cost. Specifically, the computer time for fitting this version is of the Frailty model is substantially larger. 
-
-594.655
-
 
 \begin{figure}[htbp]
     \centering
@@ -557,8 +540,7 @@ beta_err1     0.01    0.00 0.10 -0.18 -0.05  0.01  0.08  0.20 12254    1
 beta_err2     2.78    0.00 0.18  2.44  2.66  2.78  2.90  3.13  6978    1
 beta_repair  -0.16    0.00 0.10 -0.36 -0.23 -0.16 -0.10  0.03 13082    1
 beta_kWh     -3.87    0.00 0.25 -4.36 -4.03 -3.87 -3.70 -3.39  6733    1
-beta_weather  0.19    0.00 0.27 -0.35  0.02  0.18  0.35  0.77  6185    1
-\end{lstlisting}
+beta_weather  0.19    0.00 0.27 -0.35  0.02  0.18  0.35  0.77  6185    1\end{lstlisting}
     \caption{Output of Frailty Model}
     \label{out_frail}
 \end{figure}
