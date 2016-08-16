@@ -51,7 +51,7 @@ Data required for a predictive maintenance process often comes from several diff
 
 
 
-\begin{table}[htbp]
+\begin{figure}[htbp]
   \centering
     \begin{tabular}{l|l}
     \textbf{Covariate/Feature} & \textbf{Description} \\
@@ -69,11 +69,11 @@ Data required for a predictive maintenance process often comes from several diff
     \end{tabular}%
   \caption{Covariates/Features of Simulated Data}
   \label{dat_vars}%
-\end{table}%
+\end{figure}%
 
 
 
-Table~\ref{dat_vars} gives an illustration of how data should be structured on input. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. 
+Figure~\ref{dat_vars} gives an illustration of how data should be structured on input. The suffix, 'l30d' takes the count in the last thirty days of operation of a particular value, such as 'kWh' which encodes outlying energy output or 'weather' which encodes extreme weather events. The suffix, 'days', counts the number of days since an event, in this case the number of days since any repair was performed on the inverter. 
 
 Recall that the input for the models was structured as follows:
 
@@ -199,7 +199,7 @@ Where $\hat{\text{lpd}}$ is the log pointwise predictive density and the $\hat{p
 
 $$ \text{lpd} = \sum_{i=1}^n \ln \int p(y_i|\theta)p(\theta|y) d\theta \qquad \hat{\text{lpd}} = \sum_{i=1}^n \ln\left ( \frac{1}{S} \sum_{i = 1}^S p(y_i|\theta^s)  \right ) $$
 
-And $\theta^s$ is the vector of completed posterior simulations. 
+Where $\theta^s$ is the vector of completed posterior simulations. 
 
 The effective number of parameters is approximated using the sample variance of the log likelihood of posterior distribution.
 
