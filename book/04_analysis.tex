@@ -313,27 +313,25 @@ The process of explicitly writing likelihoods exposes one to the inner operation
 
 It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input \lstinline{cens_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
-Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. These are provided in Figure~\ref{mhaz_data}. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \lstinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
-
-
 \begin{figure}[htbp]
     \centering
     \begin{lstlisting}[belowskip=-2 \baselineskip]
-		data {
-		  int<lower=0>  N;
-		  vector[2]     lifetime[N];
-		  real          x_err1[N];
-		  real          x_err2[N];
-		  real          x_repair[N];
-		  real          x_kWh[N];
-		  real          park_weather[N];
-		}\end{lstlisting}
+        data {
+          int<lower=0>  N;
+          vector[2]     lifetime[N];
+          real          x_err1[N];
+          real          x_err2[N];
+          real          x_repair[N];
+          real          x_kWh[N];
+          real          park_weather[N];
+        }\end{lstlisting}
     \caption{Data Block for Multiplicative Hazard Model}
     \label{mhaz_data}
 \end{figure}
 
+Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. These are provided in Figure~\ref{mhaz_data}. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \lstinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
 
-To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named \lstinline{list()} The names within the list should correspond to the variable names found in the \lstinline{data} block in Figure~\ref{mhaz_data}. The number of observations, the values of those observations and the values of any covariates must be defined here. Note, that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. Of course, caution is advised as it is possible that the data one wishes to import cannot take on real values. 
+
 
 
 \begin{figure}[htbp]
@@ -351,6 +349,11 @@ parameters {
     \caption{Parameters Block for Multiplicative Hazard Model}
     \label{mhaz_params}
 \end{figure}
+
+To allow for the sampling of the likelihood, input data must be defined. These are the observed values. Data can be input any number of different ways. Stan is self-sufficient and it can be accessed through a variety of programming languages, like R, Python, Julia, etc. Each one of these languages have the ability to feed data into Stan. In the R language, this is done through a named \lstinline{list()} The names within the list should correspond to the variable names found in the \lstinline{data} block in Figure~\ref{mhaz_data}. The number of observations, the values of those observations and the values of any covariates must be defined here. Note, that the type and dimensions of each element of data must be declared here. It is good practice to center and scale data prior to input. Even if a covariate is a count, like the number of days since repairs or a count of error codes, it is advisable to scale and convert it to real values. This greatly improves the performance of Stan, as HMC is optimized to operate on continuous functions. If this is not done a much slower discrete optimization process is used. Of course, caution is advised as it is possible that the data one wishes to import cannot take on real values. 
+
+
+
 
 
 The parameters of the model also must be defined. This is done in Figure~\ref{mhaz_params}. In this case, this includes the parameters for the Weibull distribution, \lstinline{alp} and \lstinline{gam}, as well as the linear coefficients, \lstinline{beta_}, associated with the model covariates. Notice the \lstinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the \lstinline{alp} and \lstinline{gam} parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where where the sampler does not explicitly warn about negative probabilities, it is best practice to apply constraints if one is aware of them.
