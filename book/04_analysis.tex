@@ -310,11 +310,11 @@ functions {
 \end{figure}
 
 
-Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a \lstinline{function} block at the beginning of the model code. Figure~\ref{mhazm_funs} contains code block for the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the \lstinline{H\_t()} and \lstinline{log\_h\_t()} functions, respectively. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the \lstinline{surv\_dens\_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
+Stan permits the inclusion of arbitrary functions. These functions can be used in any manner, but in this context they are primarily useful for evaluating the likelihood of the model. To be included, they must be placed in a \lstinline{function} block at the beginning of the model code. Figure~\ref{mhazm_funs} contains code block for the functions needed to define a Multiplicative Hazard Model in Stan. The conditional cumulative hazard, $H(t|x)$, and the conditional log hazard, $\ln(h(t|x))$, are defined in the \lstinline{H_t()} and \lstinline{log_h_t()} functions, respectively. The model's log likelihood, $\ell(\theta|Y, d)$ is defined in the \lstinline{surv_dens_log()} function. This last function that will be minimized in sampling steps of the fitting process. 
 
 The process of explicitly writing likelihoods exposes one to the inner operation of a model. This fosters a deeper connection between the mathematics and programming. Furthermore, such a process enables one to extend the model far beyond what is covered in this text.
 
-It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input \lstinline{cens\_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
+It should be noted, that this type of functional definitions are not commonly required to use Stan, as it comes with a large library of built in functions\cite{StanDevelopmentTeam2016}. However, Stan's handling of censored data is currently problematic for most time-to-event models making such functions mandatory. To make the effect of censoring explicit, the likelihood function takes a vector as input \lstinline{cens_lifetime} that contains the double, time and censoring indicator, $(Y_i,d_i)$, needed to define an observed lifetime. 
 
 Stan is statically typed and forces precision in definitions. As a result, every function and variable must have its type explicitly stated before hand. These are provided in Figure~\ref{mhaz_data}. Most common data types are available, including ones for dealing with vector and matrix operations. As these functions deal with continuous variables, \lstinline{real} is the common type. Due to the language's imperative nature, order is not arbitrary and all variables and functions must be defined prior to being used. 
 
@@ -358,7 +358,7 @@ parameters {
 \end{figure}
 
 
-The parameters of the model also must be defined. This is done in Figure~\ref{mhaz_params}. In this case, this includes the parameters for the Weibull distribution, \lstinline{alp} and \lstinline{gam}, as well as the linear coefficients, \lstinline{beta\_}, associated with the model covariates. Notice the \lstinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the \lstinline{alp} and \lstinline{gam} parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where where the sampler does not explicitly warn about negative probabilities, it is best practice to apply constraints if one is aware of them.
+The parameters of the model also must be defined. This is done in Figure~\ref{mhaz_params}. In this case, this includes the parameters for the Weibull distribution, \lstinline{alp} and \lstinline{gam}, as well as the linear coefficients, \lstinline{beta_}, associated with the model covariates. Notice the \lstinline{real<lower=0>} in the parameter definitions. These are constraints which are applied to the \lstinline{alp} and \lstinline{gam} parameters to ensure that their support is only over the positive real numbers. In this model, failure to do so will result in errors produced by negative probabilities, causing proposal moves to be discarded. This may result in poor convergence and biased parameter estimates. Even in situations where where the sampler does not explicitly warn about negative probabilities, it is best practice to apply constraints if one is aware of them.
 
 \begin{figure}[htbp]
     \centering
@@ -383,7 +383,7 @@ model {
 \end{figure}
 
 
-The model block encapsulates the high-level configuration of the model and defines the sampling process. Figure~\ref{mhaz_model}, defines both the priors as well as the method of sampling. The sampling is declared through a sampling statement. The \lstinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the \lstinline{function} block it is possible to make use of it. Note that the function being called is \lstinline{surv\_dens} not \lstinline{surv\_dens\_log} as was defined in the \lstinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the \lstinline{\_log} suffix and acts accordingly. This is meant to ensure that the focus is retained on the characteristics of the model rather than its fitting process. 
+The model block encapsulates the high-level configuration of the model and defines the sampling process. Figure~\ref{mhaz_model}, defines both the priors as well as the method of sampling. The sampling is declared through a sampling statement. The \lstinline{for()} loop iterates over each element in the data and declares that each observation is distributed, $Y \sim \mathcal {L}(\theta)$,  given a likelihood. In this case, as a log-likelihood was already defined in the \lstinline{function} block it is possible to make use of it. Note that the function being called is \lstinline{surv_dens} not \lstinline{surv_dens_log} as was defined in the \lstinline{function} block. This is because each observation is defined according to the likelihood, even if the model is fit using a log-likelihood. Stan understands the \lstinline{_log} suffix and acts accordingly. This is meant to ensure that the focus is retained on the characteristics of the model rather than its fitting process. 
 
 Below the sampling statement are the priors associated with the parameters. Priors do not have to be explicitly defined in Stan. If they are not, Stan will use a continuous uniform prior. However, these are highly inefficient especially if no constraints were declared for a particular parameter. The consequences of this omission can be poor convergence and biased estimates. This is especially true of the scale parameter of the Weibull distribution, \lstinline{gam}, whose true value is often far from zero. Weakly regularizing priors centered near zero are advisable, especially if all the variables were scaled beforehand. If there is some existing knowledge about the expected lifetime of a system, a prior can also be used as a means by which to introduce this expertise into the model. 
 
@@ -403,7 +403,7 @@ generated quantities {
     \label{mhaz_quants}
 \end{figure}
 
-Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \lstinline{generated quantities} block. This is shown in Figure~\ref{mhaz_quants}. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \lstinline{\_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom range function.
+Lastly, it is possible to directly output the posterior predictive distribution for each inverter using the \lstinline{generated quantities} block. This is shown in Figure~\ref{mhaz_quants}. To achieve this, a simple iteration across each observation using the final parameters is done. These values can then be extracted into R and their predictive accuracy assessed. Most importantly, it is possible to extract the variances on each prediction, allowing this to be taken into account when planning maintenance scheduling. Generally, Stan provides an entire class of functions for numerous distributions with the suffix, \lstinline{_rng} that allow for the generation of these quantities. However, as a custom likelihood is used, so too must a custom range function.
 
 \begin{figure}[htbp]
     \centering
@@ -417,11 +417,11 @@ beta_repair  -0.23       0 0.05 -0.34 -0.26 -0.23 -0.19 -0.12 12435    1
 beta_kWh     -3.92       0 0.17 -4.26 -4.04 -3.92 -3.81 -3.60  4897    1
 beta_weather  0.25       0 0.06  0.14  0.21  0.25  0.28  0.36  9761    1
 \end{lstlisting}
-    \caption{Generated Quantities Block for Multiplicative Hazard Model}
+    \caption{Output of Multiplicative Hazard Model}
     \label{mhaz_print}
 \end{figure}
 
-Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. The \lstinline{print()} output can be seen in Figure~\ref{mhaz_print}. It includes what is generally expected from a linear model output, the mean values of the posterior, standard errors, the distributions standard deviations and quantiles. Additionally two metrics for diagnosing convergence issues are given. The \lstinline{n\_eff} is a crude measure of effective sample size. As the MCMC process produces autocorrelated samples, the effective samples are an estimate of the number of independent samples in the process, this number should be high relative to the number of samples given. Very low numbers can be a sign of bias in the outcome. The \lstinline{Rhat} is the Gelman-Rubin statistic, which can roughly be thought of as a estimate of the convergence of the Markov chains to the target distribution\cite{Gelman1992}. If convergence occurs, \lstinline{Rhat} approaches 1 from above. As such values greater than one can suggest that the model has not yet converged and the samples should not be trusted. Alternatively, convergence can be checked visually through the use of a traceplot. Figure~\ref{mhaz_traceplot} illustrates the traceplot for the \lstinline{alp} and \lstinline{gam} parameters. Ideally, there should be no visible pattern in the traceplot and it should be centered around the mean of the parameter value. 
+Once the model is fit, the parameters can be easily printed out or plotted, with the \lstinline{print()} and \lstinline{plot()} functions respective. The \lstinline{print()} output can be seen in Figure~\ref{mhaz_print}. It includes what is generally expected from a linear model output, the mean values of the posterior, standard errors, the distributions standard deviations and quantiles. Additionally two metrics for diagnosing convergence issues are given. The \lstinline{n_eff} is a crude measure of effective sample size. As the MCMC process produces autocorrelated samples, the effective samples are an estimate of the number of independent samples in the process, this number should be high relative to the number of samples given. Very low numbers can be a sign of bias in the outcome. The \lstinline{Rhat} is the Gelman-Rubin statistic, which can roughly be thought of as a estimate of the convergence of the Markov chains to the target distribution\cite{Gelman1992}. If convergence occurs, \lstinline{Rhat} approaches 1 from above. As such values greater than one can suggest that the model has not yet converged and the samples should not be trusted. Alternatively, convergence can be checked visually through the use of a traceplot. Figure~\ref{mhaz_traceplot} illustrates the traceplot for the \lstinline{alp} and \lstinline{gam} parameters. Ideally, there should be no visible pattern in the traceplot and it should be centered around the mean of the parameter value. 
 
 \begin{figure}[htbp]
     \centering
@@ -451,12 +451,11 @@ generated quantities {
 
 
 
-Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index. To generate the WAIC metric, a point-wise log likelihood, \lstinline{log\_lik}, is required. Figure~\ref{mhaz_loglik} demonstrates how to retrieve this value. The \lstinline{generated quantities} block allows for these likelihoods to be extracted upon completion of sampling. The functions \lstinline{WAIC()} from the \lstinline{rethinking} package can be used to compute the WAIC value for the model under the assumption that the \lstinline{log\_lik} vector is included in the output. 
+Once it is clear that the model has converged to a stable solution. Fit and prediction accuracy can be assessed using WAIC and the C-Index. To generate the WAIC metric, a point-wise log likelihood, \lstinline{log_lik}, is required. Figure~\ref{mhaz_loglik} demonstrates how to retrieve this value. The \lstinline{generated quantities} block allows for these likelihoods to be extracted upon completion of sampling. The functions \lstinline{WAIC()} from the \lstinline{rethinking} package can be used to compute the WAIC value for the model under the assumption that the \lstinline{log_lik} vector is included in the output. 
 
 To compute the C-Index, the hazard function, the prognostic measure, must first be generated. This is done by sampling the parameters from posterior. This has the added benefit of retaining the uncertainty associated with each parameter as well as the hazard function. As stated earlier, the C-Index should be computed on a hold-out sample to prevent overfitting. The simulated data used for this exploration, provides the added ability to estimate the C-Index on the uncensored lifetimes. This completes the process.
 
-
-Unobserved heterogeneity or clustered observations can be implemented in several ways in Stan, with roughly the same results. However, the strategy for what is being optimized varies significantly.
+Unobserved heterogeneity or clustered observations can be implemented in several ways in Stan, with roughly the same results. However, the strategy for what is being optimized varies.
 
 First, it is possible to repeat the mechanism with which the Multiplicative Hazard was fit, by explicitly writing out the log likelihood into the \lstinline{function} block. Recall, that the Frailty, $Z$, is not directly modeled, as it is constrained to have an expectation of one, $\mathrm{E}[Z]=1$, by design. Rather the unconditional likelihood is used with the Frailty parameter integrated out. Figure~\ref{frail_funs} illustrates the necessary changes required for the density function.
 
@@ -485,7 +484,7 @@ First, it is possible to repeat the mechanism with which the Multiplicative Haza
 
 Beyond the density function, there is also a requirement to resolve the sums across the clusters. To do this a grouping variable must be made during the model fitting process. This allows for the estimation of $\sigma^2$ for each level of the group. In this example, the each park is given its own estimate of the Frailty variance. The estimation process is done as before, but a different value is given for each of the five parks in the input data.
 
-To do this in Stan must be made aware that the parameter \lstinline{sig} will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of \lstinline{sig} sampling is being done. Thus, the following additions are required to the Stan program:
+To do this in Stan must be made aware that the parameter \lstinline{sig} will now be a vector of real numbers. It needs to know the size of the vector. Then, the fitting process must take into account which position in the vector of \lstinline{sig} sampling is being done. Thus, the following additions are required to complete the Stan program:
 
 
 \begin{figure}[htbp]
@@ -515,20 +514,60 @@ model {
 \end{figure}
 
 
-Figure~\ref{park_group} demonstrates the required changes. The \lstinline{data} block introduces a grouping variable, \lstinline{park} which is the length of the number of observations, \lstinline{N}. It identifies park membership of any single observation with an integer value. The \lstinline{park\_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \lstinline{parameters} block for defining the dimensions of the \lstinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \lstinline{model} block, the same sampling statement is made as before, however, now the additional indexing of the \lstinline{sig} parameter is introduced. This is done through the use of an index on the \lstinline{park} variable, which has a range between one and five. As such, when the sampling statement is run, a value at each park is generated with, \lstinline{sig[park[i]]}.
+Figure~\ref{park_group} demonstrates the required changes. The \lstinline{data} block introduces a grouping variable, \lstinline{park} which is the length of the number of observations, \lstinline{N}. It identifies park membership of any single observation with an integer value. The \lstinline{park_N} variable is introduced to provide a count of the total number of parks in the whole dataset. This is useful in the \lstinline{parameters} block for defining the dimensions of the \lstinline{sig} vector that stores the variances of the Frailty parameter. Finally, in the \lstinline{model} block, the same sampling statement is made as before, however, now the additional indexing of the \lstinline{sig} parameter is introduced. This is done through the use of an index on the \lstinline{park} variable, which has a range between one and five. As such, when the sampling statement is run, a value at each park is generated within, \lstinline{sig[park[i]]}.
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
+  real surv_dens_log(vector cens_lifetime, real alp, real gam, real lin_pred, real Z){
+    real lifetime;
+    real d_i;
+  
+    lifetime <- cens_lifetime[1];
+    d_i      <- cens_lifetime[2];
+  
+    return d_i * (log_h_t(lifetime, alp, gam) + lin_pred + Z) - (H_t(lifetime, alp, gam) * exp(lin_pred) * exp(Z));
+  }
+\end{lstlisting}
+    \caption{Fraily Model with Direct Estimation of $Z$ parameter}
+    \label{z_lik}
+\end{figure}
+
+
+An alternative method can be used to fit the model in a substantially more flexible and extensible form. This allows for the direct sampling of the $Z$ parameter rather than integrating it out through a constraint. This greatly simplifies the model. Figure~\ref{z_lik} provides the likelihood function, \lstinline{surv_dens_log}, needed to fit the model. The other alterations required to the code are the same as in in the previous case, a vector of $Z$ parameters must be defined in the \lstinline{parameter} block and added to the end of the likelihood function call in the \lstinline{model} block. As before, a park grouping should be used like \lstinline{Z[park[i]] to ensure the sampling is done for each park. As can be seen from Figure~\ref{z_lik}, the introduction of the $Z$ parameter simply requires the inclusion of a single term to the hazard and cumulative hazard of the likelihood. This likelihood is the original simple likelihood of the Multiplicative Hazard Model. 
+
+Unfortunately, this ease of construction is without its cost. Specifically, the computer time for fitting this version is of the Frailty model is substantially larger. 
+
+594.655
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{lstlisting}[belowskip=-2 \baselineskip]
+              mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+alp           2.92    0.00 0.19  2.55  2.79  2.92  3.06  3.30  6818    1
+gam           6.79    0.01 0.83  5.57  6.22  6.65  7.22  8.77  5811    1
+Z[1]          0.57    0.01 0.47  0.02  0.21  0.46  0.80  1.78  6111    1
+Z[2]          0.48    0.01 0.38  0.02  0.19  0.39  0.67  1.46  5266    1
+Z[3]          0.97    0.01 0.37  0.31  0.72  0.95  1.20  1.79  5253    1
+Z[4]          0.41    0.00 0.33  0.01  0.16  0.34  0.58  1.23  6143    1
+Z[5]          0.48    0.00 0.38  0.02  0.19  0.39  0.67  1.45  5938    1
+beta_err1     0.01    0.00 0.10 -0.18 -0.05  0.01  0.08  0.20 12254    1
+beta_err2     2.78    0.00 0.18  2.44  2.66  2.78  2.90  3.13  6978    1
+beta_repair  -0.16    0.00 0.10 -0.36 -0.23 -0.16 -0.10  0.03 13082    1
+beta_kWh     -3.87    0.00 0.25 -4.36 -4.03 -3.87 -3.70 -3.39  6733    1
+beta_weather  0.19    0.00 0.27 -0.35  0.02  0.18  0.35  0.77  6185    1
+\end{lstlisting}
+    \caption{Output of Frailty Model}
+    \label{out_frail}
+\end{figure}
+
+Figure~\ref{out_frail} provides the standard output for the Frailty model. As before, it includes what is expected, the mean values of the posterior, standard errors, the distributions standard deviations and quantiles for each parameter. Additionally, the $Z$ parameters are presented which express the hazard at each park. The larger than average value of \lstinline{Z[3]} illustrates that there is some systemic problem at that park that maintenance staff may wish to address. While the structure of the model, not the output, improves the prediction, the ability to understand the rationale for those predictions is a valuable tool for enabling better decision making about how to allocate resources.
 
 This completes the shared Frailty extension. The remainder of the process is identical to that which was performed above. Upon completion the basic sanity check of statistical modeling must be performed. Assumptions regarding the adequacy of the baseline hazard and the convergence of the model should be checked in the same manner as described before. The C-Index and WAIC should be used to check the predictive performance as well as to ensure that the model is not overfitting. Finally, a list of the most at-risk inverters can be output.
 
-
-
-
-% Alternative method
-
-
-One of the joys of working with Stan is its ability to be extended indefinitely. Additional flexibility can be added to the model a similar manner as was done with the park. For example, Frailty parameters can be included that account for the variation on inverter model or if there is reason to believe the baseline hazard is different per grouping. A stratified baseline hazard can be introduced that provides a different \lstinline{alp} and \lstinline{gam} parameter per group. Even, a correlation structure can be given to the Frailty parameters. The extension potential is limitless. 
-
-
-
+One of the wondrous benefits of working with Stan, is that the models constructed above can be extended indefinitely with simple additions. This can be done in the same manner as presented previously through the addition of Frailties to deal with unobserved heterogeneity. Numerous potential extensions are feasible, only an understanding of their structural affect must be integrated. For example, it is possible to stratify the baseline hazard allowing a different shape and scale for each group. It is also possible to expand the Frailty beyond the current independence assumption and provide a correlation structure between terms in the model. It is even possible to directly model time-varying effects, to explicitly cope with phenomena whose relationship changes as the system ages. The possibilities need only to be justified, tested and checked to ensure they provide improvements in out of sample performance. The extension potential is limitless. 
 
 
 
