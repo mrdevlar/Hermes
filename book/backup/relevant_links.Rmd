@@ -1,0 +1,25 @@
+# Relevant Links
+
+This is a collection of the open windows I've been holding for the past few months related to the thesis. This is meant as a temporary storage area for these links. They should not stay here. Rather they should be put at the end of their relevant categories so they can easily be inserted into the text.
+
+[The world’s largest solar plant will soon deliver enough power for over 1 million homes](http://bgr.com/2016/02/08/noor-concentrated-solar-power-complex/)
+
+[Gaussian Processes for Machine Learning](http://www.gaussianprocess.org/gpml/chapters/)
+
+[A quick-start introduction to Stan for economists](http://nbviewer.jupyter.org/github/QuantEcon/QuantEcon.notebooks/blob/master/IntroToStan_basics_workflow.ipynb)
+
+[Using Time Dependent Covariates and Time Dependent Coeffcients in the Cox Models](https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf)
+
+[PREDICTION OF REMAINING LIFE OF POWER TRANSFORMERS BASED ON LEFT TRUNCATED AND RIGHT CENSORED LIFETIME DATA](http://arxiv.org/pdf/0908.2901.pdf)
+
+[Corey Sparks RPubs - Mainly contains examples of survival analysis](https://rpubs.com/corey_sparks)
+	- https://rpubs.com/corey_sparks/68765
+	- https://rpubs.com/corey_sparks/65939
+	- https://rpubs.com/corey_sparks/63970
+	- https://rpubs.com/corey_sparks/63112
+	- https://rpubs.com/corey_sparks/58432
+	- https://rpubs.com/corey_sparks/164805
+
+[Simulating Data with Proportional Hazard Assumption Starting with Life Tables](http://courses.demog.berkeley.edu/mason213F15/Week10/welcome.pdf)
+	- Provides a better process for the data generation process.
+	- Piecewise Constant Hazard Function, results in Exp(\lambda) within the cut points.

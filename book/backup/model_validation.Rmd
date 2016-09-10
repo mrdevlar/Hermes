@@ -1,0 +1,16 @@
+# Model Validation
+
+Here we describe how models can be selected.
+- Log-likelihood and Deviance Checks
+	- DIC as a model comparison tool
+		- May not be entirely adequate due to a small quantity of available covariates when used in this or similarly informational sparse domains.
+
+- C-index and Predictive Performance
+
+- Quantify closeness to the true model and optimality of the current model.
+- Model averaging
+- Increased flexibility of model class
+
+
+## Check
+- Peter Orbanz’ Bayesian nonparametric tutorial

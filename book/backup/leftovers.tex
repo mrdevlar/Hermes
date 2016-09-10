@@ -1,0 +1,218 @@
+% <!-- From the above table, it should be clear that that rows no longer represent independent observations. A collection of rows can belong to a single system. Observations are now interval censored between time points $t_0$ and $t_1$. In the case of the photovoltaic data the interval granularity is days. -->
+
+% \begin{lstlisting}
+% Figure: Simulated Data Structure
+
+% 500 Inverters
+
+% 5 Parks with 150, 150, 100, 50, 50 inverters, respectively.
+
+% 3 Types of inverters: central, string, micro. Which are distributed among the parks in the following manner:
+
+% (125, 25, 0,
+% 75 , 50, 25,
+% 0  , 75, 25,
+% 40 ,  0, 10,
+% 0  , 30, 20)
+
+
+% Park Level Covariates
+% weather_l6m: Number of Extreme Weather Events in last 6 months
+
+% Covariates
+% kWh: kWh inverter output on the current day
+
+% err_code01: Count of errors
+% err_code02: Count of critical errors
+
+% repair_days: Days since last repair or replacement
+% \end{lstlisting}
+
+% <!-- Time-to-event models, require an expansion of this construction, to account for time-dependent variables. First, an additional column that contains the identifier of system observed is needed. Second, two columns that define the interval across which the time-dependent observation is made is also required.  -->
+
+% <!-- 
+% $$ (Y_{ijk(t_0)}, Y_{ijk(t_1)}, d_{ijk}, Z_j, W_k,  \textbf{x}_{ijk}) $$ 
+% -->
+
+% <!-- The other failure mode is old age wear, which peaks within ten years of operation, on average. Admittedly, this is a pessimistic choice for a time frame given improvements in inverter reliability over the preceding decade. However, it is justified in that most current solar systems will still be making use of older components. -->
+
+% <!-- The temporal granularity of the data is daily. A predictive maintenance process could be set up on an hourly, even second basis. However, the inability to act, not to mention the time required to refit the model, makes such such narrow intervals impractical. -->
+
+%<!-- All of this data is then subject to feature engineering, to extract its relevant values for the modeling process. -->
+
+%<!-- As time-dependent data requires a trajectory in time-to-event models, this data is heavily processed to extract  -->
+
+% Maybe add alternative methods?
+
+
+
+
+% <!-- Maybe insert the picture of what you're measuring
+% Survival Function, color in the right hand side of that function
+%  -->
+
+
+
+% <!--
+% Nice to have: A full page picture of the distributions with various parameters.
+%  -->
+
+
+
+% Fortunately, the Multiplicative Hazard Model is relatively easy to extend to address two temporal concerns that of time-dependent effects and time-varying covariates\cite{Dekker2008}. However, in extending the model beyond this simplified form the proportionality of hazards is lost, as the linear model segment becomes dependent on time.
+
+% The model can be generalized to include time-dependent effects, these alter how identical model coefficient affect the outcome at a specific point in time. For example, the level of lubricant may have a different impact in a recently installed machine than one that has been in operation for several weeks due to "burn in". Thus, while the covariate would remain unaltered, its effect would be dependent on when in the lifetime of the machine it is observed. This leads to the following extension:
+
+% $$ h_i(t|\textbf{x}_i) = h_0(t) \exp(\boldsymbol\beta(t)^T \textbf{x}_i)  $$
+
+% The form of these effects must be specified parametrically to be able to identify the model and estimate the parameters. Polynomials on duration, where $\boldsymbol\beta(t)$ is a linear or quadratic function of time appear as obvious candidates\cite{Rodriguez2007}. The requirement to specify the form creates an additional overhead, as such an extension will not automatically adapt time-invariant covariates to time-dependent ones. As such, care should be taken to ensure that covariates that appear time-invariant actually are.
+
+% The model can also be generalized to include time-varying covariates. This generalization is more common, as numerous variables that can be included in a model change over the lifetime of a system. The majority of condition monitoring covariates are time-varying. For example, sensor telemetry on electrical output or environmental conditions, such as average daily temperature, will always be reported with a time-stamp. These values will be different given any particular point in time. The model can be extended in the following way:
+
+% $$ h_i(t|\textbf{x(t)}_i) = h_0(t) \exp(\boldsymbol\beta^T \textbf{x(t)}_i)  $$
+
+% In this form, model covariates and lifetime no longer so easily separated. This may periodically lead to identifiability problems, as some covariates are highly collinear with time\cite{Rodriguez2007}. In such cases, it is especially important to perform adequate feature engineering to minimize the risk of identifiability problems.
+
+
+% <!-- Maybe insert S(t|Z) = S(t)^Z -->
+
+
+
+% <!-- This independence between Frailties can be relaxed, but is often less useful in practice
+
+% In this case rather than defining a single variance parameter, $\theta$, a covariance matrix $\mathbf{V}$ which is meant to represent the dependency structure between each Frailty.
+%  -->
+
+
+% $$ H(t) = \frac{1}{\sigma^2} \ln \left (\sigma^2 \left (\frac{t}{\gamma}  \right )^{\alpha} + 1  \right )$$
+
+
+% <!-- Possibly introduce covariance structure between independent frailties - Want but not need -->
+
+
+% <!-- The problem is that what is observed in a study population is no the conditional hazard but the net result for all individuals with different values of the random variable Z.
+ % -->
+
+% Possibly talk about other extensions here. Lognormal Frailty, where there is no 
+
+
+
+% <!-- Log likelihood
+
+% $$ l(\beta_i, h_0, b_i) = \sum^{n_i}_{j=1} \left [ d_{ij} (\ln h_0(t_{ij}) + \beta^tx_{ij} + b_i z^t_{ij})  - H_0(t_{ij} \exp(\beta^tx_{ij} + b_i z^t_{ij}))\right ] $$
+
+% See\cite{Romdhane2015}.
+% -->
+
+
+% <!-- Maybe insert Weibull with Gamma Frailties -->
+
+% <!-- Or a time-dependent covariate:
+
+% $$ T = \left [\frac{1}{k} \ln\left ( \frac{(1 + \nu)(-\ln(U))}{\beta_t \lambda \nu \exp(\boldsymbol\beta^T \textbf{x}) } \right )  \right ]^{\frac{1}{(1+\nu)}} $$
+
+% Where, the the time-dependent covariate, $k$, is continuous and generated by a function that has a multiplicative effect on time, $z(k) = kt$ \cite{Austin2012}.  -->
+
+% <!-- - Model overfitting could arise when the number of events is small compared with the number of predictors in the risk model
+% - In an overfitted model, the probability of an event tends to be underestimated in low risk patients and overestimated in high risk patients
+% - The use of regularizing priors -->
+
+
+% <!-- Maybe include statement about this being the result of time-to-event data coming from skewed distributions -->
+
+% Predictive accuracy can also be assessed using the custom \lstinline{C\_Index()} function. However, before this is done, model assumptions and convergence should be verified. 
+
+% <!-- QQ-Plot and Traceplot Output -->
+
+% <!-- ln(-ln(S(t))) => check baseline-->
+% A check on the fit of the baseline hazard function should be done. This can be easily assessed using a Quantile plot, which matches the observations against the cdf of the chosen parametric distribution. If the observations correspond to the distribution, then a straight diagonal line is will be observed. It is important to examine any outliers and determine if their values are not a symptom of a structure absent from the current model. 
+
+
+
+% <!-- 
+
+
+
+% $$ \frac{\frac{\frac{\alpha}{\gamma}(\frac{t}{\gamma})^{\alpha - 1}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}}  \exp{\beta}}{1 + \sigma^2 (\frac{t}{\gamma})^{\alpha}} \exp(\beta) $$
+
+% $$ \frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} $$
+
+% $$\frac{\frac{\frac{a}{g} (\frac{t}{g})^{a-1}}{1+s^2 (\frac{t}{g})^a} * \exp(X)}{1 + s^2 (\frac{t}{g})^a *\exp(X)} $$
+
+% $$ (1 + s^2 (\frac{t}{g})^a *\exp(X)))^{-\frac{1}{s^2}} $$
+
+
+% $$(a (t/g)^a)/(t + s^2 t (t/g)^a)$$
+
+% $$ (\alpha \exp(\beta^T X) (t/\gamma)^(\alpha-1))/(\gamma (\sigma^2 (t/\gamma)^\alpha+1) (\sigma^2 \exp(\beta^T X) (t/\gamma)^\alpha+1)) $$
+
+
+% $$ d (-log(s^2 e^X (g/t)^(-a)+1)-log(s^2 (g/t)^(-a)+1)-a log(g)+a log(t)+log(a)-log(t)+X) $$
+
+
+
+%  -->
+
+
+% <!-- 
+% While it is likely that the price of sensors will continue to decline, ...
+% As gradual improvments in photovoltaic inverters occur\cite{Fife2012}.
+
+% Something for the conclusion, start recording your data correctly and make money yo
+
+% The size and breadth of conventional capacity makes it difficult to displace existing generation methods. 
+% Yet, the size and breadth of conventional generation capacity makes it difficult to displace without technological and policy incentives. 
+
+
+% Lack of trained maintenance workers is a constraint on the industry.
+%  -->
+% <!-- 
+% ## Conclusion?
+
+% IF we know that certain factors contribute to the deterioration of objects in the environment, whether from literature or subject-matter experts in the company, we should make use of them. Simply inputing data from existing systems and expecting perfect prediction is naive and foolish. Regardless of the perpetual drive toward greater automation in model optimization, ultimately, it is people that determine what is input. A mixed model can help provide a degree of flexibility to offset what is not being input. However, it is not magic (even if it may seem that way), and its performance can be easily overcome by a more sensible strategy of inputting variables.  -->
+% <!-- 
+% - Make extensive use domain knowledge
+% - Codify everything that can be codified
+% - Do not expect sensors to save you
+
+% In summation, general guidelines for time-to-event modeling in a predictive context can be constructed. However, to quote Harrell\cite{Harrell2001}, "we are for better or worse forced to develop models empirically in the majority of cases". Thus, general guidelines should be treated more as horoscopes than rigid battle plans\cite{McElreath2016}. They should not override domain knowledge, modeling experience or common sense. 
+
+% - Increment model development. 
+% - Check the assumptions of the model. 
+% 	- Parameterization of the baseline hazard
+% 	- Check HDPI of covariates
+% 	- The affect of Frailties
+% - For each set of relevant covariates:
+% 	- Fit model
+% 	- Refit model with regularizing priors
+% - When in doubt, simulate data with the properties found in real-world sources then validate that the model returns the expected parameters.
+% - 
+
+% create a unique circumstances 
+
+% - Robustness of Fit
+% - Residual Overdispersion
+
+
+
+% - Write out the full probability model. That is, a joint probability model of all data and parameters of the model.
+% - Simulate the model with known values for the parameters.
+% - Estimate the model to recover the parameters from simulated data.
+% - Estimate the model against real data.
+% - Check that the estimation has run properly.
+% - Run posterior predictive checking/time series cross validation to evaluate model fit.
+% - Perform inference and prediction.
+% - Model comparison.
+% - Iterate!
+
+
+
+
+% ## Outline
+
+% - Model Extensions
+% 	- Repeated Failures - Repeated Events
+% 	- Competing Risk
+% 	- Improved Baseline Hazard Estimation
+
+%  -->

@@ -1,0 +1,49 @@
+# Data Generation
+
+Data is generated using inverse transform sampling using an empirical distribution function. That distribution is generated using input from two real-world data sets from photovoltaic companies. 
+
+Data is generated using a life table like those found in classic demographic research. 
+
+There are several reasons for this approach. First, it introduces time discretization which is a consideration in any real data set. This is in contrast to the model itself, which treats time as a continuous phenomena. 
+
+Second, it allows for the specification of a population that has an arbitrarily defined hazard. This makes the output substantially more realistic than generating the data from a known parametric distribution (such as a Weibull or Lognormal). 
+
+Third, it allows for the introduction of deviations
+
+Finally, as the data is 
+
+
+<!-- Granularity & Unit of Analysis -->
+Recording granularity is taken as days, with an underlying data generating assumption of a constant hazard within each day. Such a granularity is already quite fine, but could be better. In ideal circumstances, we would prefer to have hourly, if not finer resolution, of device status and covariate measures. However, in practice, such granularity can lead to noisy observations and poor model outputs. Daily data provides the ability to smooth out intra-day variation that could be caused by low quality sensors signal errors or other recording errors. This is especially true when time-dependent covariates are involved, as sensor errors can result in model instability.
+
+Inverse transform sampling of the CDF of the life table is used to generate values. 
+
+It is possible to make an argument that piecewise constant hazard is 
+
+
+The data was intentionally made in this manner to make it difficult to adequately capture all the variation using a standard parametric distribution for lifetime.
+
+Distribution is actually bimodal and the two peaks found within the density represent two very different modes of failure. 
+
+The first peak represents short term infant mortality found within the data. Within a year a small proportion (15%) of the inverters fail. They do for many of the same reasons as most industrial devices, 
+What is important to realize here is that the first peak is a minimum of the conjunction of various at-risk elements within the inverter. 
+
+The standard model for reliability analysis, the "bathtub curve" is unrealistic. 
+
+In an ideal world, all failure modes would be identifiable. We would have categories for each type of failure,
+
+
+<!-- 
+
+[Inverse Transform Sampling](https://en.wikipedia.org/wiki/Inverse_transform_sampling)
+ - This is the exact method that is being used
+
+[Demography 213 Fall 2015](http://courses.demog.berkeley.edu/mason213F15/)
+ - Contains data generation for PH model from life tables.
+ - Contains data generation for violations of the PH model, again using the life tables
+ 	- See Week 10 and 11
+
+[GLM Piecewise Exponential Survival Model](http://data.princeton.edu/wws509/stata/recidivismR.html)
+ - Contains an alternative method for calculating failure. 
+
+ -->
